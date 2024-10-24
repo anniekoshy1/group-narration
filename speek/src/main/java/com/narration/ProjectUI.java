@@ -1,3 +1,4 @@
+package com.narration;
 import java.util.Scanner;
 
 public class ProjectUI {
@@ -208,5 +209,10 @@ public class ProjectUI {
     private void logout() {
         facade.saveAndLogout();
         System.out.println("You have been logged out.");
+    }
+
+    public static void main(String[] args) {
+        ProjectUI languageInterface = new ProjectUI();
+        languageInterface.start();
     }
 }

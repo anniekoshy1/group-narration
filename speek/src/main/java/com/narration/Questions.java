@@ -1,8 +1,7 @@
-import java.util.UUID;
+package com.narration;
 
 public class Questions {
 
-    private UUID questionID;
     private String questionText;  // The text of the question
     private boolean correctAnswer;  // The correct answer for the question
     private String userAnswer;  // The answer provided by the user
@@ -13,7 +12,6 @@ public class Questions {
         this.correctAnswer = correctAnswer;
         this.difficulty = difficulty;
         this.userAnswer = "";
-        this.questionID = UUID.randomUUID();
 
     }
 

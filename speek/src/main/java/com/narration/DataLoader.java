@@ -1,3 +1,4 @@
+package com.narration;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -251,4 +252,9 @@ public class DataLoader {
 
     public void saveAssessmentHistory(User user, Assessment assessment) {
     }
+
+	public Assessment loadAssessmentById(String assessmentIDSTR) {
+		
+		throw new UnsupportedOperationException("Unimplemented method 'loadAssessmentById'");
+	}
 }

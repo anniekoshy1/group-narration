@@ -1,4 +1,6 @@
-package com.narriation;
+package com.narration;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
@@ -6,12 +8,9 @@ package com.narriation;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.polly.PollyClient;
 import software.amazon.awssdk.services.polly.model.DescribeVoicesRequest;
-import software.amazon.awssdk.services.polly.model.Voice;
 import software.amazon.awssdk.services.polly.model.DescribeVoicesResponse;
 import software.amazon.awssdk.services.polly.model.PollyException;
-
-import java.util.Iterator;
-import java.util.stream.Stream;
+import software.amazon.awssdk.services.polly.model.Voice;
 
 public class VoiceList {
     private VoiceList(){};

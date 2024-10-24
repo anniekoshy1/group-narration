@@ -1,3 +1,4 @@
+package com.narration;
 public class FlashcardQuestion {
 
     private String frontInfo;  // The front of the flashcard 

@@ -1,3 +1,4 @@
+package com.narration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -35,14 +36,6 @@ public class Language {
         this.name = name;
     }
 
-
-
-
-
-
-
-
-\
     // Get the name of the language
     public String getName() {
         return name;
