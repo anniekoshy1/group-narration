@@ -2,6 +2,7 @@ package com.narration;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.json.simple.JSONArray;
@@ -9,14 +10,14 @@ import org.json.simple.JSONObject;
 
 public class DataWriter {
 
-    private static final String USERS_FILE = "docs/JSON/User.json";
-    private static final String COURSES_FILE = "docs/JSON/Courses.json";
-    private static final String LANGUAGES_FILE = "docs/JSON/Languages.json";
-    private static final String WORDS_FILE = "docs/JSON/words.json";
-    private static final String PHRASES_FILE = "docs/JSON/phrases.json";
+    private static final String USERS_FILE = "speek/docs/JSON/User.json";
+    private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
+    private static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
+    private static final String WORDS_FILE = "speek/docs/JSON/words.json";
+    private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
 
-    //done
+    //done3
     public boolean saveUsers(ArrayList<User> users) {
         JSONArray userArray = new JSONArray();
 
@@ -37,6 +38,7 @@ public class DataWriter {
             userJson.put("courses", coursesJson);
 
             JSONObject progressJson = new JSONObject();
+            HashMap<UUID, Double> progress = user.getProgress();  // Parameterized HashMap
             for (UUID courseId : user.getProgress().keySet()) {
                 progressJson.put(courseId.toString(), user.getProgress().get(courseId));
             }

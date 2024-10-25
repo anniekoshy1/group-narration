@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "ProjectUI",
+            "request": "launch",
+            "mainClass": "com.narration.ProjectUI",
+            "projectName": "speek"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "com.narration.Main",
+            "projectName": "speek"
+        },
+        {
             "type": "jdk",
             "request": "launch",
             "name": "Launch Java App"

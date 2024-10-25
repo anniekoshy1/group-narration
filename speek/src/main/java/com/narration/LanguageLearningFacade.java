@@ -1,6 +1,7 @@
 package com.narration;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class LanguageLearningFacade {
@@ -11,11 +12,21 @@ public class LanguageLearningFacade {
     private User user;  // The currently logged-in user
     private Language currentLanguage;  // The language the user is currently learning
     DataLoader dataLoader = new DataLoader();
+    DataWriter dataWriter = new DataWriter();
+    private List<User> users;
+    private ArrayList<Language> languages;
 
     public LanguageLearningFacade() {
+        languages = new ArrayList<>();
         userList = UserList.getInstance();
         courseList = CourseList.getInstance();
+        languages.add(new Language("Spanish"));
         languageList = LanguageList.getInstance();
+        this.dataWriter = new DataWriter();
+        this.users = new DataLoader().getUsers();  // Assuming this returns an ArrayList<User>
+        if (this.users == null) {
+            this.users = new ArrayList<>();  // If no users exist, initialize an empty list
+        }
     }
 
     // User login using username and password
@@ -61,8 +72,8 @@ public class LanguageLearningFacade {
     }
 
     // Get a list of all languages supported in the system
-    public ArrayList<Language> getAllLanguages() {
-        return languageList.getLanguages();
+    public List<Language> getAllLanguages() {
+        return languages;
     }
 
     // Select a language for the user to learn
@@ -122,11 +133,13 @@ public class LanguageLearningFacade {
         }
     }
 
+
     // Add a new user to the system
     public void registerUser(String username, String email, String password) {
         UUID userId = UUID.randomUUID();
         User newUser = new User(userId, username, email, password, new ArrayList<>(), new HashMap<>(), new ArrayList<>(), null, new ArrayList<>(), null, "English");
         userList.addUser(newUser);
+        dataWriter.saveUsers(new ArrayList<>(users));
     }
 
     public boolean hasCourseAccess(Course course) {

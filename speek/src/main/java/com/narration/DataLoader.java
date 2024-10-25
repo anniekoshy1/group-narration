@@ -12,11 +12,11 @@ import org.json.simple.parser.ParseException;
 
 public class DataLoader {
 
-    private static final String USERS_FILE = "docs/JSON/User.json";
-    private static final String COURSES_FILE = "docs/JSON/Courses.json";
-    private static final String LANGUAGES_FILE = "docs/JSON/Languages.json";
-    private static final String WORDS_FILE = "docs/JSON/words.json";
-    private static final String PHRASES_FILE = "docs/JSON/phrases.json";
+    private static final String USERS_FILE = "speek/docs/JSON/User.json";
+    private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
+    private static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
+    private static final String WORDS_FILE = "speek/docs/JSON/words.json";
+    private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
 
     public ArrayList<User> getUsers() {

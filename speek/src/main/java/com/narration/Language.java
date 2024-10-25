@@ -31,6 +31,20 @@ public class Language {
         this.courseAccess = new HashMap<>();
         this.dictionary = new Dictionary(new WordsList());
     }
+
+    public Language(String name) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.coursePercentage = 0.0;
+        this.totalPercentage = 0.0;
+        this.languageProgress = 0.0;
+        this.keyWords = new ArrayList<>();
+        this.completedCourses = new ArrayList<>();
+        this.completedAssessments = new ArrayList<>();
+        this.courseAccess = new HashMap<>();
+        this.dictionary = new Dictionary(new WordsList());
+    }
+
     public Language(UUID id, String name) {
         this.id = id;
         this.name = name;

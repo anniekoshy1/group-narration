@@ -5,6 +5,7 @@ public class ProjectUI {
 
     private LanguageLearningFacade facade;
     private Scanner scanner;
+    private DataConstants dataConstants;
 
     public ProjectUI() {
         facade = new LanguageLearningFacade();
@@ -111,17 +112,35 @@ public class ProjectUI {
         return facade.getCurrentUser() != null;
     }
 
-    private void register() {
-        System.out.print("Enter new username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter email: ");
-        String email = scanner.nextLine();
-        System.out.print("Enter new password: ");
-        String password = scanner.nextLine();
+private void register() {
+    System.out.print("Enter new username: ");
+    String username = scanner.nextLine();
+    String email;
+    String password;
 
-        facade.registerUser(username, email, password);
-        System.out.println("Registration successful! Please login to continue.");
+    while (true) {
+        System.out.print("Enter email: ");
+        email = scanner.nextLine();
+        if (email.contains("@") && email.contains(".")) {
+            break;
+        } else {
+            System.out.println("Invalid email, please enter a valid email that includes '@' and '.'");
+        }
     }
+
+    while (true) {
+        System.out.print("Enter new password: ");
+        password = scanner.nextLine();
+        if (password.length() >= DataConstants.MIN_PASSWORD_LENGTH && password.length() <= DataConstants.MAX_PASSWORD_LENGTH) {
+            break;
+        } else {
+            System.out.println("Invalid password, please enter a password between " + DataConstants.MIN_PASSWORD_LENGTH + " and " + DataConstants.MAX_PASSWORD_LENGTH + " characters.");
+        }
+    }
+    facade.registerUser(username, email, password);
+    System.out.println("Registration successful! Please login to continue.");
+}
+
 
     private void selectLanguage() {
         if (!isLoggedIn()) {
