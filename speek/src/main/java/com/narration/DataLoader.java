@@ -21,8 +21,8 @@ public class DataLoader extends DataConstants{
     private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
 
-    public static ArrayList<User> getUsers() {
-        ArrayList<User> users = UserList.getInstance().getUsers();
+    public ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(USERS_FILE)) {
@@ -88,7 +88,7 @@ public class DataLoader extends DataConstants{
     }
 
     // Confirm a user by checking the username and password
-    public static boolean confirmUser(String username, String password) {
+    public boolean confirmUser(String username, String password) {
         ArrayList<User> users = getUsers();
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
@@ -98,7 +98,7 @@ public class DataLoader extends DataConstants{
         return false;
     }
 
-    public static ArrayList<Course> getCourses() {
+    public ArrayList<Course> getCourses() {
         ArrayList<Course> courses = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
 
@@ -147,7 +147,7 @@ public class DataLoader extends DataConstants{
     }
 
     
-    public static ArrayList<Language> getLanguages() {
+    public ArrayList<Language> getLanguages() {
         ArrayList<Language> languages = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
 
@@ -170,7 +170,7 @@ public class DataLoader extends DataConstants{
         return languages;
     }
 
-    public static void loadUserProgress(User user) {
+    public void loadUserProgress(User user) {
         JSONParser jsonParser = new JSONParser();
 
         try (FileReader fileReader = new FileReader(USERS_FILE)) {
@@ -201,7 +201,7 @@ public class DataLoader extends DataConstants{
         }
     }
 
-    public static WordsList loadWords() {
+    public WordsList loadWords() {
         WordsList wordsList = new WordsList();
         JSONParser parser = new JSONParser();
 
@@ -225,7 +225,7 @@ public class DataLoader extends DataConstants{
     }
 
     // Load phrases from the JSON file
-    public static PhraseList loadPhrases() {
+    public PhraseList loadPhrases() {
         PhraseList phraseList = new PhraseList();
         JSONParser parser = new JSONParser();
 
@@ -270,16 +270,16 @@ public class DataLoader extends DataConstants{
         return new User(id, email, username, progress);
     }
 
-    public static void saveCourses(ArrayList<Course> courses) {
+    public void saveCourses(ArrayList<Course> courses) {
     }
 
-    public static void saveUserProgress(User user) {
+    public void saveUserProgress(User user) {
     }
 
-    public static void saveAssessmentHistory(User user, Assessment assessment) {
+    public void saveAssessmentHistory(User user, Assessment assessment) {
     }
 
-	public static Assessment loadAssessmentById(String assessmentIDSTR) {
+	public Assessment loadAssessmentById(String assessmentIDSTR) {
 		
 		throw new UnsupportedOperationException("Unimplemented method 'loadAssessmentById'");
 	}

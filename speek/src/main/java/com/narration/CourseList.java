@@ -67,6 +67,7 @@ public class CourseList {
     }
         //possibly done, question for portia
     public void save() {
-        DataWriter.saveCourses();
+        DataWriter dataWriter = new DataWriter();
+        dataWriter.saveCourses(courses);
     }
 }
