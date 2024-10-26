@@ -2,7 +2,7 @@ package com.narration;
 
 public class TrueFalseQuestion extends Questions {
 
-    private boolean correctAnswer;  // The correct answer
+    private final boolean correctAnswer;  // The correct answer
     private boolean userAnswer;  // The user's submitted answer 
 
     public TrueFalseQuestion(String questionText, boolean correctAnswer, Difficulty difficulty) {
@@ -16,12 +16,12 @@ public class TrueFalseQuestion extends Questions {
         super.submitAnswer(userAnswer ? "True" : "False");  
     }
 
-    // Check if the user's answer is correct
     @Override
     public boolean checkAnswers() {
         return this.userAnswer == this.correctAnswer;  
     }
 
+    @Override
     public boolean getCorrectAnswer() {
         return correctAnswer;
     }

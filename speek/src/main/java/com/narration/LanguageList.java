@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class LanguageList {
 
     private static LanguageList instance;  
-    private ArrayList<Language> languages; 
+    private final ArrayList<Language> languages; // Made final
 
     private LanguageList() {
         languages = new ArrayList<>();

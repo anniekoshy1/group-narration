@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PhraseList {
-    private List<Phrase> phrases;
+    private final List<Phrase> phrases;
 
     public PhraseList() {
         this.phrases = new ArrayList<>();

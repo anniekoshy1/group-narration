@@ -11,78 +11,50 @@
                 "lessonID": "7479de25-c6c0-4701-abaf-a25f75f98f3f",
                 "lessonProgress": 0,
                 "description": "Greetings and opening phrases",
-                "words": [
-                    {
-                        "text": "Hola",
-                        "language": "Spanish",
-                        "partOfSpeech": "Interjection",
-                        "definition": "Hello",
-                        "synonyms": ["Hello", "Hi"],
-                        "id": "07fc3afd-0296-4839-a6ff-4e72a3e1368b"
-                    },
-                    {
-                        "text": "Adiós",
-                        "language": "Spanish",
-                        "partOfSpeech": "Interjection",
-                        "definitions": "Hello",
-                        "synonyms": ["Bye", "Farewell"],
-                        "id": "2817fd3c-82f5-4859-98ee-2e5ab888079b"
-                    }
-                ],
-                "phrases":[
-                    {
-                        "id": "dac75ddd-a4a2-45fa-b10b-1ba19b5a21d4",
-                        "text": "Buenos días",
-                        "language": "Spanish",
-                        "partOfSpeech": "Phrase",
-                        "definition": "Good Morning",
-                        "synonyms": ["Good day", "Morning"]
-                    },
-                    {
-                        "id": "9b1e194f-7bb3-470f-864a-80aa142f9d4d",
-                        "text": "Que tenga un buen día",
-                        "langague": "Spanish",
-                        "partOfSpeech": "Phrase",
-                        "defintion": "Have a good day",
-                        "synonyms": ["Take care"]
-                    }
-                ],
-                "questions":[
-                    {
-                        "questionID": "88688fef-a047-45e0-8e39-3343b13e20c0",
-                        "content": "How do you say `Goodbye` in Spanish?",
-                        "correctAnswer": "Adiós",
-                        "userAnswer": "",
-                        "difficulty": 1
-                    },
-                    {
-                        "questionID": "6a88adfa-292d-4b76-b215-3f0b116826c1",
-                        "content": "How do you say `hello` in Spanish?",
-                        "correctAnswer": "Hola",
-                        "userAnswer": "",
-                        "difficulty": 1
-                    }
-                ]
+                "content": "Introduction to basic greetings and commonly used opening phrases in Spanish."
             }
         ],
         "assessments": [
             {
                 "assessmentID": "969eb3fa-fabc-4957-9604-d0929de9c207",
                 "type": "Quiz",
-                "userScore": "85%",
+                "userScore": 85,
                 "attempts": 1,
-                "questions":[
-                {
-                    "questionID": "56ba4e8d-abd6-4e96-a22f-0d6ec1fb5d43",
-                    "content": "How do you say `Goodbye` in Spanish?",
-                    "correctAnswer": "Adiós",
-                    "userAnswer": "",
-                    "difficulty": 1
-                }
-            
+                "questions": [
+                    {
+                        "questionID": "56ba4e8d-abd6-4e96-a22f-0d6ec1fb5d43",
+                        "content": "How do you say 'Goodbye' in Spanish?",
+                        "correctAnswer": "Adiós",
+                        "userAnswer": "",
+                        "difficulty": "Rudimentary"
+                    },
+                    {
+                        "questionID": "2a8d5c78-7d5f-4c37-9d1c-63502f7c4773",
+                        "content": "Match the word 'Hello' to its Spanish equivalent.",
+                        "correctAnswer": "Hola",
+                        "userAnswer": "",
+                        "difficulty": "Rudimentary",
+                        "type": "MatchingQuestion"
+                    },
+                    {
+                        "questionID": "b8e2cd48-1d9f-4f2f-8d9e-78b3e9a20b5a",
+                        "content": "Is 'Gracias' the correct word for 'Thank you'?",
+                        "correctAnswer": "True",
+                        "userAnswer": "",
+                        "difficulty": "Rudimentary",
+                        "type": "TrueFalseQuestion"
+                    },
+                    {
+                        "questionID": "cd9a5c88-1234-4b45-8d59-6e7bafbd5ad2",
+                        "content": "What is the Spanish word for 'Please'?",
+                        "choices": ["Por favor", "Gracias", "De nada"],
+                        "correctAnswer": "Por favor",
+                        "userAnswer": "",
+                        "difficulty": "Rudimentary",
+                        "type": "MultipleChoiceQuestion"
+                    }
                 ]
             }
         ]
-        ,"keyWords": ["greetings", "basic phrases"]
     }
 ]

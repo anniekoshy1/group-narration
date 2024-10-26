@@ -18,13 +18,15 @@ import software.amazon.awssdk.services.polly.model.SynthesizeSpeechResponse;
 import software.amazon.awssdk.services.polly.model.Voice;
 
 public class Narriator {
-    private Narriator(){};
+    private Narriator(){}
 
-    public static void playSound(String text){
-        PollyClient polly = PollyClient.builder().region(Region.EU_WEST_3).build();
-
-        talkPolly(polly, text);
-        polly.close();
+    public static void playSound(String text) {
+        try (PollyClient polly = PollyClient.builder().region(Region.EU_WEST_3).build()) {
+            talkPolly(polly, text);
+        } catch (PollyException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
     }
 
     private static void talkPolly(PollyClient polly, String text) {
@@ -39,13 +41,11 @@ public class Narriator {
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Voice not found"));
 
-
             InputStream stream = synthesize(polly, text, voice, OutputFormat.MP3);
             AdvancedPlayer player = new AdvancedPlayer(stream,
                     javazoom.jl.player.FactoryRegistry.systemRegistry().createAudioDevice());
-                    
-            player.setPlayBackListener(new PlaybackListener(){});
 
+            player.setPlayBackListener(new PlaybackListener() {});
             player.play();
 
         } catch (PollyException | JavaLayerException | IOException e) {

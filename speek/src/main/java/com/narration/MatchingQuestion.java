@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class MatchingQuestion {
 
-    private Map<String, String> questionPairs;
-    private Map<String, String> userMatches;
+    private final Map<String, String> questionPairs;
+    private final Map<String, String> userMatches;
 
     public MatchingQuestion(Map<String, String> questionPairs) {
         this.questionPairs = questionPairs;
@@ -17,7 +17,6 @@ public class MatchingQuestion {
         userMatches.put(term, match);
     }
 
-    // Check if the user's matches are correct
     public boolean checkAnswer() {
         for (String term : questionPairs.keySet()) {
             String correctMatch = questionPairs.get(term);
@@ -33,17 +32,14 @@ public class MatchingQuestion {
         userMatches.clear();
     }
 
-    // Get the correct match for a term
     public String getCorrectMatch(String term) {
         return questionPairs.get(term);
     }
 
-    // Get the list of all terms in the question
     public List<String> getTerms() {
         return List.copyOf(questionPairs.keySet());
     }
 
-    // Get the list of all possible matches in the question
     public List<String> getMatches() {
         return List.copyOf(questionPairs.values());
     }
@@ -52,7 +48,6 @@ public class MatchingQuestion {
         return userMatches.get(term);
     }
 
-    // Display the correct answers for all terms
     public Map<String, String> showCorrectAnswers() {
         return questionPairs;
     }

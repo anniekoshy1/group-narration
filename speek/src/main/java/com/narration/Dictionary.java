@@ -1,12 +1,13 @@
 package com.narration;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Dictionary {
 
-    private WordsList wordsList;  
-    private Map<String, String> translationMap;  // Map to store translations (e.g., "hello" -> "hola")
+    private final WordsList wordsList;  // Marked as final
+    private final Map<String, String> translationMap;  // Marked as final
 
     // Constructor that takes in a WordsList
     public Dictionary(WordsList wordsList) {

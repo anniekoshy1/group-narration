@@ -1,19 +1,20 @@
 package com.narration;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 public class User {
 
-    private UUID id;
+    private final UUID id;
     private String username;  // Username of the user
     private String email;  // Email address of the user
     private String password;  // User's password
-    private ArrayList<Course> courses;  // List of courses the user is enrolled in
+    private final ArrayList<Course> courses;  // List of courses the user is enrolled in
     private HashMap<UUID, Double> progress;  // Map to track the user's progress for each course
-    private ArrayList<UUID> completedCourses;  // List of completed courses
+    private final ArrayList<UUID> completedCourses;  // List of completed courses
     private UUID currentCourseID;  // The current course the user is working on
-    private ArrayList<Language> languages;  // List of languages the user is learning
+    private final ArrayList<Language> languages;  // List of languages the user is learning
     private UUID currentLanguageID;  // The ID of the current language the user is learning
     private String currentLanguageName;  // The name of the current language the user is learning
 
@@ -33,60 +34,60 @@ public class User {
         this.currentLanguageName = currentLanguageName;
     }
 
-    public User(String id2, String email2, String username2, double progress2) {
-        //TODO Auto-generated constructor stub
+    public User(UUID id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.courses = new ArrayList<>();
+        this.progress = new HashMap<>();
+        this.completedCourses = new ArrayList<>();
+        this.currentCourseID = null;
+        this.languages = new ArrayList<>();
+        this.currentLanguageID = null;
+        this.currentLanguageName = "English";
     }
 
     public UUID getId() {
         return id;
     }
 
-    // Get the user's username
     public String getUsername() {
         return username;
     }
 
-    // Set the user's username
     public void setUsername(String username) {
         this.username = username;
     }
 
-    // Get the user's email
     public String getEmail() {
         return email;
     }
 
-    // Set the user's email
     public void setEmail(String email) {
         this.email = email;
     }
 
-    // Get the user's password
     public String getPassword() {
         return password;
     }
 
-    // Set the user's password
     public void setPassword(String password) {
         this.password = password;
     }
 
-    // Get the list of courses the user is enrolled in
     public ArrayList<Course> getCourses() {
         return courses;
     }
 
-    // Add a course to the user's list of courses
     public void addCourse(Course course) {
         courses.add(course);
     }
 
-    // Get the user's progress in a specific course
     public double getCourseProgress(UUID courseId) {
         return progress.getOrDefault(courseId, 0.0);
     }
 
-    // Update the user's progress for a specific course
     public void updateCourseProgress(UUID courseId, double newProgress) {
         progress.put(courseId, newProgress);
     }
@@ -101,52 +102,42 @@ public class User {
         }
     }
 
-    // Get the current course the user is working on
     public UUID getCurrentCourse() {
         return currentCourseID;
     }
 
-    // Set the current course the user is working on
     public void setCurrentCourse(UUID courseId) {
         this.currentCourseID = courseId;
     }
 
-    // Get the list of languages the user is learning
     public ArrayList<Language> getLanguages() {
         return languages;
     }
 
-    // Add a new language to the user's list of languages
     public void addLanguage(Language language) {
         languages.add(language);
     }
 
-    // Get the current language ID the user is learning
     public UUID getCurrentLanguage() {
         return currentLanguageID;
     }
 
-    // Set the current language ID the user is learning
     public void setCurrentLanguage(UUID languageId) {
         this.currentLanguageID = languageId;
     }
 
-    // Get the current language name the user is learning
     public String getCurrentLanguageName() {
         return currentLanguageName;
     }
 
-    // Set the current language name the user is learning
     public void setCurrentLanguageName(String languageName) {
         this.currentLanguageName = languageName;
     }
 
-    // Get the user's progress in all courses
     public HashMap<UUID, Double> getProgress() {
         return progress;
     }
 
-    // Set the user's progress
     public void setProgress(HashMap<UUID, Double> progress) {
         this.progress = progress;
     }

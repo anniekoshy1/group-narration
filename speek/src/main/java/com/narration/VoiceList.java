@@ -1,4 +1,5 @@
 package com.narration;
+
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -10,13 +11,15 @@ import software.amazon.awssdk.services.polly.model.PollyException;
 import software.amazon.awssdk.services.polly.model.Voice;
 
 public class VoiceList {
-    private VoiceList(){};
+    private VoiceList() {}
 
-    public static void showVoices(Region region){
-        PollyClient polly = PollyClient.builder().region(region).build();
-
-        displayVoices(polly);
-        polly.close();
+    public static void showVoices(Region region) {
+        try (PollyClient polly = PollyClient.builder().region(region).build()) {
+            displayVoices(polly);
+        } catch (PollyException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
     }
 
     private static void displayVoices(PollyClient polly) {
@@ -30,11 +33,9 @@ public class VoiceList {
 
             Iterator<Voice> voices = voiceStream.iterator();
 
-            while(voices.hasNext()){
+            while (voices.hasNext()) {
                 Voice voice = voices.next();
-                
                 System.out.println(voice.name() + ": " + voice.genderAsString() + " " + voice.languageName());
-                
             }
 
         } catch (PollyException e) {
@@ -43,8 +44,7 @@ public class VoiceList {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         VoiceList.showVoices(Region.EU_WEST_3);
     }
-    
 }

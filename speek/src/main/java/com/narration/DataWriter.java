@@ -100,42 +100,25 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
 
     //done
     @SuppressWarnings("unchecked")
-	public boolean saveCourses(ArrayList<Course> courses) {
-        JSONArray courseArray = new JSONArray();
+    public static void saveCourses(ArrayList<Course> courses) {
+        JSONArray courseList = new JSONArray();
 
         for (Course course : courses) {
-            JSONObject courseJson = new JSONObject();
-            courseJson.put("courseID", course.getId().toString());
-            courseJson.put("name", course.getName());
-            courseJson.put("description", course.getDescription());
-            courseJson.put("userAccess", course.getUserAccess());
-            courseJson.put("courseProgress", course.getCourseProgress());
-            courseJson.put("completed", course.isCompletedCourse());
+            JSONObject courseJSON = new JSONObject();
+            courseJSON.put("courseID", course.getId());
+            courseJSON.put("name", course.getName());
+            courseJSON.put("description", course.getDescription());
+            // Add additional fields as needed
 
-            JSONArray lessonsJson = new JSONArray();
-            for (Lesson lesson : course.getAllLessons()) {
-                JSONObject lessonJson = new JSONObject();
-                lessonJson.put("lessonID", lesson.getId().toString());
-                lessonJson.put("lessonProgress", lesson.getLessonProgress());
-                lessonJson.put("description", lesson.getDescription());
-                lessonsJson.add(lessonJson);
-            }
-            courseJson.put("lessons", lessonsJson);
-
-            JSONArray assessmentsJson = new JSONArray();
-            for (Assessment assessment : course.getAllAssessments()) {
-                JSONObject assessmentJson = new JSONObject();
-                assessmentJson.put("assessmentID", assessment.getId().toString());
-                assessmentJson.put("type", assessment.getType().toString());
-                assessmentJson.put("attempts", assessment.getAttempts());
-                assessmentsJson.add(assessmentJson);
-            }
-            courseJson.put("assessments", assessmentsJson);
-
-            courseArray.add(courseJson);
+            courseList.add(courseJSON);
         }
 
-        return writeToFile(COURSES_FILE, courseArray);
+        try (FileWriter file = new FileWriter(DataConstants.COURSE_FILE)) {
+            file.write(courseList.toJSONString());
+            file.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //done

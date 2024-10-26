@@ -14,74 +14,71 @@ import org.json.simple.parser.ParseException;
 
 public class DataLoader extends DataConstants{
 
-    private static final String USERS_FILE = "speek/docs/JSON/User.json";
-    private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
-    private static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
-    private static final String WORDS_FILE = "speek/docs/JSON/words.json";
-    private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
+    public static final String USERS_FILE = "speek/docs/JSON/User.json";
+    public static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
+    public static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
+    public static final String WORDS_FILE = "speek/docs/JSON/words.json";
+    public static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
 
-    public ArrayList<User> getUsers() {
+    public static ArrayList<User> getUsers() {
         ArrayList<User> users = new ArrayList<>();
-        JSONParser jsonParser = new JSONParser();
 
-        try (FileReader fileReader = new FileReader(USERS_FILE)) {
-            JSONArray userArray = (JSONArray) jsonParser.parse(fileReader);
+        try (FileReader reader = new FileReader(DataConstants.USERS_FILE)) {
+            JSONParser jsonParser = new JSONParser();
+            JSONArray userList = (JSONArray) jsonParser.parse(reader);
 
-            for (Object userObject : userArray) {
-                JSONObject userJson = (JSONObject) userObject;
+            for (Object obj : userList) {
+                JSONObject userJSON = (JSONObject) obj;
 
-                UUID id = UUID.fromString((String) userJson.get("id"));
-                String username = (String) userJson.get("username");
-                String email = (String) userJson.get("email");
-                String password = (String) userJson.get("password");
+                // Extract user data
+                UUID id = UUID.fromString((String) userJSON.get("userId"));
+                String username = (String) userJSON.get("username");
+                String email = (String) userJSON.get("email");
+                String password = (String) userJSON.get("password");
 
-                JSONArray coursesJson = (JSONArray) userJson.get("courses");
+                // Parse courses
+                JSONArray coursesJSON = (JSONArray) userJSON.get("courses");
                 ArrayList<Course> courses = new ArrayList<>();
-                for (Object courseObj : coursesJson) {
-                    JSONObject courseJson = (JSONObject) courseObj;
-                    UUID courseID = UUID.fromString((String) courseJson.get("courseID"));
-                    double courseProgress = (Double) courseJson.get("courseProgress");
-                    courses.add(new Course(courseID, courseProgress));
+                for (Object courseObj : coursesJSON) {
+                    JSONObject courseJSON = (JSONObject) courseObj;
+                    UUID courseId = UUID.fromString((String) courseJSON.get("courseID"));
+                    // Instantiate Course or use a reference if available
+                    courses.add(new Course(courseId, username, email));  // Adjust as needed
                 }
 
-                JSONObject progressJson = (JSONObject) userJson.get("progress");
+                // Parse progress
+                JSONObject progressJSON = (JSONObject) userJSON.get("progress");
                 HashMap<UUID, Double> progress = new HashMap<>();
-                for (Object key : progressJson.keySet()) {
+                for (Object key : progressJSON.keySet()) {
                     UUID courseId = UUID.fromString((String) key);
-                    double courseProgress = (Double) progressJson.get(key);
+                    double courseProgress = ((Number) progressJSON.get(key)).doubleValue();
                     progress.put(courseId, courseProgress);
                 }
 
-                JSONArray completedCoursesJson = (JSONArray) userJson.get("completedCourses");
+                // Parse completed courses
+                JSONArray completedCoursesJSON = (JSONArray) userJSON.get("completedCourses");
                 ArrayList<UUID> completedCourses = new ArrayList<>();
-                for (Object completedCourseId : completedCoursesJson) {
-                    completedCourses.add(UUID.fromString((String) completedCourseId));
+                for (Object courseId : completedCoursesJSON) {
+                    completedCourses.add(UUID.fromString((String) courseId));
                 }
 
-                JSONObject currentCourseJson = (JSONObject) userJson.get("currentCourse");
-                UUID currentCourseID = UUID.fromString((String) currentCourseJson.get("courseID"));
-
-                JSONArray languagesJson = (JSONArray) userJson.get("languages");
+                // Parse languages and current language details
+                JSONArray languagesJSON = (JSONArray) userJSON.get("languages");
                 ArrayList<Language> languages = new ArrayList<>();
-                for (Object languageObj : languagesJson) {
-                    JSONObject languageJson = (JSONObject) languageObj;
-                    UUID languageID = UUID.fromString((String) languageJson.get("languageID"));
-                    String languageName = (String) languageJson.get("name");
-                    languages.add(new Language(languageID, languageName));
+                for (Object lang : languagesJSON) {
+                    languages.add(Language.valueOf((String) lang));  // Assuming enum Language
                 }
+                UUID currentCourseID = UUID.fromString((String) userJSON.get("currentCourseID"));
+                UUID currentLanguageID = UUID.fromString((String) userJSON.get("currentLanguageID"));
+                String currentLanguageName = (String) userJSON.get("currentLanguageName");
 
-                JSONObject currentLanguageJson = (JSONObject) userJson.get("currentLanguage");
-                UUID currentLanguageID = UUID.fromString((String) currentLanguageJson.get("languageID"));
-                String currentLanguageName = (String) currentLanguageJson.get("name");
-
+                // Instantiate User and add to list
                 User user = new User(id, username, email, password, courses, progress, completedCourses, currentCourseID, languages, currentLanguageID, currentLanguageName);
                 users.add(user);
             }
-
-            System.out.println("Users loaded successfully.");
-        } catch (IOException | ParseException e) {
-            System.err.println("Error loading users: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return users;
@@ -98,49 +95,31 @@ public class DataLoader extends DataConstants{
         return false;
     }
 
-    public ArrayList<Course> getCourses() {
+    public static ArrayList<Course> loadCourses() {
         ArrayList<Course> courses = new ArrayList<>();
-        JSONParser jsonParser = new JSONParser();
 
-        try (FileReader fileReader = new FileReader(COURSES_FILE)) {
-            JSONArray courseArray = (JSONArray) jsonParser.parse(fileReader);
+        try (FileReader reader = new FileReader(COURSES_FILE)) {
+            JSONParser jsonParser = new JSONParser();
+            JSONArray courseList = (JSONArray) jsonParser.parse(reader);
 
-            for (Object courseObject : courseArray) {
-                JSONObject courseJson = (JSONObject) courseObject;
+            for (Object obj : courseList) {
+                JSONObject courseJSON = (JSONObject) obj;
+                UUID id = UUID.fromString((String) courseJSON.get("courseID"));
+                String name = (String) courseJSON.get("name");
+                String description = (String) courseJSON.get("description");
+                boolean userAccess = (Boolean) courseJSON.get("userAccess");
+                boolean completed = (Boolean) courseJSON.get("completed");
+                double courseProgress = ((Number) courseJSON.get("courseProgress")).doubleValue();
 
-                UUID courseID = UUID.fromString((String) courseJson.get("courseID"));
-                String name = (String) courseJson.get("name");
-                String description = (String) courseJson.get("description");
-                boolean userAccess = (boolean) courseJson.get("userAccess");
-                double courseProgress = ((Number) courseJson.get("courseProgress")).doubleValue();
-                boolean completed = (boolean) courseJson.get("completed");
-
-                JSONArray lessonsJson = (JSONArray) courseJson.get("lessons");
-                ArrayList<Lesson> lessons = new ArrayList<>();
-                for (Object lessonObject : lessonsJson) {
-                    JSONObject lessonJson = (JSONObject) lessonObject;
-                    UUID lessonID = UUID.fromString((String) lessonJson.get("lessonID"));
-                    double lessonProgress = ((Number) lessonJson.get("lessonProgress")).doubleValue();
-                    String lessonDescription = (String) lessonJson.get("description");
-                    lessons.add(new Lesson(lessonID, lessonProgress, lessonDescription));
-                }
-
-                JSONArray assessmentsJson = (JSONArray) courseJson.get("assessments");
                 ArrayList<Assessment> assessments = new ArrayList<>();
-                for (Object assessmentObject : assessmentsJson) {
-                    JSONObject assessmentJson = (JSONObject) assessmentObject;
-                    UUID assessmentID = UUID.fromString((String) assessmentJson.get("assessmentID"));
-                    String type = (String) assessmentJson.get("type");
-                    int attempts = ((Number) assessmentJson.get("attempts")).intValue();
-                    assessments.add(new Assessment(assessmentID, Assessment.AssessmentType.valueOf(type), null)); 
-                }
-
-                courses.add(new Course(courseID, name, description, userAccess, courseProgress, completed, lessons, assessments, new ArrayList<>()));
+                ArrayList<String> completedAssessments = new ArrayList<>();
+                ArrayList<Lesson> lessons = new ArrayList<>();
+                
+                Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments);
+                courses.add(course);
             }
-
-            System.out.println("Courses loaded successfully.");
-        } catch (IOException | ParseException e) {
-            System.err.println("Error loading courses: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return courses;
@@ -267,7 +246,7 @@ public class DataLoader extends DataConstants{
         String username = (String) userJSON.get(USER_USERNAME);
         String email = (String) userJSON.get(USER_EMAIL);
         double progress = (double) userJSON.get(USER_PROGRESS);
-        return new User(id, email, username, progress);
+        return new User(id, email, username, pro);
     }
 
     public void saveCourses(ArrayList<Course> courses) {

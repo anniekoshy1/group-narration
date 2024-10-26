@@ -1,15 +1,16 @@
 package com.narration;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class Word {
 
-    private UUID id; 
+    private final UUID id; 
     private String translation;
     private String wordText;  // The word
     private String definition;  // The definition or meaning of the word
     private String partOfSpeech;  // The part of speech of the word 
-    private ArrayList<String> translations;
+    private final ArrayList<String> translations = new ArrayList<>();  // Initialize and set as final
     private String language;  // The language of the word
 
     public Word(String wordText, String definition, String partOfSpeech, String language) {
@@ -66,12 +67,10 @@ public class Word {
         translations.remove(translation);
     }
 
-    // Get the language of the word
     public String getLanguage() {
         return language;
     }
 
-    // Set the language of the word
     public void setLanguage(String language) {
         this.language = language;
     }

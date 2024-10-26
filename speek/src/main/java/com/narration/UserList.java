@@ -1,35 +1,49 @@
 package com.narration;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class UserList {
 
-    private static UserList instance; 
-    private ArrayList<User> users;  // List of users in the system
+    private final ArrayList<User> users;  // List of users in the system
+    public static UserList userList;
 
     private UserList() {
         this.users = new ArrayList<>();
     }
 
     public static UserList getInstance() {
-        if (instance == null) {
-            instance = new UserList();
+        if (userList == null) {
+            userList = new UserList();
         }
-        return instance;
+        return userList;
     }
 
-    // Add a user to the list
+    /**
+     * Adds a user to the list.
+     *
+     * @param user The user to add.
+     */
     public void addUser(User user) {
         users.add(user);
     }
 
-    // Remove a user from the list by their UUID
+    /**
+     * Removes a user from the list by their UUID.
+     *
+     * @param userId The UUID of the user to remove.
+     */
     public void removeUser(UUID userId) {
         users.removeIf(user -> user.getId().equals(userId));
     }
 
-    // Find a user by their username 
-    public User findUserByUsername(String username) {
+    /**
+     * Finds a user by their username.
+     *
+     * @param username The username to search for.
+     * @return The user if found, otherwise null.
+     */
+    public User getUser(String username) {
         for (User user : users) {
             if (user.getUsername().equalsIgnoreCase(username)) {
                 return user;
@@ -38,7 +52,12 @@ public class UserList {
         return null;
     }
 
-    // Find a user by their UUID
+    /**
+     * Finds a user by their UUID.
+     *
+     * @param userId The UUID to search for.
+     * @return The user if found, otherwise null.
+     */
     public User findUserById(UUID userId) {
         for (User user : users) {
             if (user.getId().equals(userId)) {
@@ -48,12 +67,20 @@ public class UserList {
         return null;
     }
 
-    // Get the list of all users
+    /**
+     * Retrieves the list of all users.
+     *
+     * @return An ArrayList of all users.
+     */
     public ArrayList<User> getUsers() {
         return users;
     }
 
-    // Get the total number of users in the system
+    /**
+     * Gets the total number of users in the system.
+     *
+     * @return The total number of users.
+     */
     public int getTotalUsers() {
         return users.size();
     }

@@ -15,19 +15,6 @@ public class Course {
     private boolean completed;  // Indicates whether the course is completed
     private ArrayList<String> completedAssessments;  // List of completed assessments
 
-    // Default constructor for creating a course for a user
-    public Course(User user) {
-        this.name = "Default Course Name";
-        this.description = "Default Description";
-        this.userAccess = false;
-        this.courseProgress = 0.0;
-        this.lessons = new ArrayList<>();
-        this.assessments = new ArrayList<>();
-        this.keyWords = new ArrayList<>();
-        this.completedAssessments = new ArrayList<>();  // Initialize completedAssessments
-        this.id = UUID.randomUUID();
-        this.completed = false;
-    }
 
     // Full constructor to set up a course with all details
     public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed, ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments) {
@@ -47,6 +34,7 @@ public class Course {
         this.id = id;
         this.courseProgress = courseProgress;
     }
+
     
     public Course(String string) {
         //TODO Auto-generated constructor stub

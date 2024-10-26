@@ -6,16 +6,16 @@ import java.util.UUID;
 
 public class LanguageLearningFacade {
 
-    private UserList userList;  // List of all users
-    private CourseList courseList;  // List of all available courses
-    private LanguageList languageList;  // List of all languages in the system
+    private final UserList userList;  // List of all users
+    private final CourseList courseList;  // List of all available courses
+    private final LanguageList languageList;  // List of all languages in the system
     private User user;  // The currently logged-in user
     private Language currentLanguage;  // The language the user is currently learning
     DataLoader dataLoader = new DataLoader();
     DataWriter dataWriter = new DataWriter();
     private List<User> users;
-    private ArrayList<Language> languages;
-    private WordsList wordsList;
+    private final ArrayList<Language> languages;  // Marked as final
+    private final WordsList wordsList;  // Marked as final
 
     public LanguageLearningFacade() {
         languages = new ArrayList<>();
@@ -26,31 +26,30 @@ public class LanguageLearningFacade {
         this.dataWriter = new DataWriter();
         this.wordsList = dataLoader.loadWords();
         this.users = new DataLoader().getUsers();  // Assuming this returns an ArrayList<User>
+       
+        Course startingOutCourse = new Course ("Starting Out");
+        courseList.addCourse(startingOutCourse);
+       
         if (this.users == null) {
             this.users = new ArrayList<>();  // If no users exist, initialize an empty list
         }
     }
 
-    // User login using username and password
     public boolean login(String username, String password) {
-        User foundUser = userList.findUserByUsername(username);
+        User foundUser = userList.getUser(username);
         if (foundUser != null && foundUser.getPassword().equals(password)) {
             this.user = foundUser;
-
             dataLoader.loadUserProgress(this.user);    
-
             return true;
         }
         return false;
     }
 
-    // User logout to reset the current session
     public void logout() {
         this.user = null;
         this.currentLanguage = null;
     }
 
-    // Start a new course for the user
     public void startCourse(Course course) {
         if (user != null) {
             user.getCourses().add(course);
@@ -58,7 +57,6 @@ public class LanguageLearningFacade {
         }
     }
 
-    // Track the progress of the current course
     public double trackCourseProgress(Course course) {
         if (user != null && course.getUserAccess()) {
             return course.getCourseProgress();
@@ -66,19 +64,16 @@ public class LanguageLearningFacade {
         return 0.0;
     }
 
-    // Start an assessment for the current course
     public void startAssessment(Assessment assessment) {
         if (user != null) {
             assessment.retakeAssessment();  
         }
     }
 
-    // Get a list of all languages supported in the system
     public List<Language> getAllLanguages() {
         return languages;
     }
 
-    // Select a language for the user to learn
     public void selectLanguage(String languageName) {
         Language language = languageList.findLanguageByName(languageName);
         if (language != null) {
@@ -86,7 +81,6 @@ public class LanguageLearningFacade {
         }
     }
 
-    // Track the user's progress in the current language
     public double trackLanguageProgress() {
         if (currentLanguage != null) {
             return currentLanguage.getLanguageProgress();
@@ -94,7 +88,6 @@ public class LanguageLearningFacade {
         return 0.0;
     }
 
-    // Get all courses available in the system
     public ArrayList<Course> getAllCourses() {
         return courseList.getCourses();
     }
@@ -103,7 +96,6 @@ public class LanguageLearningFacade {
         return this.wordsList;
     }
 
-    // Track overall progress in all courses for a user
     public double trackOverallProgress() {
         if (user != null) {
             double totalProgress = 0.0;
@@ -115,7 +107,6 @@ public class LanguageLearningFacade {
         return 0.0;
     }
 
-    // Find all languages that match a specific keyword
     public ArrayList<Language> getAllLanguagesByKeyWord(String keyWord) {
         ArrayList<Language> matchingLanguages = new ArrayList<>();
         for (Language language : languageList.getLanguages()) {
@@ -126,12 +117,10 @@ public class LanguageLearningFacade {
         return matchingLanguages;
     }
 
-    // Get the current user who is logged in
     public User getCurrentUser() {
         return user;
     }
 
-    // Save user progress and logout
     public void saveAndLogout() {
         if (user != null) {
             new DataWriter().saveUserProgress(user);
@@ -139,8 +128,6 @@ public class LanguageLearningFacade {
         }
     }
 
-
-    // Add a new user to the system
     public void registerUser(String username, String email, String password) {
         UUID userId = UUID.randomUUID();
         User newUser = new User(userId, username, email, password, new ArrayList<>(), new HashMap<>(), new ArrayList<>(), null, new ArrayList<>(), null, "English");
@@ -156,8 +143,6 @@ public class LanguageLearningFacade {
     }
 
     public void loadAssessmentQuestions(UUID assessmentId) {
-        String assessmentIDSTR = assessmentId.toString();
-
-        Assessment assessment = dataLoader.loadAssessmentById(assessmentIDSTR);
+        dataLoader.loadAssessmentById(assessmentId.toString());
     }
 }

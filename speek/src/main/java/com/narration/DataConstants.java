@@ -4,6 +4,12 @@ import java.util.List;
 
 public class DataConstants {
 
+    public static final String USERS_FILE = "speek/docs/JSON/User.json";
+    public static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
+    public static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
+    public static final String WORDS_FILE = "speek/docs/JSON/words.json";
+    public static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
+    
     // Constants for user information
     public static final int MIN_PASSWORD_LENGTH = 5;  // Minimum length for passwords
     public static final int MAX_PASSWORD_LENGTH = 8;  // Maximum length for passwords
