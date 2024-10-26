@@ -199,7 +199,7 @@ private void register() {
             if (flashcardsCompleted) {
                 System.out.println("2. Start Assessment");
             } else {
-                System.out.println("2. Assssment (Learning activities flashcards first)")
+                System.out.println("2. Assssment (Learning activities flashcards first)");
             }
 
             System.out.println("3. Exit to Main Menu");
@@ -271,7 +271,7 @@ private void register() {
 
         if (!flashcardsCompleted) {
             System.out.println("You must complete flashcard practice before starting the assessment.");
-            return; // Exit if flashcards are not completed
+            return; 
         }
 
         if (currentCourse.completedCourse()) {

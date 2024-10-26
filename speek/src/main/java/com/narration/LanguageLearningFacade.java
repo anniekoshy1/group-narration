@@ -24,8 +24,8 @@ public class LanguageLearningFacade {
         languages.add(new Language("Spanish"));
         languageList = LanguageList.getInstance();
         this.dataWriter = new DataWriter();
-        this.wordsList = dataLoader.loadWords();
-        this.users = new DataLoader().getUsers();  // Assuming this returns an ArrayList<User>
+        this.wordsList = DataLoader.loadWords();
+        this.users =  new DataLoader().loadUsers();  // Assuming this returns an ArrayList<User>
         if (this.users == null) {
             this.users = new ArrayList<>();  // If no users exist, initialize an empty list
         }
@@ -37,7 +37,7 @@ public class LanguageLearningFacade {
         if (foundUser != null && foundUser.getPassword().equals(password)) {
             this.user = foundUser;
 
-            dataLoader.loadUserProgress(this.user);    
+            DataLoader.loadUserProgress(this.user);    
 
             return true;
         }
@@ -134,7 +134,7 @@ public class LanguageLearningFacade {
     // Save user progress and logout
     public void saveAndLogout() {
         if (user != null) {
-            new DataWriter().saveUserProgress(user);
+            DataWriter.saveUsers();
             logout();
         }
     }
@@ -145,7 +145,7 @@ public class LanguageLearningFacade {
         UUID userId = UUID.randomUUID();
         User newUser = new User(userId, username, email, password, new ArrayList<>(), new HashMap<>(), new ArrayList<>(), null, new ArrayList<>(), null, "English");
         userList.addUser(newUser);
-        dataWriter.saveUsers(new ArrayList<>(users));
+        DataWriter.saveUsers();
     }
 
     public boolean hasCourseAccess(Course course) {
