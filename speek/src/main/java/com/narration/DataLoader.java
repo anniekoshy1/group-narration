@@ -111,15 +111,13 @@ public class DataLoader extends DataConstants{
                 boolean userAccess = (Boolean) courseJSON.get("userAccess");
                 boolean completed = (Boolean) courseJSON.get("completed");
                 double courseProgress = ((Number) courseJSON.get("courseProgress")).doubleValue();
-
                 ArrayList<Assessment> assessments = new ArrayList<>();
                 ArrayList<String> completedAssessments = new ArrayList<>();
                 ArrayList<Lesson> lessons = new ArrayList<>();
+                Lesson lesson = new Lesson();
+                FlashcardQuestion flashcard = new FlashcardQuestion();
                 
-                if(userAccess == null){
-                    userAccess = false;
-                }
-                Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments);
+                Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments, lesson, flashcard);
                 courses.add(course);
                 System.out.println("Loaded course: " + course.getName());
             }
