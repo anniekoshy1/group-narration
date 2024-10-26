@@ -6,8 +6,6 @@ public class ProjectUI {
     private LanguageLearningFacade facade;
     private Scanner scanner;
     private DataConstants dataConstants;
-    private boolean flashcardsCompleted = false; // Track flashcard completion
-
 
     public ProjectUI() {
         facade = new LanguageLearningFacade();
@@ -166,113 +164,29 @@ private void register() {
             return;
         }
 
-        System.out.println("Available courses: ");
+        System.out.println("Available courses:");
         for (Course course : facade.getAllCourses()) {
             System.out.println("- " + course.getName());
         }
-
         System.out.print("Select a course to start: ");
-        String courseName = scanner.nextLine(); 
+        String courseName = scanner.nextLine();
 
         Course selectedCourse = facade.getAllCourses().stream()
-                .filter(course -> course.getName().equalsIgnoreCase(courseName) || 
-                        "Starting Out".equalsIgnoreCase(courseName))
-                .findFirst()
-                .orElse(null);
-                
-                if (selectedCourse != null) {
-                    facade.startCourse(selectedCourse); 
-                    System.out.println("Course started: " + selectedCourse.getName());
-                    courseActivitiesMenu(); // Go directly to activities menu
-                } else {
-                    System.out.println("Course not found.");
-                }
-    }
+                .filter(course -> course.getName().equalsIgnoreCase(courseName))
+                .findFirst().orElse(null);
 
-    private void courseActivitiesMenu() {
-        boolean exit = false;
-
-        while (!exit) {
-            System.out.println("\nCourse Activities:");
-            System.out.println("1. Flashcard Practice");
-
-            if (flashcardsCompleted) {
-                System.out.println("2. Start Assessment");
-            } else {
-                System.out.println("2. Assssment (Learning activities flashcards first)");
-            }
-
-            System.out.println("3. Exit to Main Menu");
-            System.out.print("Please enter your choice: ");
-
-            int choice = getUserChoice();
-
-            switch (choice) {
-                case 1:
-                    startFlashcards();
-                    break;
-                case 2:
-                    if (flashcardsCompleted) {
-                        startAssessment(); // Only start assessment if flashcards are completed
-                    } else {
-                        System.out.println("You must complete flashcard practice before starting the assessment.");
-                    }
-                break;
-                case 3:
-                    exit = true;
-                    System.out.println("Exiting course activities");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
+        if (selectedCourse != null) {
+            facade.startCourse(selectedCourse);
+            System.out.println("Course started: " + selectedCourse.getName());
+        } else {
+            System.out.println("Course not found.");
         }
     }
-
-    private void startFlashcards() {
-        System.out.println("Starting Flashcard Practice...");
-
-        WordsList wordsList = facade.getWordsList();
-        if (wordsList == null || wordsList.getAllWords().isEmpty()) {
-            System.out.println("No words available for practice.");
-            return;
-        }
-
-        boolean continuePractice = true;
-        while (continuePractice) {
-            Word randomWord = wordsList.getRandomWord();
-
-            Narriator.playSound("Translate the following word to Spanish: " +randomWord.getTranslation());
-            System.out.println("Translate the following word to Spanish: " + randomWord.getTranslation());
-
-            System.out.print("");
-            String userAnswer = scanner.nextLine().trim();
-
-            if (userAnswer.equalsIgnoreCase(randomWord.getWordText())) {
-                System.out.println("Correct!");
-                Narriator.playSound("Correct, the translation is: " + randomWord.getWordText());
-            } else {
-                System.out.println("Incorrect, the correct translation is: " + randomWord.getWordText());
-                Narriator.playSound("Incorrect, the correct translation is: " + randomWord.getWordText());
-            }
-
-            System.out.print("Would you like to practice another word? (yes/no): ");
-            String continueResponse = scanner.nextLine().trim();
-            continuePractice = continueResponse.equalsIgnoreCase("yes");
-
-            }
-            flashcardsCompleted = true;
-            System.out.println("Exiting Flashcard Practice.");
-        }
 
         private void startAssessment() {
         Course currentCourse = facade.getCurrentUser().getCourses().get(0);
 
         currentCourse.calculateProgress();
-
-        if (!flashcardsCompleted) {
-            System.out.println("You must complete flashcard practice before starting the assessment.");
-            return; 
-        }
 
         if (currentCourse.completedCourse()) {
             System.out.println("Course is completed. Do you want to start the assessment? (yes/no)");
@@ -291,7 +205,7 @@ private void register() {
         }
     }
 
-     private void loadQuestionsFromJson(Assessment assessment) {
+    private void loadQuestionsFromJson(Assessment assessment) {
         facade.loadAssessmentQuestions(assessment.getId());
         
         System.out.println("Questions loaded from JSON:");
