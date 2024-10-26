@@ -10,9 +10,18 @@
             {
                 "lessonID": "7479de25-c6c0-4701-abaf-a25f75f98f3f",
                 "lessonProgress": 0,
-                "description": "Greetings and opening phrases",
-                "content": "Introduction to basic greetings and commonly used opening phrases in Spanish."
-            }
+                "description": "Greetings and opening phrases, Introducing yourself and Others",
+                "content": 
+                        {"term": "Hola", "translation": "Hello"},
+                        {"term": "Buenos días", "translation": "Good morning"},
+                        {"term": "Buenas tardes", "translation": "Good afternoon"},
+                        {"term": "Buenas noches", "translation": "Good evening/night"},
+                        {"term": "Adiós", "translation": "Goodbye"}
+                        {"term": "¿Cómo te llamas?", "translation": "What’s your name?"}
+                        {"term": "¿Me llamo", "translation": "My name is"}
+                        
+                }
+
         ],
         "assessments": [
             {

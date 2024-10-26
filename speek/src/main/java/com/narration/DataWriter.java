@@ -20,71 +20,63 @@ public class DataWriter extends DataConstants {
 
     //done3
     @SuppressWarnings("unchecked")
-    public boolean saveUsers(ArrayList<User> newUsers) {
-    JSONArray userArray = new JSONArray();
 
-    // Read existing users from the file
-    try (FileReader reader = new FileReader(USERS_FILE)) {
-        JSONArray existingUsers = (JSONArray) new org.json.simple.parser.JSONParser().parse(reader);
-        userArray.addAll(existingUsers);  // Append existing users
-    } catch (Exception e) {
-        e.printStackTrace();  // Handle exceptions for file reading/parsing
+    public static void saveUsers(ArrayList<User> users) {
+        JSONArray userList = new JSONArray();
+
+        for (User user : users) {
+            JSONObject userJSON = new JSONObject();
+            userJSON.put("userId", user.getId().toString());
+            userJSON.put("username", user.getUsername());
+            userJSON.put("email", user.getEmail());
+            userJSON.put("password", user.getPassword());
+
+            // Convert courses to JSON
+            JSONArray coursesJSON = new JSONArray();
+            for (Course course : user.getCourses()) {
+                JSONObject courseJSON = new JSONObject();
+                courseJSON.put("courseID", course.getId().toString());
+                // Add other course fields as needed
+                coursesJSON.add(courseJSON);
+            }
+            userJSON.put("courses", coursesJSON);
+
+            // Convert progress to JSON
+            JSONObject progressJSON = new JSONObject();
+            for (UUID courseId : user.getProgress().keySet()) {
+                progressJSON.put(courseId.toString(), user.getCourseProgress(courseId));
+            }
+            userJSON.put("progress", progressJSON);
+
+            // Convert completed courses to JSON
+            JSONArray completedCoursesJSON = new JSONArray();
+            for (UUID courseId : user.getCompletedCourses()) {
+                completedCoursesJSON.add(courseId.toString());
+            }
+            userJSON.put("completedCourses", completedCoursesJSON);
+
+            // Convert languages to JSON
+            JSONArray languagesJSON = new JSONArray();
+            for (Language lang : user.getLanguages()) {
+                languagesJSON.add(lang.name());  // Assuming Language is an enum
+            }
+            userJSON.put("languages", languagesJSON);
+
+            // Add current course and language info
+            userJSON.put("currentCourseID", user.getCurrentCourse().toString());
+            userJSON.put("currentLanguageID", user.getCurrentLanguage().toString());
+            userJSON.put("currentLanguageName", user.getCurrentLanguageName());
+
+            userList.add(userJSON);
+        }
+
+        try (FileWriter file = new FileWriter(DataConstants.USERS_FILE)) {
+            file.write(userList.toJSONString());
+            file.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-
-    // Add new users to the userArray
-    for (User user : newUsers) {
-        JSONObject userJson = new JSONObject();
-        userJson.put("id", user.getId().toString());
-        userJson.put("username", user.getUsername());
-        userJson.put("email", user.getEmail());
-        userJson.put("password", user.getPassword());
-
-        JSONArray coursesJson = new JSONArray();
-        for (Course course : user.getCourses()) {
-            JSONObject courseJson = new JSONObject();
-            courseJson.put("courseID", course.getId().toString());
-            courseJson.put("courseProgress", course.getCourseProgress());
-            coursesJson.add(courseJson);
-        }
-        userJson.put("courses", coursesJson);
-
-        JSONObject progressJson = new JSONObject();
-        HashMap<UUID, Double> progress = user.getProgress();  // Assuming you have this method
-        for (UUID courseId : progress.keySet()) {
-            progressJson.put(courseId.toString(), progress.get(courseId));
-        }
-        userJson.put("progress", progressJson);
-
-        JSONArray completedCoursesJson = new JSONArray();
-        for (UUID completedCourseId : user.getCompletedCourses()) {
-            completedCoursesJson.add(completedCourseId.toString());
-        }
-        userJson.put("completedCourses", completedCoursesJson);
-
-        JSONObject currentCourseJson = new JSONObject();
-        currentCourseJson.put("courseID", user.getCurrentCourse().toString());
-        userJson.put("currentCourse", currentCourseJson);
-
-        JSONArray languagesJson = new JSONArray();
-        for (Language language : user.getLanguages()) {
-            JSONObject languageJson = new JSONObject();
-            languageJson.put("languageID", language.getId().toString());
-            languageJson.put("name", language.getName());
-            languagesJson.add(languageJson);
-        }
-        userJson.put("languages", languagesJson);
-
-        JSONObject currentLanguageJson = new JSONObject();
-        currentLanguageJson.put("languageID", user.getCurrentLanguage().toString());
-        currentLanguageJson.put("name", user.getCurrentLanguageName());
-        userJson.put("currentLanguage", currentLanguageJson);
-
-        userArray.add(userJson);
-    }
-
-    // Write the updated userArray back to the file
-    return writeToFile(USERS_FILE, userArray);
-}
 
 // Helper method to write to the file
 private boolean writeToFile(String filePath, JSONArray jsonArray) {

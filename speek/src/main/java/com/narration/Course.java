@@ -35,15 +35,6 @@ public class Course {
         this.courseProgress = courseProgress;
     }
 
-    
-    public Course(String string) {
-        //TODO Auto-generated constructor stub
-    }
-
-    public Course(String id2, String name2, String description2, int progress) {
-		//TODO Auto-generated constructor stub
-	}
-
 	//done
     public double getCourseProgress() {
         return this.courseProgress;

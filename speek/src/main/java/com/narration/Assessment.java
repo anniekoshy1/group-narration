@@ -34,7 +34,7 @@ public class Assessment {
         int correctAnswers = 0;
         for (Questions question : questions) {
             if (question.checkAnswers()) {
-                correctAnswers+=5;
+                correctAnswers++;
             }
         }
         this.userScore = (int) ((double) correctAnswers / questions.size() * 100);  // Calculate score as a percentage

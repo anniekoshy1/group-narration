@@ -43,8 +43,10 @@ public class DataLoader extends DataConstants{
                 for (Object courseObj : coursesJSON) {
                     JSONObject courseJSON = (JSONObject) courseObj;
                     UUID courseId = UUID.fromString((String) courseJSON.get("courseID"));
-                    // Instantiate Course or use a reference if available
-                    courses.add(new Course(courseId, username, email));  // Adjust as needed
+                    String courseName = (String) courseJSON.get("name");
+                    String courseDesc = (String) courseJSON.get("description"); 
+
+                    courses.add(new Course(courseId, courseName, courseDesc));  // Adjust as needed
                 }
 
                 // Parse progress
@@ -67,7 +69,7 @@ public class DataLoader extends DataConstants{
                 JSONArray languagesJSON = (JSONArray) userJSON.get("languages");
                 ArrayList<Language> languages = new ArrayList<>();
                 for (Object lang : languagesJSON) {
-                    languages.add(Language.valueOf((String) lang));  // Assuming enum Language
+                    languages.add(new Language((String) lang));  // Assuming enum Language
                 }
                 UUID currentCourseID = UUID.fromString((String) userJSON.get("currentCourseID"));
                 UUID currentLanguageID = UUID.fromString((String) userJSON.get("currentLanguageID"));
@@ -147,37 +149,6 @@ public class DataLoader extends DataConstants{
         }
 
         return languages;
-    }
-
-    public void loadUserProgress(User user) {
-        JSONParser jsonParser = new JSONParser();
-
-        try (FileReader fileReader = new FileReader(USERS_FILE)) {
-            JSONArray usersArray = (JSONArray) jsonParser.parse(fileReader);
-
-            for (Object userObject : usersArray) {
-                JSONObject userJson = (JSONObject) userObject;
-                String username = (String) userJson.get("username");
-
-                if (username.equals(user.getUsername())) {
-                    JSONObject progressJson = (JSONObject) userJson.get("progress");
-                    HashMap<UUID, Double> progressMap = new HashMap<>();
-
-                    for (Object key : progressJson.keySet()) {
-                        UUID courseId = UUID.fromString((String) key);
-                        double progress = ((Number) progressJson.get(key)).doubleValue();
-                        progressMap.put(courseId, progress);
-                    }
-
-                    user.setProgress(progressMap);
-                    System.out.println("User progress loaded successfully.");
-                    return;
-                }
-            }
-
-        } catch (IOException | ParseException e) {
-            System.err.println("Error loading user progress: " + e.getMessage());
-        }
     }
 
     public WordsList loadWords() {
