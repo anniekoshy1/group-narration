@@ -18,15 +18,38 @@ import software.amazon.awssdk.services.polly.model.SynthesizeSpeechResponse;
 import software.amazon.awssdk.services.polly.model.Voice;
 
 public class Narriator {
-    private Narriator(){}
+    
+    private Narriator() {}
 
+    /**
+     * Narrates any given text.
+     * @param text The text to be narrated.
+     */
     public static void playSound(String text) {
         try (PollyClient polly = PollyClient.builder().region(Region.EU_WEST_3).build()) {
             talkPolly(polly, text);
         } catch (PollyException e) {
-            System.err.println(e.getMessage());
+            System.err.println("PollyException: " + e.getMessage());
             System.exit(1);
         }
+    }
+
+    /**
+     * Narrates a feedback message after a question or assessment.
+     * @param score The score to narrate.
+     */
+    public static void playFeedback(double score) {
+        String feedback = score >= 80 ? "Great job! You've scored " + score + "%. Moving to the next module." :
+                "You scored " + score + "%. You'll need to review this module.";
+        playSound(feedback);
+    }
+
+    /**
+     * Reads a question aloud.
+     * @param question The question text.
+     */
+    public static void narrateQuestion(String question) {
+        playSound("Question: " + question);
     }
 
     private static void talkPolly(PollyClient polly, String text) {
@@ -49,12 +72,12 @@ public class Narriator {
             player.play();
 
         } catch (PollyException | JavaLayerException | IOException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Error in Polly narration: " + e.getMessage());
             System.exit(1);
         }
     }
 
-    public static InputStream synthesize(PollyClient polly, String text, Voice voice, OutputFormat format)
+    private static InputStream synthesize(PollyClient polly, String text, Voice voice, OutputFormat format)
             throws IOException {
         SynthesizeSpeechRequest synthReq = SynthesizeSpeechRequest.builder()
                 .text(text)

@@ -1,4 +1,5 @@
 package com.narration;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProjectUI {
@@ -193,7 +194,8 @@ private void register() {
         while (!exit) {
             System.out.println("\nCourse Activities:");
             System.out.println("1. Flashcard Practice");
-            System.out.println("2. Exit to Main Menu");
+            System.out.println("2. Storytelling");
+            System.out.println("3. Exit to Main Menu");
             System.out.print("Please enter your choice: ");
 
             int choice = getUserChoice();
@@ -203,6 +205,9 @@ private void register() {
                     startFlashcards();
                     break;
                 case 2:
+                    startStoryTelling();
+                    break;
+                case 3:
                     exit = true;
                     System.out.println("Exiting course activites");
                     break;
@@ -215,36 +220,63 @@ private void register() {
     private void startFlashcards() {
         System.out.println("Starting Flashcard Practice...");
 
-        WordsList wordsList = facade.getWordsList();
-        if (wordsList == null || wordsList.getAllWords().isEmpty()) {
-            System.out.println("No words available for practice.");
+        List<FlashcardQuestion> flashcards = loadFlashcardsFromJson("speek/docs/JSON/Words.json");
+
+        if (flashcards.isEmpty()) {
+            System.out.println("No flashcards available.");
             return;
         }
 
-        boolean continuePractice = true;
-        while (continuePractice) {
-            Word randomWord = wordsList.getRandomWord();
+        for (FlashcardQuestion flashcard : flashcards) {
+            if (flashcard.isCompleted()) continue;
 
-            Narriator.playSound("Translate the following word to Spanish: " +randomWord.getTranslation());
-            System.out.println("Translate the following word to Spanish: " + randomWord.getTranslation());
+            System.out.println("Translate the following: " + flashcard.getFrontInfo());
+            Narriator.playSound(flashcard.getFrontInfo());  
 
-            System.out.print("");
             String userAnswer = scanner.nextLine().trim();
+            flashcard.submitAnswer(userAnswer);
 
-            if (userAnswer.equalsIgnoreCase(randomWord.getWordText())) {
+            if (flashcard.checkAnswer()) {
                 System.out.println("Correct!");
-                Narriator.playSound("Correct, the translation is: " + randomWord.getWordText());
+                Narriator.playSound("Correct!");
             } else {
-                System.out.println("Incorrect, the correct translation is: " + randomWord.getWordText());
-                Narriator.playSound("Incorrect, the correct translation is: " + randomWord.getWordText());
+                System.out.println("Incorrect. The correct answer is: " + flashcard.showCorrectAnswer());
+                Narriator.playSound("The correct answer is: " + flashcard.showCorrectAnswer());  
             }
 
-            System.out.print("Would you like to practice another word? (yes/no): ");
+            System.out.print("Enter 'done' to mark this flashcard as completed or press Enter to continue: ");
             String continueResponse = scanner.nextLine().trim();
-            continuePractice = continueResponse.equalsIgnoreCase("yes");
+            flashcard.markAsCompleted(continueResponse);
 
+            if (flashcard.isCompleted()) {
+                System.out.println("Flashcard marked as complete.");
             }
-            System.out.println("Exiting Flashcard Practice.");
+            System.out.println("Flashcard Progress: " + flashcard.getFlashcardProgress() + "%");
+        }
+
+        System.out.println("Exiting Flashcard Practice.");
+    }
+
+        private void startStoryTelling() {
+            System.out.println("Starting Storytelling...");
+
+            String spanishStory = "Una mañana, la familia Méndez se estaba preparando para ir a la escuela. Mía, la hija, tenía que cepillarse los dientes, cepillarse el pelo, desayunar y vestirse. El hijo, Juan, tuvo que cepillarse los dientes, desayunar y hacer la mochila. Mamá preparó la comida y papá los acompañó a la escuela.";
+            String englishStory = "One morning, the Mendez family was getting ready for school. Mia, the daughter, had to brush her teeth, brush her hair, eat breakfast, and put on clothes. The son, Juan, had to brush his teeth, eat breakfast, and pack his backpack. Mom made the food, and dad walked them to school.";
+
+            System.out.println("Reading story in Spanish...");
+            Narriator.playSound(spanishStory);
+            System.out.println(spanishStory);
+
+            System.out.println("Now reading the translation...");
+            Narriator.playSound(englishStory);
+            System.out.println(englishStory);
+
+            System.out.print("Enter 'done' to mark stoytelling as completed or press enter to continue");
+            String continueResponse = scanner.nextLine().trim();
+            if (continueResponse.equalsIgnoreCase("done")) {
+                facade.markStoryTellingComplete();
+            }
+            System.out.println("Exiting Storytelling.");
         }
 
         private void startAssessment() {

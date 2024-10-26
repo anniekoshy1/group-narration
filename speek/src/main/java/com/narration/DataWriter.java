@@ -1,9 +1,7 @@
 package com.narration;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.UUID;
 
 import org.json.simple.JSONArray;
@@ -58,7 +56,7 @@ public class DataWriter extends DataConstants {
             // Convert languages to JSON
             JSONArray languagesJSON = new JSONArray();
             for (Language lang : user.getLanguages()) {
-                languagesJSON.add(lang.name());  // Assuming Language is an enum
+                languagesJSON.add(lang.getName());  // Assuming Language is an enum
             }
             userJSON.put("languages", languagesJSON);
 

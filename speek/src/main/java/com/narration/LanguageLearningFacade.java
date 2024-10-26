@@ -26,10 +26,7 @@ public class LanguageLearningFacade {
         this.dataWriter = new DataWriter();
         this.wordsList = dataLoader.loadWords();
         this.users = new DataLoader().getUsers();  // Assuming this returns an ArrayList<User>
-       
-        Course startingOutCourse = new Course ("Starting Out");
-        courseList.addCourse(startingOutCourse);
-       
+
         if (this.users == null) {
             this.users = new ArrayList<>();  // If no users exist, initialize an empty list
         }
@@ -39,7 +36,7 @@ public class LanguageLearningFacade {
         User foundUser = userList.getUser(username);
         if (foundUser != null && foundUser.getPassword().equals(password)) {
             this.user = foundUser;
-            dataLoader.loadUserProgress(this.user);    
+            dataLoader.saveUserProgress(this.user);    
             return true;
         }
         return false;
@@ -89,7 +86,15 @@ public class LanguageLearningFacade {
     }
 
     public ArrayList<Course> getAllCourses() {
-        return courseList.getCourses();
+        ArrayList<Course> courses = DataLoader.loadCourses();
+        if (courses.isEmpty()) {
+            System.out.println("No courses found in DataLoader.");
+        } else {
+            for (Course course : courses) {
+                System.out.println("Available course: " + course.getName());
+            }
+        }
+        return courses;
     }
 
     public WordsList getWordsList() {

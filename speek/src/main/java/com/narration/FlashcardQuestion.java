@@ -1,65 +1,78 @@
 package com.narration;
+
 public class FlashcardQuestion {
 
-    private String frontInfo;  // The front of the flashcard 
-    private String backAnswer;  // The back of the flashcard
+    private final String frontInfo;  // The front of the flashcard, now final
+    private final String backAnswer;  // The back of the flashcard, now final
     private String userAnswer;  // The user's input or guess
+    private boolean completed;   // Track if the flashcard has been completed
+    private double flashcardProgress;  // Track the progress of the flashcard
 
-    //done
+    // Constructor to initialize flashcard information
     public FlashcardQuestion(String frontInfo, String backAnswer) {
         this.frontInfo = frontInfo;
         this.backAnswer = backAnswer;
         this.userAnswer = "";
+        this.completed = false;  // Default to not completed
+        this.flashcardProgress = 0.0;  // Default progress
     }
 
-    //done
+    // Method to flip the card and show the answer
     public void flipCard() {
         System.out.println("Flipped! The answer is: " + backAnswer);
     }
 
-    //done
     // Show the definition or answer on the back of the card
     public String showDefinition() {
         return backAnswer;
     }
 
-    //done
     // Submit an answer for the flashcard question
     public void submitAnswer(String userAnswer) {
-    if (userAnswer == null || userAnswer.trim().isEmpty()) {
-        throw new IllegalArgumentException("Please provide a valid answer.");
+        if (userAnswer == null || userAnswer.trim().isEmpty()) {
+            throw new IllegalArgumentException("Please provide a valid answer.");
+        }
+        this.userAnswer = userAnswer;
     }
-    this.userAnswer = userAnswer;
-}
 
-    //done
+    // Method to mark the flashcard as completed if the user types "done"
+    public void markAsCompleted(String userInput) {
+        if ("done".equalsIgnoreCase(userInput.trim())) {
+            this.flashcardProgress = 100.0;  // Set progress to 100%
+            this.completed = true;  // Mark as completed
+        }
+    }
+
     // Check if the user's answer is correct
     public boolean checkAnswer() {
-        if (userAnswer == null) {
-            return false;
-        }
         return userAnswer.equalsIgnoreCase(backAnswer);
     }
 
-    //done
     // Show the correct answer
     public String showCorrectAnswer() {
         return backAnswer;
     }
 
-    //done
     // Getters for the flashcard information
     public String getFrontInfo() {
         return frontInfo;
     }
 
-    //done
     public String getBackAnswer() {
         return backAnswer;
     }
 
-    //done
     public String getUserAnswer() {
         return userAnswer;
+    }
+
+    // Check if the flashcard is completed
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    // Get flashcard progress
+    public double getFlashcardProgress() {
+        return flashcardProgress;
     }
 }

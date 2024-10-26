@@ -45,8 +45,7 @@ public class DataLoader extends DataConstants{
                     UUID courseId = UUID.fromString((String) courseJSON.get("courseID"));
                     String courseName = (String) courseJSON.get("name");
                     String courseDesc = (String) courseJSON.get("description"); 
-
-                    courses.add(new Course(courseId, courseName, courseDesc));  // Adjust as needed
+                    courses.add(new Course(courseId, courseName, courseDesc, false, 0, false, coursesJSON, coursesJSON, coursesJSON));  // Adjust as needed
                 }
 
                 // Parse progress
@@ -117,13 +116,17 @@ public class DataLoader extends DataConstants{
                 ArrayList<String> completedAssessments = new ArrayList<>();
                 ArrayList<Lesson> lessons = new ArrayList<>();
                 
+                if(userAccess == null){
+                    userAccess = false;
+                }
                 Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments);
                 courses.add(course);
+                System.out.println("Loaded course: " + course.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        System.out.println("total courses loaded: " + courses.size());
         return courses;
     }
 
@@ -197,22 +200,8 @@ public class DataLoader extends DataConstants{
         return phraseList;
     }
 
-    public static ArrayList<User> loadUsers() {
-        ArrayList<User> users = new ArrayList<>();
-        try (FileReader reader = new FileReader(USER_USERNAME)) {
-            JSONArray usersJSON = (JSONArray) new JSONParser().parse(reader);
-            for (Object obj : usersJSON) {
-                JSONObject userJSON = (JSONObject) obj;
-                User user = parseUser(userJSON);
-                users.add(user);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
 
-        private static User parseUser(JSONObject userJSON) {
+    private static User parseUser(JSONObject userJSON) {
         String id = (String) userJSON.get(USER_ID);
         String username = (String) userJSON.get(USER_USERNAME);
         String email = (String) userJSON.get(USER_EMAIL);

@@ -14,10 +14,13 @@ public class Course {
     private UUID id;  // Unique identifier for the course
     private boolean completed;  // Indicates whether the course is completed
     private ArrayList<String> completedAssessments;  // List of completed assessments
+    private FlashcardQuestion flashcard;  // Track the progress of the flashcard
+    private Lesson lesson;
+    
 
 
     // Full constructor to set up a course with all details
-    public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed, ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments) {
+    public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed, ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments, Lesson lesson, FlashcardQuestion flashcard) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -26,7 +29,9 @@ public class Course {
         this.completed = completed;
         this.lessons = lessons;
         this.assessments = assessments;
-        this.completedAssessments = new ArrayList<>();  
+        this.completedAssessments = new ArrayList<>(); 
+        this.flashcard = flashcard; 
+        this.lesson = lesson; // Default progress 
     }//done
 
     //done
@@ -67,23 +72,14 @@ public class Course {
     //done
     // Get the progress of the course
     public void calculateProgress() {
-        int totalItems = lessons.size() + assessments.size();
-        int completedItems = 0;
-
-        for (Lesson lesson : lessons) {
-            if (lesson.isCompletedLesson()) {
-                completedItems++;
-            }
+        if (lesson.isCompleted() && flashcard.isCompleted()) {
+            courseProgress = 100.0;
+        } 
+        else if(lesson.isCompleted() || flashcard.isCompleted()){
+            courseProgress = 50.0;
         }
-        for (Assessment assessment : assessments) {
-            if (assessment.calculateRating() >= 70) { // 70% = pass
-                completedItems++;
-            }
-        }
-        if (totalItems > 0) {
-            this.courseProgress = (double) completedItems / totalItems * 100;
-        } else {
-            this.courseProgress = 0.0;
+        else {
+            courseProgress = 0.0;
         }
     }
 
