@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PhraseList {
     private List<Phrase> phrases;
+    private static PhraseList instance;
 
     public PhraseList() {
         this.phrases = new ArrayList<>();
@@ -12,6 +13,13 @@ public class PhraseList {
     // Add a phrase to the list
     public void addPhrase(Phrase phrase) {
         phrases.add(phrase);
+    }
+
+    public static PhraseList getInstance() {
+        if (instance == null) {
+            instance = new PhraseList();
+        }
+        return instance;
     }
 
     // Get phrases by a particular part of speech

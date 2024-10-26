@@ -4,6 +4,7 @@ import java.util.List;
 
 public class WordsList {
     private List<Word> words;
+    private static WordsList instance;
 
     public WordsList() {
         this.words = new ArrayList<>();
@@ -12,6 +13,13 @@ public class WordsList {
     // Add a word to the list
     public void addWord(Word word) {
         this.words.add(word);
+    }
+
+        public static WordsList getInstance() {
+        if (instance == null) {
+            instance = new WordsList();
+        }
+        return instance;
     }
 
     // Get words by a specific part of speech

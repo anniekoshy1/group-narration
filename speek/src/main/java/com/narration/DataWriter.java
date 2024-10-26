@@ -1,4 +1,5 @@
 package com.narration;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,22 +18,32 @@ public class DataWriter extends DataConstants {
     private static final String WORDS_FILE = "speek/docs/JSON/words.json";
     private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
-
-    //done3
+    // Static method to save users to JSON file
     @SuppressWarnings("unchecked")
-    public boolean saveUsers(ArrayList<User> newUsers) {
-    JSONArray userArray = new JSONArray();
+    public static boolean saveUsers() {
+        ArrayList<User> newUsers = UserList.getInstance().getUsers(); // Access singleton
+        JSONArray userArray = new JSONArray();
 
-    // Read existing users from the file
-    try (FileReader reader = new FileReader(USERS_FILE)) {
-        JSONArray existingUsers = (JSONArray) new org.json.simple.parser.JSONParser().parse(reader);
-        userArray.addAll(existingUsers);  // Append existing users
-    } catch (Exception e) {
-        e.printStackTrace();  // Handle exceptions for file reading/parsing
+        // Read existing users from file
+        try (FileReader reader = new FileReader(USERS_FILE)) {
+            JSONArray existingUsers = (JSONArray) new org.json.simple.parser.JSONParser().parse(reader);
+            userArray.addAll(existingUsers); // Append existing users
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Add new users to JSON array
+        for (User user : newUsers) {
+            JSONObject userJson = createUserJson(user);
+            userArray.add(userJson);
+        }
+
+        return writeToFile(USERS_FILE, userArray);
     }
 
-    // Add new users to the userArray
-    for (User user : newUsers) {
+    // Static helper method to create JSON object for a user
+    @SuppressWarnings("unchecked")
+    private static JSONObject createUserJson(User user) {
         JSONObject userJson = new JSONObject();
         userJson.put("id", user.getId().toString());
         userJson.put("username", user.getUsername());
@@ -49,7 +60,7 @@ public class DataWriter extends DataConstants {
         userJson.put("courses", coursesJson);
 
         JSONObject progressJson = new JSONObject();
-        HashMap<UUID, Double> progress = user.getProgress();  // Assuming you have this method
+        HashMap<UUID, Double> progress = user.getProgress();
         for (UUID courseId : progress.keySet()) {
             progressJson.put(courseId.toString(), progress.get(courseId));
         }
@@ -79,28 +90,25 @@ public class DataWriter extends DataConstants {
         currentLanguageJson.put("name", user.getCurrentLanguageName());
         userJson.put("currentLanguage", currentLanguageJson);
 
-        userArray.add(userJson);
+        return userJson;
     }
 
-    // Write the updated userArray back to the file
-    return writeToFile(USERS_FILE, userArray);
-}
-
-// Helper method to write to the file
-private boolean writeToFile(String filePath, JSONArray jsonArray) {
-    try (FileWriter file = new FileWriter(filePath)) {
-        file.write(jsonArray.toJSONString());
-        file.flush();
-        return true;
-    } catch (IOException e) {
-        e.printStackTrace();  // Handle exceptions for file writing
-        return false;
+    // Static method to write JSON array to file
+    private static boolean writeToFile(String filePath, JSONArray jsonArray) {
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(jsonArray.toJSONString());
+            file.flush();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-    //done
+    // Static method to save courses
     @SuppressWarnings("unchecked")
-	public boolean saveCourses(ArrayList<Course> courses) {
+    public static boolean saveCourses() {
+        ArrayList<Course> courses = CourseList.getInstance().getCourses(); // Access singleton
         JSONArray courseArray = new JSONArray();
 
         for (Course course : courses) {
@@ -130,17 +138,16 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
                 assessmentJson.put("attempts", assessment.getAttempts());
                 assessmentsJson.add(assessmentJson);
             }
-            courseJson.put("assessments", assessmentsJson);
-
             courseArray.add(courseJson);
         }
 
         return writeToFile(COURSES_FILE, courseArray);
     }
 
-    //done
+    // Static method to save languages
     @SuppressWarnings("unchecked")
-    public boolean saveLanguages(ArrayList<Language> languages) {
+    public static boolean saveLanguages() {
+        ArrayList<Language> languages = LanguageList.getInstance().getLanguages(); // Access singleton
         JSONArray languageArray = new JSONArray();
 
         for (Language language : languages) {
@@ -153,33 +160,12 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         return writeToFile(LANGUAGES_FILE, languageArray);
     }
 
-    //done
-    public void saveUserProgress(User user) {
-        ArrayList<User> users = new DataLoader().getUsers();
-        for (User existingUser : users) {
-            if (existingUser.getId().equals(user.getId())) {
-                existingUser.setProgress(user.getProgress());
-                break;
-            }
-        }
-        saveUsers(users);
-    }
-
-    //done
-    public void saveAssessmentHistory(User user, Assessment assessment) {
-        ArrayList<User> users = new DataLoader().getUsers();
-        for (User existingUser : users) {
-            if (existingUser.getId().equals(user.getId())) {
-                break;
-            }
-        }
-        saveUsers(users);
-    }
-
-    // Save words to the JSON file
+    // Static method to save words
     @SuppressWarnings("unchecked")
-    public void saveWords(WordsList wordsList) {
+    public static void saveWords() {
+        WordsList wordsList = WordsList.getInstance(); // Access singleton
         JSONArray wordsArray = new JSONArray();
+
         for (Word word : wordsList.getAllWords()) {
             JSONObject wordObj = new JSONObject();
             wordObj.put("word", word.getWordText());
@@ -189,17 +175,15 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
             wordsArray.add(wordObj);
         }
 
-        try (FileWriter writer = new FileWriter(WORDS_FILE)) {
-            writer.write(wordsArray.toJSONString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writeToFile(WORDS_FILE, wordsArray);
     }
 
-    // Save phrases to the JSON file
+    // Static method to save phrases
     @SuppressWarnings("unchecked")
-    public void savePhrases(PhraseList phraseList) {
+    public static void savePhrases() {
+        PhraseList phraseList = PhraseList.getInstance(); // Access singleton
         JSONArray phrasesArray = new JSONArray();
+
         for (Phrase phrase : phraseList.getAllPhrases()) {
             JSONObject phraseObj = new JSONObject();
             phraseObj.put("phrase", phrase.getPhraseText());
@@ -208,10 +192,6 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
             phrasesArray.add(phraseObj);
         }
 
-        try (FileWriter writer = new FileWriter(PHRASES_FILE)) {
-            writer.write(phrasesArray.toJSONString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writeToFile(PHRASES_FILE, phrasesArray);
     }
 }

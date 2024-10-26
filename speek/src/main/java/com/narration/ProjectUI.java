@@ -6,6 +6,8 @@ public class ProjectUI {
     private LanguageLearningFacade facade;
     private Scanner scanner;
     private DataConstants dataConstants;
+    private boolean flashcardsCompleted = false; // Track flashcard completion
+
 
     public ProjectUI() {
         facade = new LanguageLearningFacade();
@@ -164,7 +166,6 @@ private void register() {
             return;
         }
 
-        ArrayList<Course> courses=facade.getCourses();
         System.out.println("Available courses: ");
         for (Course course : facade.getAllCourses()) {
             System.out.println("- " + course.getName());
@@ -194,7 +195,14 @@ private void register() {
         while (!exit) {
             System.out.println("\nCourse Activities:");
             System.out.println("1. Flashcard Practice");
-            System.out.println("2. Exit to Main Menu");
+
+            if (flashcardsCompleted) {
+                System.out.println("2. Start Assessment");
+            } else {
+                System.out.println("2. Assssment (Learning activities flashcards first)")
+            }
+
+            System.out.println("3. Exit to Main Menu");
             System.out.print("Please enter your choice: ");
 
             int choice = getUserChoice();
@@ -204,11 +212,18 @@ private void register() {
                     startFlashcards();
                     break;
                 case 2:
+                    if (flashcardsCompleted) {
+                        startAssessment(); // Only start assessment if flashcards are completed
+                    } else {
+                        System.out.println("You must complete flashcard practice before starting the assessment.");
+                    }
+                break;
+                case 3:
                     exit = true;
-                    System.out.println("Exiting course activites");
+                    System.out.println("Exiting course activities");
                     break;
                 default:
-                System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
@@ -245,6 +260,7 @@ private void register() {
             continuePractice = continueResponse.equalsIgnoreCase("yes");
 
             }
+            flashcardsCompleted = true;
             System.out.println("Exiting Flashcard Practice.");
         }
 
@@ -252,6 +268,11 @@ private void register() {
         Course currentCourse = facade.getCurrentUser().getCourses().get(0);
 
         currentCourse.calculateProgress();
+
+        if (!flashcardsCompleted) {
+            System.out.println("You must complete flashcard practice before starting the assessment.");
+            return; // Exit if flashcards are not completed
+        }
 
         if (currentCourse.completedCourse()) {
             System.out.println("Course is completed. Do you want to start the assessment? (yes/no)");
