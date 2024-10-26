@@ -15,6 +15,7 @@ public class LanguageLearningFacade {
     DataWriter dataWriter = new DataWriter();
     private List<User> users;
     private ArrayList<Language> languages;
+    private WordsList wordsList;
 
     public LanguageLearningFacade() {
         languages = new ArrayList<>();
@@ -23,6 +24,7 @@ public class LanguageLearningFacade {
         languages.add(new Language("Spanish"));
         languageList = LanguageList.getInstance();
         this.dataWriter = new DataWriter();
+        this.wordsList = dataLoader.loadWords();
         this.users = new DataLoader().getUsers();  // Assuming this returns an ArrayList<User>
         if (this.users == null) {
             this.users = new ArrayList<>();  // If no users exist, initialize an empty list
@@ -95,6 +97,10 @@ public class LanguageLearningFacade {
     // Get all courses available in the system
     public ArrayList<Course> getAllCourses() {
         return courseList.getCourses();
+    }
+
+    public WordsList getWordsList() {
+        return this.wordsList;
     }
 
     // Track overall progress in all courses for a user

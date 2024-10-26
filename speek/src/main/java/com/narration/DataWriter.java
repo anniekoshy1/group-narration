@@ -9,7 +9,7 @@ import java.util.UUID;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class DataWriter {
+public class DataWriter extends DataConstants {
 
     private static final String USERS_FILE = "speek/docs/JSON/User.json";
     private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
@@ -19,6 +19,7 @@ public class DataWriter {
 
 
     //done3
+    @SuppressWarnings("unchecked")
     public boolean saveUsers(ArrayList<User> newUsers) {
     JSONArray userArray = new JSONArray();
 
@@ -98,7 +99,8 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
 }
 
     //done
-    public boolean saveCourses(ArrayList<Course> courses) {
+    @SuppressWarnings("unchecked")
+	public boolean saveCourses(ArrayList<Course> courses) {
         JSONArray courseArray = new JSONArray();
 
         for (Course course : courses) {
@@ -137,6 +139,7 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
     }
 
     //done
+    @SuppressWarnings("unchecked")
     public boolean saveLanguages(ArrayList<Language> languages) {
         JSONArray languageArray = new JSONArray();
 
@@ -174,6 +177,7 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
     }
 
     // Save words to the JSON file
+    @SuppressWarnings("unchecked")
     public void saveWords(WordsList wordsList) {
         JSONArray wordsArray = new JSONArray();
         for (Word word : wordsList.getAllWords()) {
@@ -193,6 +197,7 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
     }
 
     // Save phrases to the JSON file
+    @SuppressWarnings("unchecked")
     public void savePhrases(PhraseList phraseList) {
         JSONArray phrasesArray = new JSONArray();
         for (Phrase phrase : phraseList.getAllPhrases()) {

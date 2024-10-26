@@ -33,6 +33,10 @@ public class User {
         this.currentLanguageName = currentLanguageName;
     }
 
+    public User(String id2, String email2, String username2, double progress2) {
+        //TODO Auto-generated constructor stub
+    }
+
     public UUID getId() {
         return id;
     }

@@ -8,17 +8,18 @@ public class DataConstants {
     public static final int MIN_PASSWORD_LENGTH = 5;  // Minimum length for passwords
     public static final int MAX_PASSWORD_LENGTH = 8;  // Maximum length for passwords
     public static final int MAX_LOGIN_ATTEMPTS = 5;  // Maximum login attempts before account lock
-    public static final String USER_USERNAME = "username";  
-    public static final String USER_PASSWORD = "password";  
+    public static final String USER_USERNAME = "username"; 
+    public static final String USER_PASSWORD = "password"; 
     public static final String USER_EMAIL = "email";  
+    public static final String USER_ID = "userId";
+    public static final String USER_PROGRESS = "progress";
 
     // Constants for courses
-    public static final int MAX_LESSONS_PER_COURSE = 20;  // Maximum lessons allowed per course
-    public static final int MAX_USERS_IN_SYSTEM = 100000;  // Maximum number of users in the system
-    public static final String COURSE_NAME = "courseName";  
-    public static final String COURSE_DESCRIPTION = "courseDescription";  
+    public static final String COURSE_NAME = "name";  
+    public static final String COURSE_DESCRIPTION = "description";  
     public static final String COURSE_ID = "courseID";  
-    public static final String COURSE_LESSONS = "courseLessons";  
+    public static final String COURSE_PROGRESS = "progress";
+
 
     // Constants for lessons
     public static final String LESSON_DESCRIPTION = "lessonDescription";  

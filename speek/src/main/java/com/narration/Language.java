@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class Language {
- 
+
     private UUID id; 
     private User user;  // The user who is learning the language
     private StarterTest starterTest;  // The initial test for placement

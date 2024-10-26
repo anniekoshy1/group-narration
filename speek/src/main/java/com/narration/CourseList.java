@@ -9,8 +9,11 @@ public class CourseList {
     //done
     private CourseList() {
         courses = new ArrayList<>();
+
+        Course startingOutCourse = new Course("Starting Out");
+        courses.add(startingOutCourse);
     }
-    
+
     //done
     public static CourseList getInstance() {
         if (instance == null) {
@@ -39,7 +42,7 @@ public class CourseList {
     }
 
     //done
-   public Course findByName(String name) {
+    public Course findByName(String name) {
     if (name == null) {
         throw new IllegalArgumentException("Name cannot be null");
     }

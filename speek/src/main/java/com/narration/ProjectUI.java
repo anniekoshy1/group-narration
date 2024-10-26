@@ -164,24 +164,89 @@ private void register() {
             return;
         }
 
-        System.out.println("Available courses:");
+        ArrayList<Course> courses=facade.getCourses();
+        System.out.println("Available courses: ");
         for (Course course : facade.getAllCourses()) {
             System.out.println("- " + course.getName());
         }
+
         System.out.print("Select a course to start: ");
-        String courseName = scanner.nextLine();
+        String courseName = scanner.nextLine(); 
 
         Course selectedCourse = facade.getAllCourses().stream()
-                .filter(course -> course.getName().equalsIgnoreCase(courseName))
-                .findFirst().orElse(null);
+                .filter(course -> course.getName().equalsIgnoreCase(courseName) || 
+                        "Starting Out".equalsIgnoreCase(courseName))
+                .findFirst()
+                .orElse(null);
+                
+                if (selectedCourse != null) {
+                    facade.startCourse(selectedCourse); 
+                    System.out.println("Course started: " + selectedCourse.getName());
+                    courseActivitiesMenu(); // Go directly to activities menu
+                } else {
+                    System.out.println("Course not found.");
+                }
+    }
 
-        if (selectedCourse != null) {
-            facade.startCourse(selectedCourse);
-            System.out.println("Course started: " + selectedCourse.getName());
-        } else {
-            System.out.println("Course not found.");
+    private void courseActivitiesMenu() {
+        boolean exit = false;
+
+        while (!exit) {
+            System.out.println("\nCourse Activities:");
+            System.out.println("1. Flashcard Practice");
+            System.out.println("2. Exit to Main Menu");
+            System.out.print("Please enter your choice: ");
+
+            int choice = getUserChoice();
+
+            switch (choice) {
+                case 1:
+                    startFlashcards();
+                    break;
+                case 2:
+                    exit = true;
+                    System.out.println("Exiting course activites");
+                    break;
+                default:
+                System.out.println("Invalid choice. Please try again.");
+            }
         }
     }
+
+    private void startFlashcards() {
+        System.out.println("Starting Flashcard Practice...");
+
+        WordsList wordsList = facade.getWordsList();
+        if (wordsList == null || wordsList.getAllWords().isEmpty()) {
+            System.out.println("No words available for practice.");
+            return;
+        }
+
+        boolean continuePractice = true;
+        while (continuePractice) {
+            Word randomWord = wordsList.getRandomWord();
+
+            Narriator.playSound("Translate the following word to Spanish: " +randomWord.getTranslation());
+            System.out.println("Translate the following word to Spanish: " + randomWord.getTranslation());
+
+            System.out.print("");
+            String userAnswer = scanner.nextLine().trim();
+
+            if (userAnswer.equalsIgnoreCase(randomWord.getWordText())) {
+                System.out.println("Correct!");
+                Narriator.playSound("Correct, the translation is: " + randomWord.getWordText());
+            } else {
+                System.out.println("Incorrect, the correct translation is: " + randomWord.getWordText());
+                Narriator.playSound("Incorrect, the correct translation is: " + randomWord.getWordText());
+            }
+
+            System.out.print("Would you like to practice another word? (yes/no): ");
+            String continueResponse = scanner.nextLine().trim();
+            continuePractice = continueResponse.equalsIgnoreCase("yes");
+
+            }
+            System.out.println("Exiting Flashcard Practice.");
+        }
 
         private void startAssessment() {
         Course currentCourse = facade.getCurrentUser().getCourses().get(0);

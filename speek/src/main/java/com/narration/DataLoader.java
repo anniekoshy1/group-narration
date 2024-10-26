@@ -10,7 +10,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class DataLoader {
+
+
+public class DataLoader extends DataConstants{
 
     private static final String USERS_FILE = "speek/docs/JSON/User.json";
     private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
@@ -144,6 +146,7 @@ public class DataLoader {
         return courses;
     }
 
+    
     public ArrayList<Language> getLanguages() {
         ArrayList<Language> languages = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
@@ -242,6 +245,29 @@ public class DataLoader {
         }
 
         return phraseList;
+    }
+
+    public static ArrayList<User> loadUsers() {
+        ArrayList<User> users = new ArrayList<>();
+        try (FileReader reader = new FileReader(USER_USERNAME)) {
+            JSONArray usersJSON = (JSONArray) new JSONParser().parse(reader);
+            for (Object obj : usersJSON) {
+                JSONObject userJSON = (JSONObject) obj;
+                User user = parseUser(userJSON);
+                users.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+        private static User parseUser(JSONObject userJSON) {
+        String id = (String) userJSON.get(USER_ID);
+        String username = (String) userJSON.get(USER_USERNAME);
+        String email = (String) userJSON.get(USER_EMAIL);
+        double progress = (double) userJSON.get(USER_PROGRESS);
+        return new User(id, email, username, progress);
     }
 
     public void saveCourses(ArrayList<Course> courses) {
