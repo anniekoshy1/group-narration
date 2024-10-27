@@ -300,7 +300,7 @@ public class ProjectUI {
             courseActivitiesMenu(); 
         }
     }
-//LESSON/STORYTELLING
+    //LESSON/STORYTELLING
     private void startLesson() {
         System.out.println("Loading Storytelling...");
 
@@ -310,12 +310,13 @@ public class ProjectUI {
             return;
         }
 
-    if (!assessment.hasPassed()) {
-        System.out.println("You need to pass the assessment to unlock Storytelling. Please retake the assessment.");
-        return; // Exit the method if the assessment hasn't been passed
-    }
+        if (!assessment.hasPassed()) {
+            System.out.println("You need to pass the assessment to unlock Storytelling. Please retake the assessment.");
+            return; // Exit the method if the assessment hasn't been passed
+        }
 
         currentLesson = currentCourse.getAllLessons().get(0);
+        currentCourse.setCurrentLesson(currentLesson);
         System.out.println("Starting Storytelling...");
         
         String spanishStory = currentLesson.getSpanishContent();
@@ -407,7 +408,7 @@ public class ProjectUI {
             // Flip translation with a 50% chance
             if (random.nextBoolean()) {
                 // Correct translation
-                questionText = word.getWordText() + " means '" + trueTranslation + "'. True/Fal";
+                questionText = word.getWordText() + " means '" + trueTranslation + "'. True/False";
                 correctAnswer = true;
             } else {
                 // Incorrect translation
@@ -415,7 +416,7 @@ public class ProjectUI {
                 while (incorrectWord.equals(word)) {
                     incorrectWord = words.get(random.nextInt(words.size())); // Ensure different word
                 }
-                questionText = word.getWordText() + " means '" + incorrectWord.getTranslation() + "'. T/F";
+                questionText = word.getWordText() + " means '" + incorrectWord.getTranslation() + "'. True/False";
                 correctAnswer = false;
             }
 
@@ -565,8 +566,8 @@ public class ProjectUI {
         System.out.println("Your rating: " + rating + " out of 5 stars");
     
         if (assessment.hasPassed()) {
-            Narriator.playSound("Congratulations! You passed the assessment with a score of " + score + " percent. You may now continue to the Storytelling lesson.");
-            System.out.println("Congratulations! You passed the assessment with a score of " + score + "%. You may now continue to the Storytelling lesson.");
+            Narriator.playSound("Congratulations! You passed the assessment with a score of " + score + " percent. You completed the course, you may now continue to the next course.");
+            System.out.println("Congratulations! You passed the assessment with a score of " + score + "%. You completed the course, you may now continue to the next course.");
         } else {
             Narriator.playSound("You did not pass the assessment. Your score is " + score + " percent. Please try again to continue to the Storytelling lesson.");
             System.out.println("You did not pass the assessment. Your score is " + score + "%. Please try again to continue to the Storytelling lesson.");

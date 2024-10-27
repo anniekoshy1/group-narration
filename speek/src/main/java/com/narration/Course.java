@@ -61,6 +61,10 @@ public class Course {
         this.courseProgress = courseProgress;
     }
 
+    public void setCurrentLesson(Lesson lesson){
+        this.lesson = lesson;
+    }
+
     public double getCourseProgress() {
         return this.courseProgress;
     }
