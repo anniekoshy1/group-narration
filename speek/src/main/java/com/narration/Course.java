@@ -94,7 +94,7 @@ public class Course {
             System.out.println(courseProgress);
         } else if (lesson.isCompleted() || flashcard.isCompleted()) {
             courseProgress = 50.0;
-            System.out.println("gay gay gay "+courseProgress);
+            System.out.println("Course Progress: "+courseProgress);
         } else {
             courseProgress = 0.0;
         }

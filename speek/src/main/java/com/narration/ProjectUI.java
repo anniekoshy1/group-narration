@@ -57,27 +57,16 @@ public class ProjectUI {
                     if (!isLoggedIn()) {
                         System.out.println("Please log in first.");
                     } else {
-                        startAssessment();
-                    }
-                    break;
-                case 6:
-                    if (!isLoggedIn()) {
-                        System.out.println("Please log in first.");
-                    } else {
                         trackProgress();
                     }
                     break;
-                case 7:
+                case 6:
                     if (!isLoggedIn()) {
                         System.out.println("You are not logged in.");
                     } else {
                         logout();
                         System.out.println("Logging out.");
                     }
-                    break;
-                case 8:
-                    exit = true;
-                    System.out.println("Exiting the system. Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -91,10 +80,8 @@ public class ProjectUI {
         System.out.println("2. Register");
         System.out.println("3. Select Language");
         System.out.println("4. Start Course");
-        System.out.println("5. Start Assessment");
-        System.out.println("6. Track Progress");
-        System.out.println("7. Logout");
-        System.out.println("8. Exit");
+        System.out.println("5. Track Progress");
+        System.out.println("6. Logout");
         System.out.print("Please enter your choice: ");
     }
 
@@ -271,35 +258,24 @@ public class ProjectUI {
             System.out.print("Enter 'done' to mark this flashcard as completed or press Enter to continue: ");
             String continueResponse = scanner.nextLine().trim();
 
-            // Check if the user entered "done"
+            // Check if the user entered "done"1
+
             if (continueResponse.equalsIgnoreCase("done")) {
                 flashcard.markAsCompleted(continueResponse);  // Mark flashcard as completed
                 System.out.println("Flashcard marked as complete.");
                 startAssessment();  // Start the assessment immediately
                 return;  // Exit the flashcard loop
             } else {
-                flashcard.markAsCompleted("");  // Optionally mark as complete on empty input
-                course.calculateProgress();
+                //hey chatgpt can you complete this
+                //put in logic that will just do another flashcard when you press enter here
             }
 
             System.out.println("Flashcard Progress: " + flashcard.getFlashcardProgress() + "%");
         }
 
         System.out.println("Exiting Flashcard Practice.");
-        promptForAssessment();
     }
-    //REPEATING FLASHCARDS
-    private void promptForRepeatFlashcards() {
-        System.out.println("Do you want to try the flashcards again? (yes/no)");
-        String response = scanner.nextLine().trim();
-    
-        if (response.equalsIgnoreCase("yes")) {
-            startFlashcards();  
-        } else {
-            System.out.println("Returning to Course Activities.");
-            courseActivitiesMenu(); 
-        }
-    }
+
     //LESSON/STORYTELLING
     private void startLesson() {
         System.out.println("Loading Storytelling...");
@@ -359,10 +335,14 @@ public class ProjectUI {
 
     //ASSESSMENT FOR FLASHCARDS
     private void startAssessment() {
-        System.out.println("Starting Assessment...");
+        String startingMessage = "Starting Assessment...";
+        Narriator.playSound(startingMessage);
+        System.out.println(startingMessage);
 
         if (course == null) {
-            System.out.println("No course selected. Returning to main menu.");
+            String noCourseMessage = "No course selected. Returning to main menu.";
+            Narriator.playSound(noCourseMessage);
+            System.out.println(noCourseMessage);
             return;
         }
 
@@ -370,22 +350,21 @@ public class ProjectUI {
         List<Word> words = wordsList.getAllWords();
 
         if (words.isEmpty()) {
-            System.out.println("No words available for assessment.");
+            String noWordsMessage = "No words available for assessment.";
+            Narriator.playSound(noWordsMessage);
+            System.out.println(noWordsMessage);
             return;
         }
 
         Random random = new Random();
         
-        // Select a random word for the multiple-choice question
         Word multipleChoiceWord = words.get(random.nextInt(words.size()));
         String englishTranslationMCQ = multipleChoiceWord.getTranslation();
         String spanishWordMCQ = multipleChoiceWord.getWordText();
 
-        //Generating two random options for multiple choice questions
         String choice1 = words.get(random.nextInt(words.size())).getWordText();
         String choice2 = words.get(random.nextInt(words.size())).getWordText();
 
-        // Ensure the open-ended question uses a different word
         Word openEndedWord;
         do {
             openEndedWord = words.get(random.nextInt(words.size()));
@@ -394,27 +373,25 @@ public class ProjectUI {
         String englishTranslationOpenEnded = openEndedWord.getTranslation();
         String spanishWordOpenEnded = openEndedWord.getWordText();
 
-        // Generate assessment questions
         List<Questions> assessmentQuestions = new ArrayList<>();
 
-        // Generate random True/False questions
-        System.out.println("Please answer the following True/False questions:");
+        String trueFalsePrompt = "Please answer the following True/False questions:";
+        Narriator.playSound(trueFalsePrompt);
+        System.out.println(trueFalsePrompt);
+
         for (int i = 0; i < 3; i++) { // Number of True/False questions to generate
             Word word = words.get(random.nextInt(words.size()));
             String trueTranslation = word.getTranslation();
             String questionText;
             boolean correctAnswer;
 
-            // Flip translation with a 50% chance
             if (random.nextBoolean()) {
-                // Correct translation
                 questionText = word.getWordText() + " means '" + trueTranslation + "'. True/False";
                 correctAnswer = true;
             } else {
-                // Incorrect translation
                 Word incorrectWord = words.get(random.nextInt(words.size()));
                 while (incorrectWord.equals(word)) {
-                    incorrectWord = words.get(random.nextInt(words.size())); // Ensure different word
+                    incorrectWord = words.get(random.nextInt(words.size())); 
                 }
                 questionText = word.getWordText() + " means '" + incorrectWord.getTranslation() + "'. True/False";
                 correctAnswer = false;
@@ -423,54 +400,62 @@ public class ProjectUI {
             assessmentQuestions.add(new Questions(questionText, correctAnswer, Difficulty.RUDIMENTARY));
         }
 
-        // Multiple Choice Question
         List<String> choices = List.of("1. " + choice1, "2. " + choice2, "3. " + spanishWordMCQ);
-        String multipleChoiceQuestionText = "What is the Spanish word for '" + englishTranslationMCQ + "'?\n" + String.join("\n", choices);
-        Questions multipleChoiceQuestion = new Questions(multipleChoiceQuestionText, choices, "3", Difficulty.INTERMEDIATE); 
-        assessmentQuestions.add(multipleChoiceQuestion);
+    String multipleChoiceQuestionText = "What is the Spanish word for '" + englishTranslationMCQ + "'?\n" + String.join("\n", choices);
+    Questions multipleChoiceQuestion = new Questions(multipleChoiceQuestionText, choices, "3", Difficulty.INTERMEDIATE);
+    assessmentQuestions.add(multipleChoiceQuestion);
 
-        // Open-Ended Question with a different word
-        Questions openEndedQuestion = new Questions("What is the word for '" + englishTranslationOpenEnded + "' in Spanish?", spanishWordOpenEnded, Difficulty.ADVANCED);
-        assessmentQuestions.add(openEndedQuestion);
+    String openEndedQuestionText = "What is the word for '" + englishTranslationOpenEnded + "' in Spanish?";
+    Questions openEndedQuestion = new Questions(openEndedQuestionText, spanishWordOpenEnded, Difficulty.ADVANCED);
+    assessmentQuestions.add(openEndedQuestion);
 
-        // Create assessment object
-        assessment = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, assessmentQuestions);
+    assessment = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, assessmentQuestions);
 
-        // Iterate and display questions to user
-        for (Questions question : assessment.getQuestions()) {
-            System.out.println(question.getQuestionText());
-            
-            if (question.getOptions() != null) {
-                System.out.println("Options: " + String.join(", ", question.getOptions()));
-            }
-
-            // Collect and submit user's answer
-            String userAnswer = scanner.nextLine().trim();
-            question.submitAnswer(userAnswer);
-        }
+    for (Questions question : assessment.getQuestions()) {
+        Narriator.playSound(question.getQuestionText());
+        System.out.println(question.getQuestionText());
         
-        // Calculate and display score
-        int score = assessment.calculateScore();
-        System.out.println("Your score: " + score + "%");
+        if (question.getOptions() != null) {
+            String optionsMessage = "Options: " + String.join(", ", question.getOptions());
+            Narriator.playSound(optionsMessage);
+            System.out.println(optionsMessage);
+        }
 
-        // Display rating based on score
+        String userAnswer = scanner.nextLine().trim();
+        question.submitAnswer(userAnswer);
+    }
+
+        int score = assessment.calculateScore();
+        String scoreMessage = "Your score: " + score + "%";
+        Narriator.playSound(scoreMessage);
+        System.out.println(scoreMessage);
+
         int rating = assessment.calculateRating();
-        System.out.println("Your rating: " + rating + " out of 5 stars");
+        String ratingMessage = "Your rating: " + rating + " out of 5 stars";
+        Narriator.playSound(ratingMessage);
+        System.out.println(ratingMessage);
 
         if (assessment.hasPassed()) {
-        System.out.println("Congratulations! You passed the flashcard assessment with a score of " + score + "%. You may now continue to Storytelling lesson");
+            String passMessage = "Congratulations! You passed the flashcard assessment with a score of " + score + "%. You may now continue to the Storytelling lesson.";
+            Narriator.playSound(passMessage);
+            System.out.println(passMessage);
         } else {
-            System.out.println("You did not pass the assessment. Your score is " + score + "%. Please try again to continue to the Storytelling Lesson.");
+            String failMessage = "You did not pass the assessment. Your score is " + score + "%. Please try again to continue to the Storytelling Lesson.";
+            Narriator.playSound(failMessage);
+            System.out.println(failMessage);
             System.out.print("Do you want to retake the assessment? (yes/no): ");
-        String retakeResponse = scanner.nextLine().trim().toLowerCase();
-        if (retakeResponse.equals("yes")) {
-            assessment.retakeAssessment();  // Reset the assessment for a retake
-            startAssessment();  // Start the assessment again
-        } else {
-            System.out.println("Returning to the main menu.");
-        }
+            String retakeResponse = scanner.nextLine().trim().toLowerCase();
+            if (retakeResponse.equals("yes")) {
+                assessment.retakeAssessment(); 
+                startAssessment();  
+            } else {
+                String returnMessage = "Returning to the main menu.";
+                Narriator.playSound(returnMessage);
+                System.out.println(returnMessage);
+            }
         }
     }
+
 
     //START ASSESSMENT STORY2
     private void startAssessment2() {
@@ -535,6 +520,9 @@ public class ProjectUI {
             System.out.println(questionText);
             Narriator.playSound(questionText);
             assessmentQuestions.add(new Questions(questionText, correctAnswer, Difficulty.RUDIMENTARY));
+
+            String userAnswer = scanner.nextLine().trim();
+            assessmentQuestions.get(i).submitAnswer(userAnswer);
         }
 
         List<String> choices = List.of("1. " + choice1, "2. " + choice2, "3. " + spanishWordMCQ);
@@ -544,25 +532,24 @@ public class ProjectUI {
         Questions multipleChoiceQuestion = new Questions(multipleChoiceQuestionText, choices, "3", Difficulty.INTERMEDIATE);
         assessmentQuestions.add(multipleChoiceQuestion);
 
+        // Collect answer for multiple-choice question
+        String userAnswerMCQ = scanner.nextLine().trim();
+        multipleChoiceQuestion.submitAnswer(userAnswerMCQ);
+
         String openEndedQuestionText = "What is the word for '" + englishTranslationOpenEnded + "' in Spanish?";
         System.out.println(openEndedQuestionText);
         Narriator.playSound(openEndedQuestionText);
         Questions openEndedQuestion = new Questions(openEndedQuestionText, spanishWordOpenEnded, Difficulty.ADVANCED);
         assessmentQuestions.add(openEndedQuestion);
 
+        // Collect answer for open-ended question
+        String userAnswerOpenEnded = scanner.nextLine().trim();
+        openEndedQuestion.submitAnswer(userAnswerOpenEnded);
+
+        // Create assessment object with scored responses
         assessment = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, assessmentQuestions);
 
-        for (Questions question : assessment.getQuestions()) {
-            System.out.println(question.getQuestionText());
-            if (question.getOptions() != null) {
-                System.out.println("Options are: " + String.join(", ", question.getOptions()));
-                Narriator.playSound("Options are: " + String.join(", ", question.getOptions()));
-            }
-
-            String userAnswer = scanner.nextLine().trim();
-            question.submitAnswer(userAnswer);
-        }
-
+        // Calculate score and display results
         int score = assessment.calculateScore();
         Narriator.playSound("Your score is " + score + " percent.");
         System.out.println("Your score: " + score + "%");
