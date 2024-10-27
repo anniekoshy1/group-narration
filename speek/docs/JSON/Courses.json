@@ -8,12 +8,12 @@
         "completed": false,
         "lessons": [
             {
-                "lessonName": "Lesson1",
+                "lessonName": "Storytelling",
                 "lessonID": "7479de25-c6c0-4701-abaf-a25f75f98f3f",
                 "lessonProgress": 0,
                 "description": "Greetings and opening phrases, Introducing yourself and Others, Days of the Week and Seasons, Family Members",
-                "spanishContent": "Title: Family Morning Routine - Una mañana, la familia Méndez se estaba preparando para ir a la escuela. Mía, la hija, tenía que cepillarse los dientes, cepillarse el pelo, desayunar y vestirse. Translation: One morning, the Mendez family was getting ready for school. Mia, the daughter, had to brush her teeth, brush her hair, eat breakfast, and put on clothes.",
-                "englishContent": "Title: Market Adventure - La familia Méndez fue al mercado el domingo para comprar frutas y verduras frescas. Translation: The Mendez family went to the market on Sunday to buy fresh fruits and vegetables."
+                "spanishContent": "Title: Family Morning Routine - Una mañana, la familia Méndez se estaba preparando para ir a la escuela. Mía, la hija, tenía que cepillarse los dientes, cepillarse el pelo, desayunar y vestirse.",
+                "englishContent": "Title: Family Morning Routine - One morning, the Mendez family was getting ready for school. Mia, the daughter, had to brush her teeth, brush her hair, eat breakfast, and put on clothes. The son, Juan, had to brush his teeth, eat breakfast, and pack his backpack. Mom made the food, and dad walked them to school."
             }
 
         ],

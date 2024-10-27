@@ -298,6 +298,48 @@
         "word": "Adelante",
         "translation": "Go ahead",
         "difficulty": "INTERMEDIATE"
+    },
+    {
+        "id": "51",
+        "word": "Hija",
+        "translation": "Daughter",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "52",
+        "word": "Hijo",
+        "translation": "Son",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "53",
+        "word": "Hija",
+        "translation": "Daughter",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "54",
+        "word": "Cabello",
+        "translation": "Hair",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "55",
+        "word": "Desayuno",
+        "translation": "Breakfast",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "56",
+        "word": "Ropa",
+        "translation": "Clothes",
+        "difficulty": "RUDIMENTARY"
+    },
+    {
+        "id": "57",
+        "word": "Mochila",
+        "translation": "Backpack",
+        "difficulty": "INTERMEDIATE"
     }
 ]
 

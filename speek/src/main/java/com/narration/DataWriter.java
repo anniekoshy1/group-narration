@@ -67,7 +67,7 @@ public class DataWriter extends DataConstants {
             userList.add(userJSON);
         }
 
-        try (FileWriter file = new FileWriter(DataConstants.USERS_FILE)) {
+        try (FileWriter file = new FileWriter(USERS_FILE)) {
             file.write(userList.toJSONString());
             file.flush();
         } catch (Exception e) {
@@ -108,7 +108,7 @@ public class DataWriter extends DataConstants {
             courseList.add(courseJSON);
         }
 
-        try (FileWriter file = new FileWriter(DataConstants.COURSES_FILE)) {
+        try (FileWriter file = new FileWriter(COURSES_FILE)) {
             file.write(courseList.toJSONString());
             file.flush();
         } catch (Exception e) {
@@ -140,7 +140,7 @@ public class DataWriter extends DataConstants {
      * @param user the user whose progress is being saved
      */
     public void saveUserProgress(User user) {
-        ArrayList<User> users = new DataLoader().getUsers();
+        ArrayList<User> users = DataLoader.getUsers();
         for (User existingUser : users) {
             if (existingUser.getId().equals(user.getId())) {
                 existingUser.setProgress(user.getProgress());
@@ -157,7 +157,7 @@ public class DataWriter extends DataConstants {
      * @param assessment the assessment being saved
      */
     public void saveAssessmentHistory(User user, Assessment assessment) {
-        ArrayList<User> users = new DataLoader().getUsers();
+        ArrayList<User> users = DataLoader.getUsers();
         for (User existingUser : users) {
             if (existingUser.getId().equals(user.getId())) {
                 break;
@@ -177,8 +177,6 @@ public class DataWriter extends DataConstants {
             JSONObject wordObj = new JSONObject();
             wordObj.put("word", word.getWordText());
             wordObj.put("definition", word.getDefinition());
-            wordObj.put("partOfSpeech", word.getPartOfSpeech());
-            wordObj.put("language", word.getLanguage());
             wordsArray.add(wordObj);
         }
 
@@ -200,7 +198,6 @@ public class DataWriter extends DataConstants {
             JSONObject phraseObj = new JSONObject();
             phraseObj.put("phrase", phrase.getPhraseText());
             phraseObj.put("definition", phrase.getDefinition());
-            phraseObj.put("partOfSpeech", phrase.getPartOfSpeech());
             phrasesArray.add(phraseObj);
         }
 
@@ -210,6 +207,3 @@ public class DataWriter extends DataConstants {
             e.printStackTrace();
         }
     };    
-
-
-}

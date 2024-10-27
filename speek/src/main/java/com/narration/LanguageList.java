@@ -19,7 +19,6 @@ public class LanguageList {
 
     /**
      * Returns the singleton instance of the LanguageList.
-     *
      * @return the singleton LanguageList instance
      */
     public static LanguageList getInstance() {
@@ -31,7 +30,6 @@ public class LanguageList {
 
     /**
      * Adds a language to the list.
-     *
      * @param language the language to add
      */
     public void addLanguage(Language language) {
@@ -40,7 +38,6 @@ public class LanguageList {
 
     /**
      * Removes a language from the list.
-     *
      * @param language the language to remove
      * @return true if the language was successfully removed, false otherwise
      */
@@ -58,8 +55,7 @@ public class LanguageList {
     }
 
     /**
-     * Finds a language by its name.
-     *
+     * Finds a language by its name
      * @param name the name of the language to find
      * @return the Language object if found, otherwise null
      */
@@ -73,7 +69,7 @@ public class LanguageList {
     }
 
     /**
-     * Finds languages that contain a specified keyword.
+     * Finds languages that contain a specified keyword
      * @param keyWord the keyword to search for
      * @return an ArrayList of languages containing the keyword
      */

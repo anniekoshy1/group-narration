@@ -1,30 +1,47 @@
+/**
+ * Represents a starter test consisting of a list of questions. 
+ * Manages the user's score, total questions, and difficulty level determination based on performance
+ */
 package com.narration;
+
 import java.util.List;
 
 public class StarterTest {
 
-    private List<Questions> questions;  // List of questions in the starter test
-    private int userScore;  // The user's score on the test
-    private int totalQuestions;  // Total number of questions in the test
+    private List<Questions> questions;
+    private int userScore;
+    private int totalQuestions;
 
+    /**
+     * Constructs a StarterTest with a specified list of questions.
+     * @param questions the list of questions for the starter test
+     */
     public StarterTest(List<Questions> questions) {
         this.questions = questions;
         this.totalQuestions = questions.size();
         this.userScore = 0;
     }
 
-    // Get the list of questions in the test
+    /**
+     * Gets the list of questions in the test.
+     * @return the list of questions
+     */
     public List<Questions> getQuestions() {
         return questions;
     }
 
-    // Set the list of questions in the test
+    /**
+     * Sets the list of questions for the test and updates the total question count.
+     * @param questions the new list of questions
+     */
     public void setQuestions(List<Questions> questions) {
         this.questions = questions;
         this.totalQuestions = questions.size();
     }
 
-    // Submit the user's answers and calculate the score
+    /**
+     * Submits the user's answers for the test and calculates the score.
+     */
     public void submitTest() {
         int correctAnswers = 0;
         for (Questions question : questions) {
@@ -35,12 +52,18 @@ public class StarterTest {
         userScore = correctAnswers;
     }
 
-    // Get the user's score on the test
+    /**
+     * Gets the user's score on the test.
+     * @return the user's score
+     */
     public int getUserScore() {
         return userScore;
     }
 
-    // Get the user's score as a percentage
+    /**
+     * Gets the user's score as a percentage of total questions.
+     * @return the score percentage, or 0.0 if there are no questions
+     */
     public double getScorePercentage() {
         if (totalQuestions == 0) {
             return 0.0;
@@ -48,6 +71,9 @@ public class StarterTest {
         return (double) userScore / totalQuestions * 100.0;
     }
 
+    /**
+     * Resets the test by clearing the user's score and resetting all answers.
+     */
     public void resetTest() {
         userScore = 0;
         for (Questions question : questions) {
@@ -55,6 +81,10 @@ public class StarterTest {
         }
     }
 
+    /**
+     * Determines the difficulty level based on the user's score percentage.
+     * @return the determined difficulty level (ADVANCED, INTERMEDIATE, or RUDIMENTARY)
+     */
     public Difficulty determineLevel() {
         double percentage = getScorePercentage();
         if (percentage >= 90) {
@@ -66,18 +96,27 @@ public class StarterTest {
         }
     }
 
-    // Get the total number of questions in the test
+    /**
+     * Gets the total number of questions in the test.
+     * @return the total number of questions
+     */
     public int getTotalQuestions() {
         return totalQuestions;
     }
 
-    // Add a question to the test
+    /**
+     * Adds a question to the test and updates the total question count.
+     * @param question the question to add
+     */
     public void addQuestion(Questions question) {
         questions.add(question);
         totalQuestions++;
     }
 
-    // Remove a question from the test
+    /**
+     * Removes a question from the test and updates the total question count.
+     * @param question the question to remove
+     */
     public void removeQuestion(Questions question) {
         questions.remove(question);
         totalQuestions--;

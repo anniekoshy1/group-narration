@@ -25,21 +25,6 @@ public class WordsList {
         this.words.add(word);
     }
 
-    /**
-     * Retrieves words filtered by a specific part of speech.
-     *
-     * @param partOfSpeech The part of speech to filter by.
-     * @return A list of words matching the specified part of speech.
-     */
-    public List<Word> getWordsByPartOfSpeech(String partOfSpeech) {
-        List<Word> filteredWords = new ArrayList<>();
-        for (Word word : words) {
-            if (word.getPartOfSpeech().equalsIgnoreCase(partOfSpeech)) {
-                filteredWords.add(word);
-            }
-        }
-        return filteredWords;
-    }
 
     /**
      * Retrieves a random word from the list.

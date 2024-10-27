@@ -23,54 +23,70 @@ public class DataLoader extends DataConstants {
     public static final String WORDS_FILE = "speek/docs/JSON/words.json";
     public static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
-    private JSONObject wordsData;
-public DataLoader() {
-    loadWordsData();
-}
+    private static JSONObject wordsData;
+    public DataLoader() {
+        loadWordsData();
+    }
 
-    
+        
     /**
      * Loads users from the JSON file and constructs a list of User objects.
      * @return a list of User objects
      */
-public static ArrayList<User> getUsers() {
-    ArrayList<User> users = new ArrayList<>();
+    public static ArrayList<User> getUsers() {
+        ArrayList<User> users = new ArrayList<>();
 
-    try (FileReader reader = new FileReader(DataConstants.USERS_FILE)) {
-        JSONParser jsonParser = new JSONParser();
-        JSONArray userList = (JSONArray) jsonParser.parse(reader);
+        try (FileReader reader = new FileReader(DataConstants.USERS_FILE)) {
+            JSONParser jsonParser = new JSONParser();
+            JSONArray userList = (JSONArray) jsonParser.parse(reader);
 
-        for (Object obj : userList) {
-            JSONObject userJSON = (JSONObject) obj;
-            UUID id = parseUUID((String) userJSON.get("userId"), "userID");
-            String username = (String) userJSON.get("username");
-            String email = (String) userJSON.get("email");
-            String password = (String) userJSON.get("password");
+            for (Object obj : userList) {
+                JSONObject userJSON = (JSONObject) obj;
+                UUID id = parseUUID((String) userJSON.get("userId"), "userID");
+                String username = (String) userJSON.get("username");
+                String email = (String) userJSON.get("email");
+                String password = (String) userJSON.get("password");
 
-            ArrayList<Course> courses = new ArrayList<>();
-            JSONArray coursesJSON = (JSONArray) userJSON.get("courses");
-            // Null check for coursesJSON before iterating
-            if (coursesJSON != null) {
-                for (Object courseObj : coursesJSON) {
-                    JSONObject courseJSON = (JSONObject) courseObj;
-                    UUID courseId = parseUUID((String) courseJSON.get("courseID"), "courseID");
-                    String courseName = (String) courseJSON.get("name");
-                    String courseDescription = (String) courseJSON.get("description");
-                    boolean userAccess = courseJSON.containsKey("userAccess");
-                    double courseProgress = courseJSON.containsKey("courseProgress") ? ((Number) courseJSON.get("courseProgress")).doubleValue() : 0.0;
-                    boolean completed = courseJSON.containsKey("completed");
+                ArrayList<Course> courses = new ArrayList<>();
+                JSONArray coursesJSON = (JSONArray) userJSON.get("courses");
 
-                    // Assuming these fields have default values for Course
-                    ArrayList<Assessment> assessments = new ArrayList<>();
-                    ArrayList<String> completedAssessments = new ArrayList<>();
-                    ArrayList<Lesson> lessons = new ArrayList<>();
-                    Lesson lesson = new Lesson("Default Lesson", UUID.randomUUID(), "Default Description", 0.0, "Default Content");
-                    FlashcardQuestion flashcard = new FlashcardQuestion("Default Question", "Default Answer");
+                // Null check for coursesJSON before iterating
+                if (coursesJSON != null) {
+                    for (Object courseObj : coursesJSON) {
+                        JSONObject courseJSON = (JSONObject) courseObj;
+                        UUID courseId = parseUUID((String) courseJSON.get("courseID"), "courseID");
+                        String courseName = (String) courseJSON.get("name");
+                        String courseDescription = (String) courseJSON.get("description");
+                        boolean userAccess = courseJSON.containsKey("userAccess");
+                        double courseProgress = courseJSON.containsKey("courseProgress") ? ((Number) courseJSON.get("courseProgress")).doubleValue() : 0.0;
+                        boolean completed = courseJSON.containsKey("completed");
 
-                    Course course = new Course(courseId, courseName, courseDescription, userAccess, courseProgress, completed, lessons, assessments, completedAssessments, lesson, flashcard);
-                    courses.add(course);
+                        // Assuming these fields have default values for Course
+                        ArrayList<Assessment> assessments = new ArrayList<>();
+                        ArrayList<String> completedAssessments = new ArrayList<>();
+
+                        ArrayList<Lesson> lessons = new ArrayList<>();
+                        JSONArray lessonsArray = (JSONArray) courseJSON.get("lessons");
+                        if (lessonsArray != null) {
+                            for (Object lessonObj : lessonsArray) {
+                                JSONObject lessonJSON = (JSONObject) lessonObj;
+                                String lessonName = (String) lessonJSON.get("lessonName");
+                                UUID lessonId = UUID.fromString((String) lessonJSON.get("lessonID"));
+                                String lessonDescription = (String) lessonJSON.get("description");
+                                double lessonProgress = ((Number) lessonJSON.get("lessonProgress")).doubleValue();
+                                String englishContent = (String) lessonJSON.get("englishContent");
+                                String spanishContent = (String) lessonJSON.get("spanishContent");
+
+                                Lesson lesson = new Lesson(lessonName, lessonId, lessonDescription, lessonProgress, englishContent, spanishContent);
+                                lessons.add(lesson);
+                            }
+                        }
+                        FlashcardQuestion flashcard = new FlashcardQuestion("Default Question", "Default Answer");
+
+                        Course course = new Course(courseId, courseName, courseDescription, userAccess, courseProgress, completed, lessons, assessments, completedAssessments, flashcard);
+                        courses.add(course);
+                    }
                 }
-            }
 
             // Similar null checks can be added for other fields if needed
             HashMap<UUID, Double> progress = new HashMap<>();
@@ -102,23 +118,23 @@ public static ArrayList<User> getUsers() {
     } catch (Exception e) {
         e.printStackTrace();
     }
-
+    System.out.println("Total users loaded: " + users.size());
     return users;
 }
 
 
     private static UUID parseUUID(String uuidString, String fieldName) {
-    if (uuidString == null || uuidString.trim().isEmpty()) {
-        System.err.println("Warning: Missing or empty UUID for field: " + fieldName);
-        return null;  // Return null or handle as needed
+        if (uuidString == null || uuidString.trim().isEmpty()) {
+            System.err.println("Warning: Missing or empty UUID for field: " + fieldName);
+            return null;  // Return null or handle as needed
+        }
+        try {
+            return UUID.fromString(uuidString);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid UUID format for field: " + fieldName + ", value: " + uuidString);
+            return null; // Return null or handle as needed
+        }
     }
-    try {
-        return UUID.fromString(uuidString);
-    } catch (IllegalArgumentException e) {
-        System.err.println("Invalid UUID format for field: " + fieldName + ", value: " + uuidString);
-        return null; // Return null or handle as needed
-    }
-}
 
     /**
      * Confirms if a user exists based on the username and password.
@@ -155,13 +171,29 @@ public static ArrayList<User> getUsers() {
                 boolean userAccess = (Boolean) courseJSON.get("userAccess");
                 boolean completed = (Boolean) courseJSON.get("completed");
                 double courseProgress = ((Number) courseJSON.get("courseProgress")).doubleValue();
+
+                //Load assessments for this courses
                 ArrayList<Assessment> assessments = new ArrayList<>();
                 ArrayList<String> completedAssessments = new ArrayList<>();
+
+                //Load lessons for this course
                 ArrayList<Lesson> lessons = new ArrayList<>();
-                Lesson lesson = new Lesson("Default Lesson", UUID.randomUUID(), "Default Description", 0.0, "Default Content");
-                FlashcardQuestion flashcard = new FlashcardQuestion("Default Question", "Default Answer");
+                JSONArray lessonsArray = (JSONArray) courseJSON.get("lessons");
+                for (Object lessonObj : lessonsArray) {
+                    JSONObject lessonJSON = (JSONObject) lessonObj;
+                    String lessonName = (String) lessonJSON.get("lessonName");
+                    UUID lessonId = UUID.fromString((String) lessonJSON.get("lessonID"));
+                    String lessonDescription = (String) lessonJSON.get("description");
+                    double lessonProgress = ((Number) lessonJSON.get("lessonProgress")).doubleValue();
+                    String englishContent = (String) lessonJSON.get("englishContent");
+                    String spanishContent = (String) lessonJSON.get("spanishContent");
+
+                Lesson lesson = new Lesson(lessonName, lessonId, lessonDescription, lessonProgress, englishContent, spanishContent);
+                lessons.add(lesson);
+            }
+            FlashcardQuestion flashcard = new FlashcardQuestion("Default Question", "Default Answer");
                 
-                Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments, lesson, flashcard);
+                Course course = new Course(id, name, description, userAccess, courseProgress, completed, lessons, assessments, completedAssessments, flashcard);
                 courses.add(course);
                 System.out.println("Loaded course: " + course.getName());
             }
@@ -176,7 +208,7 @@ public static ArrayList<User> getUsers() {
      * Loads supported languages from the JSON file
      * @return a list of Language objects
      */
-    public ArrayList<Language> getLanguages() {
+    public static ArrayList<Language> getLanguages() {
         ArrayList<Language> languages = new ArrayList<>();
         JSONParser jsonParser = new JSONParser();
 
@@ -201,7 +233,7 @@ public static ArrayList<User> getUsers() {
      * Loads words from the JSON file into a WordsList object
      * @return a WordsList object containing all loaded words
      */
-    public WordsList loadWords() {
+    public static WordsList loadWords() {
         WordsList wordsList = new WordsList();
         JSONParser parser = new JSONParser();
 
@@ -224,7 +256,7 @@ public static ArrayList<User> getUsers() {
         return wordsList;
     }
 
-private void loadWordsData() {
+private static void loadWordsData() {
     JSONParser parser = new JSONParser();
     try (FileReader reader = new FileReader(WORDS_FILE)) {
         JSONArray wordsArray = (JSONArray) parser.parse(reader);  // Parse as JSONArray
@@ -252,9 +284,8 @@ private void loadWordsData() {
                 JSONObject phraseObj = (JSONObject) obj;
                 String phraseText = (String) phraseObj.get("phrase");
                 String definition = (String) phraseObj.get("definition");
-                String partOfSpeech = (String) phraseObj.get("partOfSpeech");
 
-                Phrase phrase = new Phrase(phraseText, definition, partOfSpeech);
+                Phrase phrase = new Phrase(phraseText, definition);
                 phraseList.addPhrase(phrase);
             }
         } catch (IOException | ParseException e) {
@@ -264,7 +295,7 @@ private void loadWordsData() {
         return phraseList;
     }
 
-    public String getEnglishTranslation(String spanishWord) {
+    public static String getEnglishTranslation(String spanishWord) {
         if (wordsData == null){
             loadWordsData();
         }
@@ -304,10 +335,10 @@ private void loadWordsData() {
      * @return the loaded Assessment object
      * @throws UnsupportedOperationException if the method is not implemented
      */
-    public Assessment loadAssessmentById(String assessmentIDSTR) {
+    public static Assessment loadAssessmentById(String assessmentIDSTR) {
         throw new UnsupportedOperationException("Unimplemented method 'loadAssessmentById'");
     }
-    public List<FlashcardQuestion> loadFlashcardsFromJson(String filePath) {
+    public static List<FlashcardQuestion> loadFlashcardsFromJson(String filePath) {
         List<FlashcardQuestion> flashcards = new ArrayList<>();
         JSONParser parser = new JSONParser();
 

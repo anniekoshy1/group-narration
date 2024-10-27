@@ -1,5 +1,5 @@
 /**
- * Represents an assessment in the language learning system, consisting of multiple questions and associated user scores and attempts
+ * Represents an assessment in the language learning system, consisting of multiple questions and associated user scores and attempts.
  */
 package com.narration;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 public class Assessment {
 
     /**
-     * Enum representing the types of assessments available
+     * Enum representing the types of assessments available.
      */
     public enum AssessmentType {
         MULTIPLE_CHOICE, TRUE_FALSE, OPEN_ENDED, MATCHING
@@ -20,10 +20,11 @@ public class Assessment {
     private List<Questions> questions;  
     private int attempts;  
     private UUID id;
+    private boolean passedAssessment;
 
     /**
-     * Constructs an Assessment with the specified ID, type, and list of questions
-     * Initializes the user score and attempt count to zero
+     * Constructs an Assessment with the specified ID, type, and list of questions.
+     * Initializes the user score and attempt count to zero.
      *
      * @param id the unique identifier for the assessment
      * @param type the type of assessment
@@ -35,6 +36,7 @@ public class Assessment {
         this.userScore = 0;
         this.attempts = 0;
         this.questions = questions;
+        this.passedAssessment = false;
     }
 
     /**
@@ -48,6 +50,7 @@ public class Assessment {
 
     /**
      * Calculates the user's score based on the number of correct answers in the assessment.
+     * Sets passedAssessment to true if the score is 70% or higher.
      *
      * @return the calculated score as a percentage
      */
@@ -58,8 +61,18 @@ public class Assessment {
                 correctAnswers++;
             }
         }
-        this.userScore = (int) ((double) correctAnswers / questions.size() * 100); 
+        this.userScore = (int) ((double) correctAnswers / questions.size() * 100);
+        this.passedAssessment = userScore >= 70; // Set passedAssessment based on score
         return userScore;
+    }
+
+    /**
+     * Returns whether the user has passed the assessment.
+     *
+     * @return true if the user passed, false otherwise
+     */
+    public boolean hasPassed() {
+        return passedAssessment;
     }
 
     /**
@@ -68,13 +81,13 @@ public class Assessment {
      * @return the rating as an integer
      */
     public int calculateRating() {
-        if (userScore >= 90) {
+        if (userScore == 100) {
             return 5;
-        } else if (userScore >= 80) {
+        } else if (userScore == 80) {
             return 4;
-        } else if (userScore >= 70) {
+        } else if (userScore == 60) {
             return 3;
-        } else if (userScore >= 60) {
+        } else if (userScore == 40) {
             return 2;
         } else {
             return 1;
@@ -87,6 +100,7 @@ public class Assessment {
     public void retakeAssessment() {
         attempts++; 
         this.userScore = 0;
+        this.passedAssessment = false;
     }
 
     /**
@@ -162,7 +176,7 @@ public class Assessment {
     }
 
     /**
-     * Sets the number of attempts for this assessment
+     * Sets the number of attempts for this assessment.
      *
      * @param attempts the number of attempts to set
      */
@@ -171,7 +185,7 @@ public class Assessment {
     }
 
     /**
-     * Returns a string representation of the assessment, including its ID and user score
+     * Returns a string representation of the assessment, including its ID and user score.
      *
      * @return a string representation of the assessment
      */

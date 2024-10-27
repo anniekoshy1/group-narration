@@ -1,5 +1,5 @@
 /**
- * Represents a lesson within a course, including details like description, progress, content, and completion status.
+ * Represents a lesson within a course, including details like description, progress, English and Spanish content, and completion status
  */
 package com.narration;
 
@@ -10,37 +10,43 @@ public class Lesson {
     private final UUID id;
     private String description;
     private double lessonProgress;
-    private String content;
+    private String englishContent;
+    private String spanishContent;
     private boolean completed;
     private String lessonName;
 
     /**
-     * Constructs a Lesson with specified ID, description, progress, and content.
+     * Constructs a Lesson with specified ID, description, progress, English content, and Spanish content.
      *
+     * @param lessonName     the name of the lesson
      * @param id             the unique identifier for the lesson
      * @param description    a brief description of the lesson
      * @param lessonProgress the progress percentage of the lesson
-     * @param content        the main content of the lesson
+     * @param englishContent the main English content of the lesson
+     * @param spanishContent the main Spanish content of the lesson
      */
-    public Lesson(String lessonName, UUID id, String description, double lessonProgress, String content) {
+    public Lesson(String lessonName, UUID id, String description, double lessonProgress, String englishContent, String spanishContent) {
         this.lessonName = lessonName;
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.description = description;
         this.lessonProgress = lessonProgress;
-        this.content = content;
+        this.englishContent = englishContent;
+        this.spanishContent = spanishContent;
     }
 
     /**
      * Constructs a Lesson with description and content, initializing progress at 0.
      *
-     * @param description a brief description of the lesson
-     * @param content     the main content of the lesson
+     * @param lessonName     the name of the lesson
+     * @param description    a brief description of the lesson
+     * @param englishContent the main English content of the lesson
+     * @param spanishContent the main Spanish content of the lesson
      */
-    public Lesson(String lessonName, String description, String content) {
-        this(lessonName, UUID.randomUUID(), description, 0.0, content);
+    public Lesson(String lessonName, String description, String englishContent, String spanishContent) {
+        this(lessonName, UUID.randomUUID(), description, 0.0, englishContent, spanishContent);
     }
 
-    public String getLessonName(){
+    public String getLessonName() {
         return lessonName;
     }
 
@@ -61,8 +67,7 @@ public class Lesson {
     }
 
     /**
-     * Sets the lesson progress and automatically marks it as completed if progress reaches 100%.
-     *
+     * Sets the lesson progress and automatically marks it as completed if progress reaches 100%
      * @param lessonProgress the progress percentage of the lesson
      */
     public void setLessonProgress(double lessonProgress) {
@@ -70,17 +75,24 @@ public class Lesson {
         this.completed = lessonProgress >= 100.0;
     }
 
-    public String getContent() {
-        return content;
+    public String getEnglishContent() {
+        return englishContent;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setEnglishContent(String englishContent) {
+        this.englishContent = englishContent;
+    }
+
+    public String getSpanishContent() {
+        return spanishContent;
+    }
+
+    public void setSpanishContent(String spanishContent) {
+        this.spanishContent = spanishContent;
     }
 
     /**
-     * Checks if the lesson is completed.
-     *
+     * Checks if the lesson is completed
      * @return true if the lesson is completed, false otherwise
      */
     public boolean isCompleted() {
@@ -88,7 +100,7 @@ public class Lesson {
     }
 
     /**
-     * Marks the lesson as completed, setting the progress to 100%.
+     * Marks the lesson as completed, setting the progress to 100%
      */
     public void markAsCompleted() {
         this.completed = true;

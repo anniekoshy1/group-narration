@@ -33,12 +33,11 @@ public class Course {
      * @param lessons the list of lessons in the course
      * @param assessments the list of assessments in the course
      * @param completedAssessments the list of completed assessments
-     * @param lesson the current lesson in the course
      * @param flashcard the flashcard question in the course
      */
     public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed,
         ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments,
-        Lesson lesson, FlashcardQuestion flashcard) {
+        FlashcardQuestion flashcard) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -49,7 +48,6 @@ public class Course {
         this.assessments = assessments;
         this.completedAssessments = new ArrayList<>();
         this.flashcard = flashcard;
-        this.lesson = lesson;
     }
 
     /**

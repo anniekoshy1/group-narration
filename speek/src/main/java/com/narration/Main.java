@@ -7,7 +7,6 @@ public class Main {
 
     /**
      * Main method that plays a sample sound message and outputs confirmation to the console
-     * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
         Narriator.playSound("Bonjour, nous sommes les quatre mousquetaires!");

@@ -1,38 +1,44 @@
+/**
+ * Manages a list of phrases in the language learning system. 
+ * Provides functionality to add phrases, retrieve a random phrase, and retrieve all phrases.
+ */
 package com.narration;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class PhraseList {
     private final List<Phrase> phrases;
 
+    /**
+     * Constructs a new, empty PhraseList
+     */
     public PhraseList() {
         this.phrases = new ArrayList<>();
     }
 
-    // Add a phrase to the list
+    /**
+     * Adds a phrase to the list
+     * @param phrase the Phrase object to add
+     */
     public void addPhrase(Phrase phrase) {
         phrases.add(phrase);
     }
 
-    // Get phrases by a particular part of speech
-    public List<Phrase> getPhrasesByPartOfSpeech(String partOfSpeech) {
-        List<Phrase> filteredPhrases = new ArrayList<>();
-        for (Phrase phrase : phrases) {
-            if (phrase.getPartOfSpeech().equalsIgnoreCase(partOfSpeech)) {
-                filteredPhrases.add(phrase);
-            }
-        }
-        return filteredPhrases;
-    }
-
-    // Get a random phrase
+    /**
+     * Gets a random phrase from the list
+     * @return a randomly selected Phrase, or null if the list is empty
+     */
     public Phrase getRandomPhrase() {
         if (phrases.isEmpty()) return null;
         int randomIndex = (int) (Math.random() * phrases.size());
         return phrases.get(randomIndex);
     }
 
-    // Retrieve all phrases
+    /**
+     * Retrieves all phrases in the list
+     * @return a list of all Phrase objects
+     */
     public List<Phrase> getAllPhrases() {
         return phrases;
     }

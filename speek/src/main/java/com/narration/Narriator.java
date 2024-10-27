@@ -1,3 +1,7 @@
+/**
+ * Provides text-to-speech narration functionality using Amazon Polly.
+ * Supports narrating text, feedback messages, and questions with a Spanish accent.
+ */
 package com.narration;
 
 import java.io.IOException;
@@ -22,8 +26,8 @@ public class Narriator {
     private Narriator() {}
 
     /**
-     * Narrates any given text.
-     * @param text The text to be narrated.
+     * Narrates a given text by converting it to speech.
+     * @param text the text to be narrated
      */
     public static void playSound(String text) {
         try (PollyClient polly = PollyClient.builder().region(Region.EU_WEST_3).build()) {
@@ -35,8 +39,8 @@ public class Narriator {
     }
 
     /**
-     * Narrates a feedback message after a question or assessment.
-     * @param score The score to narrate.
+     * Narrates a feedback message based on a given score.
+     * @param score the score to narrate in the feedback
      */
     public static void playFeedback(double score) {
         String feedback = score >= 80 ? "Great job! You've scored " + score + "%. Moving to the next module." :
@@ -45,13 +49,18 @@ public class Narriator {
     }
 
     /**
-     * Reads a question aloud.
-     * @param question The question text.
+     * Narrates a given question by converting it to speech.
+     * @param question the question text to be narrated
      */
     public static void narrateQuestion(String question) {
         playSound("Question: " + question);
     }
 
+    /**
+     * Converts the specified text to speech using Amazon Polly and plays it.
+     * @param polly the PollyClient instance used to interact with Amazon Polly
+     * @param text  the text to be narrated
+     */
     private static void talkPolly(PollyClient polly, String text) {
         try {
             DescribeVoicesRequest describeVoiceRequest = DescribeVoicesRequest.builder()
@@ -77,6 +86,15 @@ public class Narriator {
         }
     }
 
+    /**
+     * Synthesizes the specified text into speech using a specific voice and output format.
+     * @param polly  the PollyClient instance used for synthesis
+     * @param text   the text to convert to speech
+     * @param voice  the Polly voice to use for the synthesis
+     * @param format the output format of the speech
+     * @return an InputStream containing the speech audio of the spoken text
+     * @throws IOException if an error occurs during synthesis
+     */
     private static InputStream synthesize(PollyClient polly, String text, Voice voice, OutputFormat format)
             throws IOException {
         SynthesizeSpeechRequest synthReq = SynthesizeSpeechRequest.builder()
