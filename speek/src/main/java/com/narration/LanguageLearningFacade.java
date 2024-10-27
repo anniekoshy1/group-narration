@@ -32,8 +32,8 @@ public class LanguageLearningFacade {
         languages.add(new Language("Spanish"));
         languageList = LanguageList.getInstance();
         this.dataWriter = new DataWriter();
-        this.wordsList = dataLoader.loadWords();
-        this.users = new DataLoader().getUsers();
+        this.wordsList = new DataLoader().loadWords();
+        this.users = DataLoader.getUsers();
 
         if (this.users == null) {
             this.users = new ArrayList<>();
@@ -48,7 +48,7 @@ public class LanguageLearningFacade {
      * @return true if login is successful, false otherwise
      */
     public boolean login(String username, String password) {
-        User foundUser = userList.getUser(username);
+        User foundUser = UserList.getInstance().getUser(username);
         if (foundUser != null && foundUser.getPassword().equals(password)) {
             this.user = foundUser;
             dataLoader.saveUserProgress(this.user);
@@ -222,7 +222,7 @@ public class LanguageLearningFacade {
         UUID userId = UUID.randomUUID();
         User newUser = new User(userId, username, email, password, new ArrayList<>(), new HashMap<>(), new ArrayList<>(), null, new ArrayList<>(), null, "English");
         userList.addUser(newUser);
-        dataWriter.saveUsers(new ArrayList<>(users));
+        DataWriter.saveUsers(UserList.getInstance().getUsers());
     }
 
     /**

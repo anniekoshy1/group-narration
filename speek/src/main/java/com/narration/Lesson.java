@@ -12,6 +12,7 @@ public class Lesson {
     private double lessonProgress;
     private String content;
     private boolean completed;
+    private String lessonName;
 
     /**
      * Constructs a Lesson with specified ID, description, progress, and content.
@@ -21,7 +22,8 @@ public class Lesson {
      * @param lessonProgress the progress percentage of the lesson
      * @param content        the main content of the lesson
      */
-    public Lesson(UUID id, String description, double lessonProgress, String content) {
+    public Lesson(String lessonName, UUID id, String description, double lessonProgress, String content) {
+        this.lessonName = lessonName;
         this.id = UUID.randomUUID();
         this.description = description;
         this.lessonProgress = lessonProgress;
@@ -34,8 +36,12 @@ public class Lesson {
      * @param description a brief description of the lesson
      * @param content     the main content of the lesson
      */
-    public Lesson(String description, String content) {
-        this(UUID.randomUUID(), description, 0.0, content);
+    public Lesson(String lessonName, String description, String content) {
+        this(lessonName, UUID.randomUUID(), description, 0.0, content);
+    }
+
+    public String getLessonName(){
+        return lessonName;
     }
 
     public UUID getId() {

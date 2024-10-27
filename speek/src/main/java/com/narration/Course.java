@@ -37,8 +37,8 @@ public class Course {
      * @param flashcard the flashcard question in the course
      */
     public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed,
-                  ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments,
-                  Lesson lesson, FlashcardQuestion flashcard) {
+        ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments,
+        Lesson lesson, FlashcardQuestion flashcard) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -124,6 +124,7 @@ public class Course {
     }
 
     public ArrayList<Lesson> getAllLessons() {
+        
         return lessons;
     }
 

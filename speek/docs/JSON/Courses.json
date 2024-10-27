@@ -8,6 +8,7 @@
         "completed": false,
         "lessons": [
             {
+                "lessonName": "Lesson1",
                 "lessonID": "7479de25-c6c0-4701-abaf-a25f75f98f3f",
                 "lessonProgress": 0,
                 "description": "Greetings and opening phrases, Introducing yourself and Others, Days of the Week and Seasons, Family Members",

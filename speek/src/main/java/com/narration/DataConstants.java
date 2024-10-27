@@ -17,7 +17,7 @@ public class DataConstants {
     
     // Constants for user information
     public static final int MIN_PASSWORD_LENGTH = 5;
-    public static final int MAX_PASSWORD_LENGTH = 8;
+    public static final int MAX_PASSWORD_LENGTH = 10;
     public static final int MAX_LOGIN_ATTEMPTS = 5;
     public static final String USER_USERNAME = "username";
     public static final String USER_PASSWORD = "password";

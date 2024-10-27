@@ -4,7 +4,7 @@
 package com.narration;
 
 public enum Difficulty {
-    RUDIMENTARY,   // Beginner level
-    INTERMEDIATE,  // Medium level
-    ADVANCED       // High level
+    Easy,   // Beginner level
+    MEDIUM,  // Medium level
+    HARD       // High level
 }

@@ -9,7 +9,7 @@ public class UserList {
     public static UserList userList;
 
     private UserList() {
-        this.users = new ArrayList<>();
+        this.users = DataLoader.getUsers();
     }
 
     public static UserList getInstance() {
