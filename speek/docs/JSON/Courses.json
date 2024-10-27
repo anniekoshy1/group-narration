@@ -11,33 +11,13 @@
                 "lessonID": "7479de25-c6c0-4701-abaf-a25f75f98f3f",
                 "lessonProgress": 0,
                 "description": "Greetings and opening phrases, Introducing yourself and Others, Days of the Week and Seasons, Family Members",
-                "content": [
-                        {"term": "Hola", "translation": "Hello"},
-                        {"term": "Buenos días", "translation": "Good morning"},
-                        {"term": "Buenas tardes", "translation": "Good afternoon"},
-                        {"term": "Buenas noches", "translation": "Good evening/night"},
-                        {"term": "Adiós", "translation": "Goodbye"},
-                        {"term": "¿Cómo te llamas?", "translation": "What’s your name?"},
-                        {"term": "Me llamo", "translation": "My name is"},
-                        {"term": "Soy ", "translation": "I am"},
-                        {"term": "¿De dónde eres?", "translation": "Where are you from?"},
-                        {"term": "Soy de", "translation": "I am from"},
-                        {"term": "¿De dónde eres?", "translation": "Where are you from?"},
-                        {"term": "Lunes", "translation": "Monday"},
-                        {"term": "Martes", "translation": "Tuesday"},
-                        {"term": "Miércoles", "translation": "Wednesday"},
-                        {"term": "Jueves", "translation": "Thursday"},
-                        {"term": "Viernes", "translation": "Friday"},
-                        {"term": "Sábado", "translation": "Saturday"},
-                        {"term": "Domingo", "translation": "Sunday"},
-                        {"term": "Otoño ", "translation": "Fall"},
-                        {"term": "Invierno ", "translation": "Winter"},
-                        {"term": "Primavera", "translation": "Spring"},
-                        {"term": "Verano", "translation": "Summer"},
-                        {"term": "Madre", "translation": "Mother"},
-                        {"term": "Padre", "translation": "Father"},
-                        {"term": "Hermano", "translation": "Brother"},
-                        {"term": "Hermano", "translation": "Sister"}
+                "content": [ 
+                    {
+                        "story": "Title: Family Morning Routine - Una mañana, la familia Méndez se estaba preparando para ir a la escuela. Mía, la hija, tenía que cepillarse los dientes, cepillarse el pelo, desayunar y vestirse. Translation: One morning, the Mendez family was getting ready for school. Mia, the daughter, had to brush her teeth, brush her hair, eat breakfast, and put on clothes."
+                    },
+                    {
+                        "story": "Title: Market Adventure - La familia Méndez fue al mercado el domingo para comprar frutas y verduras frescas. Translation: The Mendez family went to the market on Sunday to buy fresh fruits and vegetables."
+                    }
                 ]
             }
 

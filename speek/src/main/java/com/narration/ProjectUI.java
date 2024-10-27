@@ -1,12 +1,16 @@
 package com.narration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 public class ProjectUI {
 
     private LanguageLearningFacade facade;
     private Scanner scanner;
     private DataConstants dataConstants;
+    private Lesson currentLesson;
+    private Course course;
 
     public ProjectUI() {
         facade = new LanguageLearningFacade();
@@ -160,39 +164,47 @@ private void register() {
     }
 
     private void startCourse() {
+        ArrayList<Course> allCourses = facade.getAllCourses();
         if (!isLoggedIn()) {
             System.out.println("You must log in to start a course.");
             return;
         }
-
-        System.out.println("Available courses: ");
-        for (Course course : facade.getAllCourses()) {
-            System.out.println("- " + course.getName());
+        if (allCourses.isEmpty()) {
+            System.out.println("No courses available.");
+            return;
         }
 
-        System.out.print("Select a course to start: ");
-        String courseName = scanner.nextLine(); 
+        System.out.println("Available courses: ");
+        for (int i = 0; i < allCourses.size(); i++) {
+            System.out.println((i + 1) + ". " + allCourses.get(i).getName());
+        }
+    
+        System.out.print("Select a course by entering the corresponding number: ");
+        int courseIndex;
+        try {
+            courseIndex = Integer.parseInt(scanner.nextLine()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            return;
+        }
+    
+        if (courseIndex < 0 || courseIndex >= allCourses.size()) {
+            System.out.println("Invalid selection. Please choose a valid course number.");
+            return;
+        }
+    
+        Course selectedCourse = allCourses.get(courseIndex);
+        facade.startCourse(selectedCourse); 
+        System.out.println("Course started: " + selectedCourse.getName());
 
-        Course selectedCourse = facade.getAllCourses().stream()
-                .filter(course -> course.getName().equalsIgnoreCase(courseName) || 
-                        "Starting Out".equalsIgnoreCase(courseName))
-                .findFirst()
-                .orElse(null);
-                
-                if (selectedCourse != null) {
-                    facade.startCourse(selectedCourse); 
-                    System.out.println("Course started: " + selectedCourse.getName());
-                    courseActivitiesMenu(); // Go directly to activities menu
-                } else {
-                    System.out.println("Course not found.");
-                }
+        courseActivitiesMenu();
     }
 
     private void courseActivitiesMenu() {
         boolean exit = false;
-
+        System.out.println("Course Activities:");
+        
         while (!exit) {
-            System.out.println("\nCourse Activities:");
             System.out.println("1. Flashcard Practice");
             System.out.println("2. Storytelling");
             System.out.println("3. Exit to Main Menu");
@@ -203,9 +215,11 @@ private void register() {
             switch (choice) {
                 case 1:
                     startFlashcards();
+                    startAssessment();
                     break;
                 case 2:
-                    startStoryTelling();
+                    startLesson();
+                    startAssessment();
                     break;
                 case 3:
                     exit = true;
@@ -216,6 +230,7 @@ private void register() {
             }
         }
     }
+    
 
     private void startFlashcards() {
         System.out.println("Starting Flashcard Practice...");
@@ -247,6 +262,7 @@ private void register() {
             System.out.print("Enter 'done' to mark this flashcard as completed or press Enter to continue: ");
             String continueResponse = scanner.nextLine().trim();
             flashcard.markAsCompleted(continueResponse);
+            course.calculateProgress();
 
             if (flashcard.isCompleted()) {
                 System.out.println("Flashcard marked as complete.");
@@ -257,7 +273,7 @@ private void register() {
         System.out.println("Exiting Flashcard Practice.");
     }
 
-        private void startStoryTelling() {
+        private void startLesson() {
             System.out.println("Starting Storytelling...");
 
             String spanishStory = "Una mañana, la familia Méndez se estaba preparando para ir a la escuela. Mía, la hija, tenía que cepillarse los dientes, cepillarse el pelo, desayunar y vestirse. El hijo, Juan, tuvo que cepillarse los dientes, desayunar y hacer la mochila. Mamá preparó la comida y papá los acompañó a la escuela.";
@@ -270,35 +286,37 @@ private void register() {
             System.out.println("Now reading the translation...");
             Narriator.playSound(englishStory);
             System.out.println(englishStory);
-
-            System.out.print("Enter 'done' to mark stoytelling as completed or press enter to continue");
+            
+            System.out.print("Enter 'done' to mark lesson as completed or press enter to continue");
             String continueResponse = scanner.nextLine().trim();
             if (continueResponse.equalsIgnoreCase("done")) {
-                facade.markStoryTellingComplete();
+                
+                currentLesson.markAsCompleted();
+                course.calculateProgress();
             }
             System.out.println("Exiting Storytelling.");
         }
 
         private void startAssessment() {
-        Course currentCourse = facade.getCurrentUser().getCourses().get(0);
+            Course currentCourse = facade.getCurrentUser().getCourses().get(0);
 
-        currentCourse.calculateProgress();
+            currentCourse.calculateProgress();
 
-        if (currentCourse.completedCourse()) {
-            System.out.println("Course is completed. Do you want to start the assessment? (yes/no)");
-            String response = scanner.nextLine();
+            if (currentCourse.completedCourse()) {
+                System.out.println("Course is completed. Do you want to start the assessment? (yes/no)");
+                String response = scanner.nextLine();
 
-            if (response.equalsIgnoreCase("yes")) {
-                Assessment assessment = currentCourse.getAllAssessments().get(0);
-                loadQuestionsFromJson(assessment);
-                facade.startAssessment(assessment);
-                System.out.println("Assessment started.");
-            } else {
-                System.out.println("Assessment not started.");
-            }
-        } else {
-            System.out.println("You need to complete the course before taking the assessment.");
-        }
+                if (response.equalsIgnoreCase("yes")) {
+                    Assessment assessment = currentCourse.getAllAssessments().get(0);
+                    loadQuestionsFromJson(assessment);
+                    facade.startAssessment(assessment);
+                    System.out.println("Assessment started.");
+                } else {
+                    System.out.println("Assessment not started.");
+                }
+                } else {
+                    System.out.println("You need to complete the course before taking the assessment.");
+                }
     }
 
     private void loadQuestionsFromJson(Assessment assessment) {

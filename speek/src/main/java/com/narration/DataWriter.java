@@ -1,4 +1,8 @@
+/**
+ * Class responsible for writing data to JSON files, including user data, courses, languages, words, and phrases
+ */
 package com.narration;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,10 +19,11 @@ public class DataWriter extends DataConstants {
     private static final String WORDS_FILE = "speek/docs/JSON/words.json";
     private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
-
-    //done3
+    /**
+     * Saves a list of users to the JSON file.
+     * @param users the list of users to be saved
+     */
     @SuppressWarnings("unchecked")
-
     public static void saveUsers(ArrayList<User> users) {
         JSONArray userList = new JSONArray();
 
@@ -29,38 +34,32 @@ public class DataWriter extends DataConstants {
             userJSON.put("email", user.getEmail());
             userJSON.put("password", user.getPassword());
 
-            // Convert courses to JSON
             JSONArray coursesJSON = new JSONArray();
             for (Course course : user.getCourses()) {
                 JSONObject courseJSON = new JSONObject();
                 courseJSON.put("courseID", course.getId().toString());
-                // Add other course fields as needed
                 coursesJSON.add(courseJSON);
             }
             userJSON.put("courses", coursesJSON);
 
-            // Convert progress to JSON
             JSONObject progressJSON = new JSONObject();
             for (UUID courseId : user.getProgress().keySet()) {
                 progressJSON.put(courseId.toString(), user.getCourseProgress(courseId));
             }
             userJSON.put("progress", progressJSON);
 
-            // Convert completed courses to JSON
             JSONArray completedCoursesJSON = new JSONArray();
             for (UUID courseId : user.getCompletedCourses()) {
                 completedCoursesJSON.add(courseId.toString());
             }
             userJSON.put("completedCourses", completedCoursesJSON);
 
-            // Convert languages to JSON
             JSONArray languagesJSON = new JSONArray();
             for (Language lang : user.getLanguages()) {
-                languagesJSON.add(lang.getName());  // Assuming Language is an enum
+                languagesJSON.add(lang.getName());
             }
             userJSON.put("languages", languagesJSON);
 
-            // Add current course and language info
             userJSON.put("currentCourseID", user.getCurrentCourse().toString());
             userJSON.put("currentLanguageID", user.getCurrentLanguage().toString());
             userJSON.put("currentLanguageName", user.getCurrentLanguageName());
@@ -76,19 +75,27 @@ public class DataWriter extends DataConstants {
         }
     }
 
-// Helper method to write to the file
-private boolean writeToFile(String filePath, JSONArray jsonArray) {
-    try (FileWriter file = new FileWriter(filePath)) {
-        file.write(jsonArray.toJSONString());
-        file.flush();
-        return true;
-    } catch (IOException e) {
-        e.printStackTrace();  // Handle exceptions for file writing
-        return false;
+    /**
+     * Writes a JSON array to the specified file.
+     * @param filePath the path of the file
+     * @param jsonArray the JSON array to write
+     * @return true if writing was successful, false otherwise
+     */
+    private boolean writeToFile(String filePath, JSONArray jsonArray) {
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(jsonArray.toJSONString());
+            file.flush();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-    //done
+    /**
+     * Saves a list of courses to the JSON file.
+     * @param courses the list of courses to save
+     */
     @SuppressWarnings("unchecked")
     public static void saveCourses(ArrayList<Course> courses) {
         JSONArray courseList = new JSONArray();
@@ -98,12 +105,10 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
             courseJSON.put("courseID", course.getId());
             courseJSON.put("name", course.getName());
             courseJSON.put("description", course.getDescription());
-            // Add additional fields as needed
-
             courseList.add(courseJSON);
         }
 
-        try (FileWriter file = new FileWriter(DataConstants.COURSE_FILE)) {
+        try (FileWriter file = new FileWriter(DataConstants.COURSES_FILE)) {
             file.write(courseList.toJSONString());
             file.flush();
         } catch (Exception e) {
@@ -111,7 +116,11 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         }
     }
 
-    //done
+    /**
+     * Saves a list of languages to the JSON file.
+     * @param languages the list of languages to save
+     * @return true if successful, false otherwise
+     */
     @SuppressWarnings("unchecked")
     public boolean saveLanguages(ArrayList<Language> languages) {
         JSONArray languageArray = new JSONArray();
@@ -126,7 +135,10 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         return writeToFile(LANGUAGES_FILE, languageArray);
     }
 
-    //done
+    /**
+     * Saves the user progress to the JSON file by updating the user's data.
+     * @param user the user whose progress is being saved
+     */
     public void saveUserProgress(User user) {
         ArrayList<User> users = new DataLoader().getUsers();
         for (User existingUser : users) {
@@ -138,7 +150,12 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         saveUsers(users);
     }
 
-    //done
+    /**
+     * Saves the assessment history for a user.
+     *
+     * @param user the user whose assessment history is saved
+     * @param assessment the assessment being saved
+     */
     public void saveAssessmentHistory(User user, Assessment assessment) {
         ArrayList<User> users = new DataLoader().getUsers();
         for (User existingUser : users) {
@@ -149,7 +166,10 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         saveUsers(users);
     }
 
-    // Save words to the JSON file
+    /**
+     * Saves words from the WordsList to the JSON file.
+     * @param wordsList the WordsList containing words to save
+     */
     @SuppressWarnings("unchecked")
     public void saveWords(WordsList wordsList) {
         JSONArray wordsArray = new JSONArray();
@@ -169,7 +189,10 @@ private boolean writeToFile(String filePath, JSONArray jsonArray) {
         }
     }
 
-    // Save phrases to the JSON file
+    /**
+     * Saves phrases from the PhraseList to the JSON file.
+     * @param phraseList the PhraseList containing phrases to save
+     */
     @SuppressWarnings("unchecked")
     public void savePhrases(PhraseList phraseList) {
         JSONArray phrasesArray = new JSONArray();

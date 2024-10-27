@@ -1,26 +1,44 @@
+/**
+ * Represents a course in the language learning system, containing lessons, assessments, and progress tracking.
+ */
 package com.narration;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
 public class Course {
 
-    private String name;  // Name of the course
-    private String description;  // Description of the course
-    private boolean userAccess;  // Access status of the course
-    private double courseProgress;  // Progress of the course (0.0 to 100.0)
-    private ArrayList<Lesson> lessons;  // List of lessons in the course
-    private ArrayList<Assessment> assessments;  // List of assessments in the course
-    private ArrayList<String> keyWords;  // Keywords related to the course
-    private UUID id;  // Unique identifier for the course
-    private boolean completed;  // Indicates whether the course is completed
-    private ArrayList<String> completedAssessments;  // List of completed assessments
-    private FlashcardQuestion flashcard;  // Track the progress of the flashcard
+    private String name;
+    private String description;
+    private boolean userAccess;
+    private double courseProgress;
+    private ArrayList<Lesson> lessons;
+    private ArrayList<Assessment> assessments;
+    private ArrayList<String> keyWords;
+    private UUID id;
+    private boolean completed;
+    private ArrayList<String> completedAssessments;
+    private FlashcardQuestion flashcard;
     private Lesson lesson;
-    
 
-
-    // Full constructor to set up a course with all details
-    public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed, ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments, Lesson lesson, FlashcardQuestion flashcard) {
+    /**
+     * Constructs a Course with all details.
+     *
+     * @param id the unique identifier of the course
+     * @param name the name of the course
+     * @param description the description of the course
+     * @param userAccess the access status of the course
+     * @param courseProgress the progress of the course
+     * @param completed indicates whether the course is completed
+     * @param lessons the list of lessons in the course
+     * @param assessments the list of assessments in the course
+     * @param completedAssessments the list of completed assessments
+     * @param lesson the current lesson in the course
+     * @param flashcard the flashcard question in the course
+     */
+    public Course(UUID id, String name, String description, boolean userAccess, double courseProgress, boolean completed,
+                  ArrayList<Lesson> lessons, ArrayList<Assessment> assessments, ArrayList<String> completedAssessments,
+                  Lesson lesson, FlashcardQuestion flashcard) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -29,119 +47,103 @@ public class Course {
         this.completed = completed;
         this.lessons = lessons;
         this.assessments = assessments;
-        this.completedAssessments = new ArrayList<>(); 
-        this.flashcard = flashcard; 
-        this.lesson = lesson; // Default progress 
-    }//done
+        this.completedAssessments = new ArrayList<>();
+        this.flashcard = flashcard;
+        this.lesson = lesson;
+    }
 
-    //done
+    /**
+     * Constructs a Course with an ID and progress
+     *
+     * @param id the unique identifier of the course
+     * @param courseProgress the progress of the course
+     */
     public Course(UUID id, double courseProgress) {
         this.id = id;
         this.courseProgress = courseProgress;
     }
 
-	//done
     public double getCourseProgress() {
         return this.courseProgress;
     }
 
-    //done
-    // Get the name of the course
     public String getName() {
         return name;
     }
 
-    //done
-    // Set the name of the course
     public void setName(String name) {
         this.name = name;
     }
 
-    //done
-    // Get the description of the course
     public String getDescription() {
         return description;
     }
 
-    //done
-    // Set the description of the course
     public void setDescription(String description) {
         this.description = description;
     }
 
-    //done
-    // Get the progress of the course
+    /**
+     * Calculates and updates the course progress based on the completion status of lessons and flashcards
+     */
     public void calculateProgress() {
         if (lesson.isCompleted() && flashcard.isCompleted()) {
             courseProgress = 100.0;
-        } 
-        else if(lesson.isCompleted() || flashcard.isCompleted()){
+            System.out.println(courseProgress);
+        } else if (lesson.isCompleted() || flashcard.isCompleted()) {
             courseProgress = 50.0;
-        }
-        else {
+            System.out.println("gay gay gay "+courseProgress);
+        } else {
             courseProgress = 0.0;
         }
     }
 
-
-    //done
     public void setCourseProgress(double courseProgress) {
         if (courseProgress >= 0.0 && courseProgress <= 100.0) {
             this.courseProgress = courseProgress;
         }
     }
 
-    //done
     public boolean getUserAccess() {
         return userAccess;
     }
     
-    //done
     public void setUserAccess(boolean userAccess) {
         this.userAccess = userAccess;
     }
 
-    //done
-    // Check if the course is completed
     public boolean isCompletedCourse() {
         return completed;
     }
 
-    //done
-    // Set the course as completed
     public void setCompleted(boolean completed) {
         this.completed = completed;
         if (completed) {
-            this.courseProgress = 100.0;  // If the course is marked completed, set progress to 100%
+            this.courseProgress = 100.0;
         }
     }
 
-    //done
-    // Get all the lessons in the course
     public ArrayList<Lesson> getAllLessons() {
         return lessons;
     }
 
-    //done
-    // Add a lesson to the course
     public void addLesson(Lesson lesson) {
         lessons.add(lesson);
     }
 
-    //done
-    // Get all the assessments in the course
     public ArrayList<Assessment> getAllAssessments() {
         return assessments;
     }
 
-    //done
-    // Add an assessment to the course
     public void addAssessment(Assessment assessment) {
         assessments.add(assessment);
     }
 
-    //done
-    // Get the completed assessments in the course
+    /**
+     * Retrieves the list of completed assessments for the course.
+     *
+     * @return a list of completed assessments
+     */
     public ArrayList<String> getCompletedAssessments() {
         ArrayList<String> completed = new ArrayList<>();
         for (Assessment assessment : assessments) {
@@ -152,47 +154,43 @@ public class Course {
         return this.completedAssessments;
     }
 
-    //done
     public void setCompletedAssessments(ArrayList<String> completedAssessments) {
         this.completedAssessments = completedAssessments;
     }
     
-    //done
     public void addKeyWord(String keyWord) {
         keyWords.add(keyWord);
     }
 
-    //done
     public ArrayList<String> getKeyWords() {
         return keyWords;
     }
 
-    //done
     public UUID generateUUID() {
         return UUID.randomUUID();
     }
 
-    //done
     public UUID getId() {
         return id;
     }
 
-    //d
     public void setId(UUID id) {
         this.id = id;
     }
 
-    //done
-    //done
-    // Mark the course as completed
+    /**
+     * Marks the course as completed and sets the progress to 100%
+     */
     public void setCompletedCourse() {
         this.completed = true;
         this.courseProgress = 100.0;
     }
 
-    //done
-    //done
-    // Check if the course is fully completed based on progress
+    /**
+     * Checks if the course is fully completed based on progress
+     *
+     * @return true if the course progress is 100%, false otherwise
+     */
     public boolean completedCourse() {
         return this.courseProgress == 100.0;
     }

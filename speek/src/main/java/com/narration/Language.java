@@ -1,3 +1,6 @@
+/**
+ * Represents a language within the language learning system, tracking a user's progress, completed courses, assessments, and keywords associated with the language
+ */
 package com.narration;
 
 import java.util.ArrayList;
@@ -6,18 +9,23 @@ import java.util.UUID;
 
 public class Language {
 
-    private final UUID id;  // Marked as final
-    private User user;  // The user who is learning the language
-    private StarterTest starterTest;  // The initial test for placement
-    private final String name;  // Marked as final
-    private double coursePercentage;  // Progress percentage for courses
-    private double totalPercentage;  // Overall progress percentage in the language
-    private double languageProgress;  // Progress in learning the language
-    private ArrayList<String> keyWords;  // Keywords related to the language
-    private ArrayList<Course> completedCourses;  // List of completed courses
-    private ArrayList<Assessment> completedAssessments;  // List of completed assessments
+    private final UUID id;
+    private User user;
+    private StarterTest starterTest;
+    private final String name;
+    private double coursePercentage;
+    private double totalPercentage;
+    private double languageProgress;
+    private ArrayList<String> keyWords;
+    private ArrayList<Course> completedCourses;
+    private ArrayList<Assessment> completedAssessments;
     private HashMap<Course, Boolean> courseAccess;
 
+    /**
+     * Constructs a Language instance associated with a user and language name
+     * @param user the user learning the language
+     * @param name the name of the language
+     */
     public Language(User user, String name) {
         this.id = UUID.randomUUID();
         this.user = user;
@@ -31,18 +39,19 @@ public class Language {
         this.courseAccess = new HashMap<>();
     }
 
+    /**
+     * Constructs a Language instance with the specified name.
+     * @param name the name of the language
+     */
     public Language(String name) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.coursePercentage = 0.0;
-        this.totalPercentage = 0.0;
-        this.languageProgress = 0.0;
-        this.keyWords = new ArrayList<>();
-        this.completedCourses = new ArrayList<>();
-        this.completedAssessments = new ArrayList<>();
-        this.courseAccess = new HashMap<>();
+        this(UUID.randomUUID(), name);
     }
 
+    /**
+     * Constructs a Language instance with a specified UUID and name.
+     * @param id   the unique identifier of the language
+     * @param name the name of the language
+     */
     public Language(UUID id, String name) {
         this.id = id;
         this.name = name;
@@ -60,6 +69,11 @@ public class Language {
         this.user = user;
     }
 
+    /**
+     * Sets access to a specific course in the language.
+     * @param course the course to set access for
+     * @param access the access status (true if accessible)
+     */
     public void setCourseAccess(Course course, boolean access) {
         courseAccess.put(course, access);
     }
@@ -76,6 +90,10 @@ public class Language {
         return languageProgress;
     }
 
+    /**
+     * Sets the progress percentage of the language and updates the total percentage.
+     * @param languageProgress the progress percentage in learning the language
+     */
     public void setLanguageProgress(double languageProgress) {
         this.languageProgress = languageProgress;
         updateTotalPercentage();
@@ -85,23 +103,41 @@ public class Language {
         return completedCourses;
     }
 
+    /**
+     * Sets the list of completed courses and updates the course completion percentage.
+     * @param completedCourses the list of completed courses
+     */
     public void setCompletedCourses(ArrayList<Course> completedCourses) {
         this.completedCourses = completedCourses;
         updateCoursePercentage();
     }
 
+    /**
+     * Checks if the user has taken the starter test.
+     * @return true if the starter test is taken, false otherwise
+     */
     public boolean takenStarterTest() {
         return starterTest != null;
     }
 
+    /**
+     * Adds a keyword associated with the language.
+     * @param keyWord the keyword to add
+     */
     public void addKeyWord(String keyWord) {
         keyWords.add(keyWord);
     }
 
+    /**
+     * Updates the overall total percentage by averaging course and language progress.
+     */
     private void updateTotalPercentage() {
         this.totalPercentage = (this.coursePercentage + this.languageProgress) / 2.0;
     }
 
+    /**
+     * Updates the course completion percentage to 100 if there are completed courses.
+     */
     private void updateCoursePercentage() {
         if (!completedCourses.isEmpty()) {
             this.coursePercentage = 100.0;
@@ -116,6 +152,10 @@ public class Language {
         return keyWords;
     }
 
+    /**
+     * Adds a completed assessment to the list of completed assessments
+     * @param assessment the assessment to add
+     */
     public void addCompletedAssessment(Assessment assessment) {
         completedAssessments.add(assessment);
     }

@@ -1,33 +1,52 @@
+/**
+ * Represents a flashcard question with a front side for the prompt and a back side for the answer
+ * Includes user interactions like answering, checking correctness, and tracking completion status
+ */
 package com.narration;
 
 public class FlashcardQuestion {
 
-    private final String frontInfo;  // The front of the flashcard, now final
-    private final String backAnswer;  // The back of the flashcard, now final
-    private String userAnswer;  // The user's input or guess
-    private boolean completed;   // Track if the flashcard has been completed
-    private double flashcardProgress;  // Track the progress of the flashcard
+    private final String frontInfo;
+    private final String backAnswer;
+    private String userAnswer;
+    private boolean completed;
+    private double flashcardProgress;
 
-    // Constructor to initialize flashcard information
+    /**
+     * Initializes a flashcard with the provided prompt and answer.
+     *
+     * @param frontInfo the prompt on the front of the flashcard
+     * @param backAnswer the answer on the back of the flashcard
+     */
     public FlashcardQuestion(String frontInfo, String backAnswer) {
         this.frontInfo = frontInfo;
         this.backAnswer = backAnswer;
         this.userAnswer = "";
-        this.completed = false;  // Default to not completed
-        this.flashcardProgress = 0.0;  // Default progress
+        this.completed = false;
+        this.flashcardProgress = 0.0;
     }
 
-    // Method to flip the card and show the answer
+    /**
+     * Flips the card to show the answer.
+     */
     public void flipCard() {
         System.out.println("Flipped! The answer is: " + backAnswer);
     }
 
-    // Show the definition or answer on the back of the card
+    /**
+     * Returns the answer on the back of the flashcard.
+     *
+     * @return the answer as a string
+     */
     public String showDefinition() {
         return backAnswer;
     }
 
-    // Submit an answer for the flashcard question
+    /**
+     * Submits the user's answer for the flashcard question.
+     * @param userAnswer the answer provided by the user
+     * @throws IllegalArgumentException if the answer is null or empty
+     */
     public void submitAnswer(String userAnswer) {
         if (userAnswer == null || userAnswer.trim().isEmpty()) {
             throw new IllegalArgumentException("Please provide a valid answer.");
@@ -35,25 +54,34 @@ public class FlashcardQuestion {
         this.userAnswer = userAnswer;
     }
 
-    // Method to mark the flashcard as completed if the user types "done"
+    /**
+     * Marks the flashcard as completed if the user inputs "done".
+     * @param userInput the user's input indicating completion
+     */
     public void markAsCompleted(String userInput) {
         if ("done".equalsIgnoreCase(userInput.trim())) {
-            this.flashcardProgress = 100.0;  // Set progress to 100%
-            this.completed = true;  // Mark as completed
+            this.flashcardProgress = 100.0;
+            this.completed = true;
         }
     }
 
-    // Check if the user's answer is correct
+    /**
+     * Checks if the user's answer is correct.
+     * @return true if the answer is correct, false otherwise
+     */
     public boolean checkAnswer() {
         return userAnswer.equalsIgnoreCase(backAnswer);
     }
 
-    // Show the correct answer
+    /**
+     * Shows the correct answer for the flashcard
+     *
+     * @return the correct answer as a string
+     */
     public String showCorrectAnswer() {
         return backAnswer;
     }
 
-    // Getters for the flashcard information
     public String getFrontInfo() {
         return frontInfo;
     }
@@ -66,12 +94,18 @@ public class FlashcardQuestion {
         return userAnswer;
     }
 
-    // Check if the flashcard is completed
+    /**
+     * Checks if the flashcard is completed
+     * @return true if completed, false otherwise
+     */
     public boolean isCompleted() {
         return completed;
     }
 
-    // Get flashcard progress
+    /**
+     * Gets the progress of the flashcard.
+     * @return the progress as a percentage
+     */
     public double getFlashcardProgress() {
         return flashcardProgress;
     }

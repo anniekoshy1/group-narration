@@ -1,15 +1,27 @@
+/**
+ * Manages a list of languages within the system, providing functionality to add, remove, and retrieve languages by name or keyword
+ */
 package com.narration;
+
 import java.util.ArrayList;
 
 public class LanguageList {
 
-    private static LanguageList instance;  
-    private final ArrayList<Language> languages; // Made final
+    private static LanguageList instance;
+    private final ArrayList<Language> languages;
 
+    /**
+     * Private constructor to initialize the language list, ensuring it is only instantiated once.
+     */
     private LanguageList() {
         languages = new ArrayList<>();
     }
 
+    /**
+     * Returns the singleton instance of the LanguageList.
+     *
+     * @return the singleton LanguageList instance
+     */
     public static LanguageList getInstance() {
         if (instance == null) {
             instance = new LanguageList();
@@ -17,21 +29,40 @@ public class LanguageList {
         return instance;
     }
 
-    // Add a language to the list
+    /**
+     * Adds a language to the list.
+     *
+     * @param language the language to add
+     */
     public void addLanguage(Language language) {
         languages.add(language);
     }
 
-    // Remove a language from the list
+    /**
+     * Removes a language from the list.
+     *
+     * @param language the language to remove
+     * @return true if the language was successfully removed, false otherwise
+     */
     public boolean removeLanguage(Language language) {
         return languages.remove(language);
     }
 
-    // Get the list of all languages
+    /**
+     * Retrieves the list of all languages.
+     *
+     * @return an ArrayList containing all languages
+     */
     public ArrayList<Language> getLanguages() {
         return languages;
     }
 
+    /**
+     * Finds a language by its name.
+     *
+     * @param name the name of the language to find
+     * @return the Language object if found, otherwise null
+     */
     public Language findLanguageByName(String name) {
         for (Language language : languages) {
             if (language.getName().equalsIgnoreCase(name)) {
@@ -41,6 +72,11 @@ public class LanguageList {
         return null;
     }
 
+    /**
+     * Finds languages that contain a specified keyword.
+     * @param keyWord the keyword to search for
+     * @return an ArrayList of languages containing the keyword
+     */
     public ArrayList<Language> findLanguagesByKeyWord(String keyWord) {
         ArrayList<Language> matchingLanguages = new ArrayList<>();
         for (Language language : languages) {
