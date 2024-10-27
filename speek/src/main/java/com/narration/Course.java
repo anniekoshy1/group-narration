@@ -124,7 +124,6 @@ public class Course {
     }
 
     public ArrayList<Lesson> getAllLessons() {
-        
         return lessons;
     }
 

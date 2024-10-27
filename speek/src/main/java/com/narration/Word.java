@@ -12,13 +12,14 @@ public class Word {
     private String partOfSpeech;  // The part of speech of the word 
     private final ArrayList<String> translations = new ArrayList<>();  // Initialize and set as final
     private String language;  // The language of the word
+    private String difficulty;
 
-    public Word(String wordText, String definition, String partOfSpeech, String language) {
+    public Word(String wordText, String definition, String difficulty, String translation) {
         this.id = UUID.randomUUID();
         this.wordText = wordText;
         this.definition = definition;
-        this.partOfSpeech = partOfSpeech;
-        this.language = language;
+        this.difficulty = difficulty;
+        this.translation = translation;
     }
 
     public UUID getId() {
@@ -74,6 +75,14 @@ public class Word {
     public void setLanguage(String language) {
         this.language = language;
     }
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
 
     @Override
     public String toString() {

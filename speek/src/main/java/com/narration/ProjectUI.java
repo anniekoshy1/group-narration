@@ -2,9 +2,9 @@ package com.narration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.UUID;
-
 
 public class ProjectUI {
 
@@ -14,6 +14,7 @@ public class ProjectUI {
     private Lesson currentLesson;
     private Course course;
     private static Difficulty difficulty;
+
     public ProjectUI() {
         facade = new LanguageLearningFacade();
         scanner = new Scanner(System.in);
@@ -165,7 +166,7 @@ public class ProjectUI {
     }
 
     private void startCourse() {
-        ArrayList<Course> allCourses = CourseLIst();
+        ArrayList<Course> allCourses = facade.getAllCourses();
         if (!isLoggedIn()) {
             System.out.println("You must log in to start a course.");
             return;
@@ -233,7 +234,7 @@ public class ProjectUI {
 
     private void startFlashcards() {
         System.out.println("Starting Flashcard Practice...");
-    
+        
         List<FlashcardQuestion> flashcards = dataLoader.loadFlashcardsFromJson("speek/docs/JSON/Words.json");
 
         if (flashcards.isEmpty()) {
@@ -243,8 +244,9 @@ public class ProjectUI {
 
         for (FlashcardQuestion flashcard : flashcards) {
             
-            if (flashcard.getFlashcardProgress() >= 100){
-                System.out.println("All flashcrds completed! Returning to Course Activities.");
+            if (flashcard.getFlashcardProgress() >= 100) {
+                System.out.println("All flashcards completed! Returning to Course Activities.");
+                startAssessment();  // Start assessment after all flashcards are completed
                 return;
             }
             if (flashcard.isCompleted()) continue;
@@ -265,19 +267,35 @@ public class ProjectUI {
 
             System.out.print("Enter 'done' to mark this flashcard as completed or press Enter to continue: ");
             String continueResponse = scanner.nextLine().trim();
-            flashcard.markAsCompleted(continueResponse);
-            course.calculateProgress();
 
-            if (flashcard.isCompleted()) {
+            // Check if the user entered "done"
+            if (continueResponse.equalsIgnoreCase("done")) {
+                flashcard.markAsCompleted(continueResponse);  // Mark flashcard as completed
                 System.out.println("Flashcard marked as complete.");
-                startAssessment();
+                startAssessment();  // Start the assessment immediately
+                return;  // Exit the flashcard loop
+            } else {
+                flashcard.markAsCompleted("");  // Optionally mark as complete on empty input
+                course.calculateProgress();
             }
+
             System.out.println("Flashcard Progress: " + flashcard.getFlashcardProgress() + "%");
-            return;
         }
 
         System.out.println("Exiting Flashcard Practice.");
         promptForAssessment();
+    }
+
+    private void promptForRepeatFlashcards() {
+        System.out.println("Do you want to try the flashcards again? (yes/no)");
+        String response = scanner.nextLine().trim();
+    
+        if (response.equalsIgnoreCase("yes")) {
+            startFlashcards();  
+        } else {
+            System.out.println("Returning to Course Activities.");
+            courseActivitiesMenu(); 
+        }
     }
 
     private void startLesson() {
@@ -326,65 +344,73 @@ public class ProjectUI {
         }
     }
 
-private void startAssessment() {
-        System.out.println("Starting Assessment...");
 
-        if (course == null) {
-            System.out.println("No course selected. Returning to main menu.");
-            return;
-        }
+    private void startAssessment() {
+    System.out.println("Starting Assessment...");
 
-        DataLoader dataLoader = new DataLoader(); 
-
-        // Create sample questions for demonstration purposes
-        List<Questions> assessmentQuestions = new ArrayList<>();
-        assessmentQuestions.add(new Questions("Hola means Hello.", true, difficulty.RUDIMENTARY));
-        assessmentQuestions.add(new Questions("The Spanish word for hat is amigo.", false, difficulty.INTERMEDIATE));
-        assessmentQuestions.add(new Questions("Padre means father.", true, difficulty.ADVANCED));
-
-        // Create an assessment object
-        Assessment assessment = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, Assessment.AssessmentType.OPEN_ENDED, assessmentQuestions);
-
-        // Present each question to the user
-        for (Questions question : assessment.getQuestions()) {
-            System.out.println(question.getQuestionText() + " (true/false)");
-            String userAnswer = scanner.nextLine().trim();
-            question.submitAnswer(userAnswer);
-        }
-
-        // Calculate the score after all questions are answered
-        int score = assessment.calculateScore();
-        int rating = assessment.calculateRating();
-
-        // Display results
-        System.out.println("Assessment Complete!");
-        System.out.println("Your Score: " + score + "%");
-        System.out.println("Rating: " + rating + " stars");
-
-        // Optionally ask if they want to retake the assessment
-        System.out.print("Do you want to retake the assessment? (yes/no): ");
-        String retakeResponse = scanner.nextLine().trim().toLowerCase();
-        if (retakeResponse.equals("yes")) {
-            assessment.retakeAssessment();  // Reset the assessment for a retake
-            startAssessment();  // Start the assessment again
-        } else {
-            System.out.println("Returning to the main menu.");
-        }
+    if (course == null) {
+        System.out.println("No course selected. Returning to main menu.");
+        return;
     }
-    
 
-    private void loadQuestionsFromJson(Assessment assessment) {
-        facade.loadAssessmentQuestions(assessment.getId());
+    // Load words and ensure words list is populated
+    WordsList wordsList = dataLoader.loadWords();
+    List<Word> words = wordsList.getAllWords();
 
-        System.out.println("Questions loaded from JSON:");
-        if (assessment.getQuestions() != null && !assessment.getQuestions().isEmpty()) {
-            for (Questions question : assessment.getQuestions()) {
-                System.out.println(question.getQuestionText());
-            }
-        } else {
-            System.out.println("No questions available for this assessment.");
-        }
+    if (words.isEmpty()) {
+        System.out.println("No words available for assessment.");
+        return;
     }
+
+    // Retrieve English translation and Spanish word for the assessment questions
+    Random random = new Random();
+    Word randomWord = words.get(random.nextInt(words.size()));  // Using first word for demonstration
+    String englishTranslation = randomWord.getTranslation();  
+    String spanishWord = randomWord.getWordText();  
+
+    // Generate assessment questions
+    List<Questions> assessmentQuestions = new ArrayList<>();
+
+    // True/False questions
+    System.out.println("Please answer the following True/False questions:");
+    assessmentQuestions.add(new Questions("Hola means Hello. T/F", true, Difficulty.RUDIMENTARY));
+    assessmentQuestions.add(new Questions("The Spanish word for hat is amigo. T/F", false, Difficulty.INTERMEDIATE));
+    assessmentQuestions.add(new Questions("Padre means father. T/F", true, Difficulty.ADVANCED));
+
+    // Multiple Choice Question
+    List<String> choices = List.of("1. Adiós", "2. Gracias", "3. " + spanishWord);
+    String multipleChoiceQuestionText = "What is the Spanish word for '" + englishTranslation + "'?\n" + String.join("\n", choices);
+    Questions multipleChoiceQuestion = new Questions(multipleChoiceQuestionText, choices, "3", Difficulty.INTERMEDIATE); 
+    assessmentQuestions.add(multipleChoiceQuestion);
+
+    // Open-Ended Question
+    Questions openEndedQuestion = new Questions("What is the word for '" + englishTranslation + "' in Spanish?", "", Difficulty.ADVANCED);
+    assessmentQuestions.add(openEndedQuestion);
+
+    // Create assessment object
+    Assessment assessment = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, assessmentQuestions);
+
+    // Iterate and display questions to user
+    for (Questions question : assessment.getQuestions()) {
+        System.out.println(question.getQuestionText());
+        
+        if (question.getOptions() != null) {
+            System.out.println("Options: " + String.join(", ", question.getOptions()));
+        }
+
+        // Collect and submit user's answer
+        String userAnswer = scanner.nextLine().trim();
+        question.submitAnswer(userAnswer);
+    }
+
+    // Calculate and display score
+    int score = assessment.calculateScore();
+    System.out.println("Your score: " + score + "%");
+
+    // Display rating based on score
+    int rating = assessment.calculateRating();
+    System.out.println("Your rating: " + rating + " out of 5 stars");
+}
 
     private void trackProgress() {
         System.out.println("Tracking progress...");
@@ -402,3 +428,4 @@ private void startAssessment() {
         languageInterface.start();
     }
 }
+

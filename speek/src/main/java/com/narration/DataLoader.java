@@ -23,6 +23,12 @@ public class DataLoader extends DataConstants {
     public static final String WORDS_FILE = "speek/docs/JSON/words.json";
     public static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
+    private JSONObject wordsData;
+public DataLoader() {
+    loadWordsData();
+}
+
+    
     /**
      * Loads users from the JSON file and constructs a list of User objects.
      * @return a list of User objects
@@ -202,13 +208,13 @@ public static ArrayList<User> getUsers() {
         try (FileReader reader = new FileReader(WORDS_FILE)) {
             JSONArray wordsArray = (JSONArray) parser.parse(reader);
             for (Object obj : wordsArray) {
-                JSONObject wordObj = (JSONObject) obj;
-                String wordText = (String) wordObj.get("word");
-                String definition = (String) wordObj.get("definition");
-                String partOfSpeech = (String) wordObj.get("partOfSpeech");
-                String language = (String) wordObj.get("language");
+                JSONObject wordObject = (JSONObject) obj;
+                String wordText = (String) wordObject.get("word");
+                String definition = (String) wordObject.get("definition");
+                String difficulty = (String) wordObject.get("difficulty");
+                String translation = (String) wordObject.get("translation");
 
-                Word word = new Word(wordText, definition, partOfSpeech, language);
+                Word word = new Word(wordText, definition, difficulty, translation);
                 wordsList.addWord(word);
             }
         } catch (IOException | ParseException e) {
@@ -217,6 +223,20 @@ public static ArrayList<User> getUsers() {
 
         return wordsList;
     }
+
+private void loadWordsData() {
+    JSONParser parser = new JSONParser();
+    try (FileReader reader = new FileReader(WORDS_FILE)) {
+        JSONArray wordsArray = (JSONArray) parser.parse(reader);  // Parse as JSONArray
+        wordsData = new JSONObject();
+        wordsData.put("words", wordsArray);  // Wrap it in a JSONObject if needed for other methods
+    } catch (IOException | ParseException e) {
+        e.printStackTrace();
+    }
+}
+
+
+
 
     /**
      * Loads phrases from the JSON file into a PhraseList object
@@ -242,6 +262,20 @@ public static ArrayList<User> getUsers() {
         }
 
         return phraseList;
+    }
+
+    public String getEnglishTranslation(String spanishWord) {
+        if (wordsData == null){
+            loadWordsData();
+        }
+        JSONArray wordsArray = (JSONArray) wordsData.get("words");
+        for (Object wordObj : wordsArray) {
+            JSONObject wordJson = (JSONObject) wordObj;
+            if (wordJson.get("word").equals(spanishWord)) {
+                return (String) wordJson.get("translation");
+            }
+        }
+        return null; // Return null if not found
     }
 
 
@@ -280,9 +314,9 @@ public static ArrayList<User> getUsers() {
         try (FileReader reader = new FileReader(filePath)) {
             JSONArray wordsArray = (JSONArray) parser.parse(reader);
             for (Object obj : wordsArray) {
-                JSONObject wordObj = (JSONObject) obj;
-                String frontInfo = (String) wordObj.get("word");  // Correct key
-                String backAnswer = (String) wordObj.get("translation");  // Correct key
+                JSONObject wordObject = (JSONObject) obj;
+                String frontInfo = (String) wordObject.get("word");  // Correct key
+                String backAnswer = (String) wordObject.get("translation");  // Correct key
                 flashcards.add(new FlashcardQuestion(frontInfo, backAnswer));
             }
         } catch (IOException | ParseException e) {

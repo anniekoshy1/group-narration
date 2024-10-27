@@ -222,7 +222,7 @@ public class LanguageLearningFacade {
         UUID userId = UUID.randomUUID();
         User newUser = new User(userId, username, email, password, new ArrayList<>(), new HashMap<>(), new ArrayList<>(), null, new ArrayList<>(), null, "English");
         userList.addUser(newUser);
-        DataWriter.saveUsers(UserList.getInstance().getUsers());
+        dataWriter.saveUsers(new ArrayList<>(users));
     }
 
     /**
