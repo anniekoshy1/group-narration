@@ -414,12 +414,6 @@ public class ProjectUI {
     for (Questions question : assessment.getQuestions()) {
         Narriator.playSound(question.getQuestionText());
         System.out.println(question.getQuestionText());
-        
-        if (question.getOptions() != null) {
-            String optionsMessage = "Options: " + String.join(", ", question.getOptions());
-            Narriator.playSound(optionsMessage);
-            System.out.println(optionsMessage);
-        }
 
         String userAnswer = scanner.nextLine().trim();
         question.submitAnswer(userAnswer);
