@@ -93,10 +93,10 @@ public class Course {
             courseProgress = 100.0;
             System.out.println(courseProgress);
         } else if (lesson.isCompleted() || flashcard.isCompleted()) {
-            courseProgress = 50.0;
+            courseProgress = 100.0;
             System.out.println("Course Progress: "+courseProgress);
         } else {
-            courseProgress = 0.0;
+            courseProgress = 50.0;
         }
     }
 

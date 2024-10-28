@@ -17,7 +17,7 @@ public class ProjectUI {
     private DataLoader dataLoader;
     private Lesson currentLesson;
     private Course course;
-    private static Difficulty difficulty;
+   // private static Difficulty difficulty;
     private Assessment assessment;
 
 
@@ -270,8 +270,7 @@ private void startFlashcards() {
                 startAssessment();  // Start the assessment immediately
                 return;  // Exit the flashcard loop
             } else {
-                //hey chatgpt can you complete this
-                //put in logic that will just do another flashcard when you press enter here
+               
             }
 
             System.out.println("Flashcard Progress: " + flashcard.getFlashcardProgress() + "%");
@@ -463,7 +462,7 @@ private void startFlashcards() {
 
     //START ASSESSMENT STORY2
     private void startAssessment2() {
-        String startingMessage = "Starting Assessment22222...";
+        String startingMessage = "Starting Assessment2...";
         Narriator.playSound(startingMessage);
         System.out.println(startingMessage);
 

@@ -90,4 +90,5 @@ public class UserList {
     public int getTotalUsers() {
         return users.size();
     }
+
 }

@@ -58,4 +58,52 @@ public class Lesson {
         return description;
     }
 
-    public void setDescript
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getLessonProgress() {
+        return lessonProgress;
+    }
+
+    /**
+     * Sets the lesson progress and automatically marks it as completed if progress reaches 100%
+     * @param lessonProgress the progress percentage of the lesson
+     */
+    public void setLessonProgress(double lessonProgress) {
+        this.lessonProgress = lessonProgress;
+        this.completed = lessonProgress >= 100.0;
+    }
+
+    public String getEnglishContent() {
+        return englishContent;
+    }
+
+    public void setEnglishContent(String englishContent) {
+        this.englishContent = englishContent;
+    }
+
+    public String getSpanishContent() {
+        return spanishContent;
+    }
+
+    public void setSpanishContent(String spanishContent) {
+        this.spanishContent = spanishContent;
+    }
+
+    /**
+     * Checks if the lesson is completed
+     * @return true if the lesson is completed, false otherwise
+     */
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    /**
+     * Marks the lesson as completed, setting the progress to 100%
+     */
+    public void markAsCompleted() {
+        this.completed = true;
+        this.lessonProgress = 100.0;
+    }
+}
