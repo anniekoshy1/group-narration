@@ -127,6 +127,7 @@ public class Course {
 
     public ArrayList<Lesson> getAllLessons() {
         return lessons;
+        
     }
 
     public void addLesson(Lesson lesson) {

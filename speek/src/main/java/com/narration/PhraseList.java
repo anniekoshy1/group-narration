@@ -1,6 +1,7 @@
 /**
  * Manages a list of phrases in the language learning system. 
  * Provides functionality to add phrases, retrieve a random phrase, and retrieve all phrases.
+ * @author Four Musketeers
  */
 package com.narration;
 

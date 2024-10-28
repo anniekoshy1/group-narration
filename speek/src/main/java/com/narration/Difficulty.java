@@ -1,5 +1,6 @@
 /**
  * Enum representing the different levels of difficulty for courses and assessments
+ * @author Four Musketeers
  */
 package com.narration;
 

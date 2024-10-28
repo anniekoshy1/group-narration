@@ -1,6 +1,7 @@
 /**
  * Represents a phrase in the language learning system, including the phrase text, definition, and a list of synonyms. 
  * Each phrase has a unique identifier.
+ * @author Four Musketeers
  */
 package com.narration;
 

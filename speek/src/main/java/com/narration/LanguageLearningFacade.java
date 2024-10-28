@@ -1,5 +1,6 @@
 /**
  * Acts as the main interface for the language learning system, providing functionality for user management, course handling, language selection, and progress tracking.
+ * @author Four Musketeers
  */
 package com.narration;
 

@@ -1,5 +1,6 @@
 /**
  * This class defines constants used across the language learning system, including file paths, user configurations, course details, and language specifications.
+ * @author Four Musketeers
  */
 package com.narration;
 

@@ -1,5 +1,6 @@
 /**
  * Manages a list of languages within the system, providing functionality to add, remove, and retrieve languages by name or keyword
+ * @author Four Musketeers
  */
 package com.narration;
 

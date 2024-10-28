@@ -1,6 +1,7 @@
 /**
  * Provides text-to-speech narration functionality using Amazon Polly.
  * Supports narrating text, feedback messages, and questions with a Spanish accent.
+ * @author Four Musketeers
  */
 package com.narration;
 

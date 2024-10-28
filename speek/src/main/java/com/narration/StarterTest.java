@@ -1,6 +1,7 @@
 /**
  * Represents a starter test consisting of a list of questions. 
  * Manages the user's score, total questions, and difficulty level determination based on performance
+ * @author Four Musketeers
  */
 package com.narration;
 

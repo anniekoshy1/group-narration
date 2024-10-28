@@ -1,6 +1,7 @@
 /**
  * Represents a multiple-choice question in a quiz or assessment.
  * Stores the question, possible answer choices, the correct answer, and the user's answer.
+ * @author Four Musketeers
  */
 package com.narration;
 

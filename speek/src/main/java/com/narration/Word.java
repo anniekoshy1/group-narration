@@ -1,5 +1,6 @@
 /**
  * Represents a word with its properties such as text, definition, difficulty level, primary translation, and a list of additional translations.
+ * @author Four Musketeers
  */
 package com.narration;
 
@@ -17,7 +18,6 @@ public class Word {
 
     /**
      * Constructs a Word object with specified properties.
-     *
      * @param wordText    the text of the word
      * @param definition  the definition or meaning of the word
      * @param difficulty  the difficulty level of the word
@@ -33,7 +33,6 @@ public class Word {
 
     /**
      * Gets the unique identifier for the word
-     *
      * @return the UUID of the word
      */
     public UUID getId() {
@@ -42,7 +41,6 @@ public class Word {
 
     /**
      * Gets the primary translation of the word
-     *
      * @return the primary translation
      */
     public String getTranslation() {
@@ -51,7 +49,6 @@ public class Word {
 
     /**
      * Gets the text of the word
-     *
      * @return the text of the word
      */
     public String getWordText() {
@@ -60,7 +57,6 @@ public class Word {
     
     /**
      * Sets the text of the word
-     *
      * @param wordText the new text for the word
      */
     public void setWordText(String wordText) {
@@ -69,7 +65,6 @@ public class Word {
 
     /**
      * Gets the definition of the word
-     *
      * @return the definition of the word
      */
     public String getDefinition() {
@@ -78,7 +73,6 @@ public class Word {
 
     /**
      * Sets the definition of the word.
-     *
      * @param definition the new definition for the word
      */
     public void setDefinition(String definition) {
@@ -86,8 +80,7 @@ public class Word {
     }
 
     /**
-     * Gets the list of additional translations for the word.
-     *
+     * Gets the list of additional translations for the word
      * @return the list of translations
      */
     public ArrayList<String> getTranslations() {
@@ -96,7 +89,6 @@ public class Word {
 
     /**
      * Adds a new translation to the list if it does not already exist.
-     *
      * @param translation the translation to add
      */
     public void addTranslation(String translation) {
@@ -107,7 +99,6 @@ public class Word {
 
     /**
      * Removes a translation from the list if it exists.
-     *
      * @param translation the translation to remove
      */
     public void removeTranslation(String translation) {
@@ -116,7 +107,6 @@ public class Word {
 
     /**
      * Gets the difficulty level of the word.
-     *
      * @return the difficulty level
      */
     public String getDifficulty() {
@@ -125,7 +115,6 @@ public class Word {
 
     /**
      * Sets the difficulty level of the word.
-     *
      * @param difficulty the new difficulty level
      */
     public void setDifficulty(String difficulty) {
@@ -134,7 +123,6 @@ public class Word {
 
     /**
      * Returns a string representation of the word, including its text, definition, and translations.
-     *
      * @return a string describing the word
      */
     @Override

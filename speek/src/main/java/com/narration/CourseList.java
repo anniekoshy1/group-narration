@@ -1,6 +1,7 @@
 /**
  * Manages the list of available courses in the language learning system.
  * This class follows the singleton pattern to ensure a single instance of the course list.
+ * @author Four Musketeers
  */
 package com.narration;
 

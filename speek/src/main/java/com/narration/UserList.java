@@ -1,3 +1,9 @@
+/**
+ * Singleton class managing the list of users in the language learning system.
+ * Provides methods to add, remove, and retrieve users by username or UUID.
+ * The user list is initialized from data loaded by DataLoader.
+ * @author Four Musketeers
+ */
 package com.narration;
 
 import java.util.ArrayList;

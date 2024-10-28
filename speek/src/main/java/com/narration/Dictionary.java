@@ -1,5 +1,6 @@
 /**
  * A dictionary that provides translations for words, allowing addition, removal, and retrieval of translations based on a WordsList
+ * @author Four Musketeers
  */
 package com.narration;
 

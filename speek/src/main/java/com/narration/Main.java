@@ -1,5 +1,6 @@
 /**
  * Entry point for the application, demonstrating the use of the Narriator class to play an audio message
+ * @author Four Musketeers
  */
 package com.narration;
 

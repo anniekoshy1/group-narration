@@ -1,14 +1,14 @@
 /**
  * Represents a question in a test, supporting different question types: True/False, multiple-choice, and open-ended questions.
  * Includes fields for the question text, answer options, and difficulty level.
+ * @author Four Musketeers
  */
 package com.narration;
 
 import java.util.List;
 
-
 public class Questions {
-
+    
     private String questionText;
     private boolean correctAnswer;
     private String userAnswer;
@@ -16,6 +16,8 @@ public class Questions {
     private List<String> options;
     private String correctOption;
     private String correctOpenEndedAnswer;
+    private List<String> correctAnswers;
+
 
     /**
      * Constructor for True/False questions.
@@ -30,6 +32,7 @@ public class Questions {
         this.options = null;
         this.correctOption = null;
         this.correctOpenEndedAnswer = null;
+        this.userAnswer = null; // Explicitly initialize to null or use a default value
     }
 
     /**
@@ -106,7 +109,7 @@ public class Questions {
      * @param userAnswer the answer provided by the user
      */
     public void submitAnswer(String userAnswer) {
-        this.userAnswer = userAnswer.trim();
+        this.userAnswer = userAnswer;
     }
 
     /**
@@ -120,7 +123,7 @@ public class Questions {
             return userAnswer.equalsIgnoreCase(correctOpenEndedAnswer); // Open-ended question
         } else {
             return Boolean.parseBoolean(userAnswer) == correctAnswer; // True/False question
-        }
+        } 
     }
 
     /**

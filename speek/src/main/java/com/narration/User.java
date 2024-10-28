@@ -1,5 +1,6 @@
 /**
  * Represents a user in the language learning system, including their profile information, enrolled courses, language preferences, and progress tracking
+ * @author Four Musketeers
  */
 package com.narration;
 

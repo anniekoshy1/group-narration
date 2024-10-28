@@ -1,6 +1,7 @@
 /**
  * Represents a true/false question
  * This class handles the correct answer, user's answer submission, and answer checking
+ * @author Four Musketeers
  */
 package com.narration;
 

@@ -1,5 +1,6 @@
 /**
  * This class loads data from JSON files, including users, courses, languages, words, and phrases, into the language learning system.
+ * @author Four Musketeers
  */
 package com.narration;
 

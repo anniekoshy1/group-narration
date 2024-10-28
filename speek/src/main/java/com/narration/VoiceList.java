@@ -1,5 +1,6 @@
 /**
  * Provides functionality to list available voices from the Amazon Polly service for a specified AWS region
+ * @author Four Musketeers
  */
 package com.narration;
 

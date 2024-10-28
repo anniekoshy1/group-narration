@@ -1,5 +1,6 @@
 /**
  * Class responsible for writing data to JSON files, including user data, courses, languages, words, and phrases
+ * @author Four Musketeers
  */
 package com.narration;
 
