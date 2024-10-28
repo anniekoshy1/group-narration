@@ -1,5 +1,8 @@
 /**
  * User interface for the language learning system, managing user interactions and facilitating functionality such as user login, registration, language selection, course management, flashcard practice, storytelling, and assessments.
+ * Provides a main menu-driven interface for navigation through various functionalities.
+ * This class utilizes a LanguageLearningFacade to handle backend operations,
+ * DataLoader for loading external data, and the Narriator for auditory feedback.
  * @author Four Musketeers
  */
 package com.narration;
@@ -20,14 +23,18 @@ public class ProjectUI {
    // private static Difficulty difficulty;
     private Assessment assessment;
 
-
+/**
+* Initializes the ProjectUI with instances of facade, scanner, and dataLoader.
+*/
     public ProjectUI() {
         facade = new LanguageLearningFacade();
         scanner = new Scanner(System.in);
         dataLoader = new DataLoader();
     }
 
-//MAIN MENU
+    /**
+     * Starts the main menu of the language learning system, allowing the user to navigate through login, registration, language selection, course management, progress tracking, and logout options.
+     */
     public void start() {
         System.out.println("Welcome to the Language Learning System!");
         boolean exit = false;
@@ -77,7 +84,9 @@ public class ProjectUI {
             }
         }
     }
-
+    /**
+     * Displays the main menu with options for user actions.
+     */
     private void displayMainMenu() {
         System.out.println("\nMain Menu:");
         System.out.println("1. Login");
@@ -96,7 +105,9 @@ public class ProjectUI {
             return -1;
         }
     }
-//LOGIN
+    /**
+     * Handles user login, authenticating via LanguageLearningFacade.
+     */
     private void login() {
         System.out.print("Enter username: ");
         String username = scanner.nextLine();
@@ -113,7 +124,9 @@ public class ProjectUI {
     private boolean isLoggedIn() {
         return facade.getCurrentUser() != null;
     }
-//REGISTER
+     /**
+     * Registers a new user by capturing user details and validating email and password.
+     */
     private void register() {
         System.out.print("Enter new username: ");
         String username = scanner.nextLine();
@@ -142,7 +155,9 @@ public class ProjectUI {
         facade.registerUser(username, email, password);
         System.out.println("Registration successful! Please login to continue.");
     }
-//LANGUAGE
+    /**
+     * Allows logged-in users to select a language from available options.
+     */
     private void selectLanguage() {
         if (!isLoggedIn()) {
             System.out.println("You must log in to select a language.");
@@ -158,7 +173,9 @@ public class ProjectUI {
         facade.selectLanguage(languageName);
         System.out.println("Language selected: " + languageName);
     }
-//START COURSE
+    /**
+     * Starts the selected course by loading course data and managing user navigation through flashcard practice and storytelling activities.
+     */
     private void startCourse() {
         ArrayList<Course> allCourses = facade.getAllCourses();
         if (!isLoggedIn()) {
@@ -225,7 +242,9 @@ public class ProjectUI {
             }
         }
     }
-    //FLASHCARDS
+    /**
+     * Initiates the flashcard practice activity within a course, allowing users to answer flashcards and marking progress.
+     */
 private void startFlashcards() {
         System.out.println("Starting Flashcard Practice...");
         
@@ -280,7 +299,9 @@ private void startFlashcards() {
     }
 
 
-    //LESSON/STORYTELLING
+    /**
+     * Initiates a storytelling lesson, reading story content in different languages with auditory feedback.
+     */
     private void startLesson() {
         System.out.println("Loading Storytelling...");
 
@@ -324,7 +345,6 @@ private void startFlashcards() {
     }
 
 
-    //PROMPT FOR ASSESSMENT AFTER FLASHCARDS
     private void promptForAssessment() {
         System.out.println("Do you want to start an assessment for this lesson? (yes/no)");
         String response = scanner.nextLine().trim();
@@ -337,7 +357,9 @@ private void startFlashcards() {
     }
 
 
-    //ASSESSMENT FOR FLASHCARDS
+    /**
+     * Prompts the user to begin an assessment, tracking their knowledge progress through multiple-choice, open-ended, true/false, and fill-in-the-blank questions.
+     */
     private void startAssessment() {
         String startingMessage = "Starting Assessment...";
         Narriator.playSound(startingMessage);
@@ -459,8 +481,9 @@ private void startFlashcards() {
         }
     }
 
-
-    //START ASSESSMENT STORY2
+    /**
+     * Prompts the user to begin an assessment, tracking their knowledge progress through multiple-choice, open-ended, true/false, and fill-in-the-blank questions.
+     */
     private void startAssessment2() {
         String startingMessage = "Starting Assessment2...";
         Narriator.playSound(startingMessage);
@@ -582,18 +605,24 @@ private void startFlashcards() {
         }
     }
 
-
+    /**
+     * Tracks the user's overall progress in their course, displaying progress as a percentage.
+     */
     private void trackProgress() {
         System.out.println("Tracking progress...");
         double progress = facade.trackOverallProgress();
         System.out.println("Your overall progress: " + progress + "%");
     }
-
+    /**
+     * Logs the user out and saves any relevant data through the facade.
+     */
     private void logout() {
         facade.saveAndLogout();
         System.out.println("You have been logged out.");
     }
-
+    **
+     * Main method for executing the ProjectUI, starting the language learning system.
+     */
     public static void main(String[] args) {
         ProjectUI languageInterface = new ProjectUI();
         languageInterface.start();
