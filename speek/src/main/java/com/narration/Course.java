@@ -23,7 +23,6 @@ public class Course {
 
     /**
      * Constructs a Course with all details.
-     *
      * @param id the unique identifier of the course
      * @param name the name of the course
      * @param description the description of the course
