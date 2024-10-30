@@ -23,9 +23,9 @@ public class ProjectUI {
    // private static Difficulty difficulty;
     private Assessment assessment;
 
-/**
-* Initializes the ProjectUI with instances of facade, scanner, and dataLoader.
-*/
+    /**
+    * Initializes the ProjectUI with instances of facade, scanner, and dataLoader.
+    */
     public ProjectUI() {
         facade = new LanguageLearningFacade();
         scanner = new Scanner(System.in);
@@ -245,7 +245,7 @@ public class ProjectUI {
     /**
      * Initiates the flashcard practice activity within a course, allowing users to answer flashcards and marking progress.
      */
-private void startFlashcards() {
+    private void startFlashcards() {
         System.out.println("Starting Flashcard Practice...");
         
         List<FlashcardQuestion> flashcards = dataLoader.loadFlashcardsFromJson("speek/docs/JSON/Words.json");
@@ -289,7 +289,6 @@ private void startFlashcards() {
                 startAssessment();  // Start the assessment immediately
                 return;  // Exit the flashcard loop
             } else {
-               
             }
 
             System.out.println("Flashcard Progress: " + flashcard.getFlashcardProgress() + "%");
@@ -620,7 +619,7 @@ private void startFlashcards() {
         facade.saveAndLogout();
         System.out.println("You have been logged out.");
     }
-    **
+    /**
      * Main method for executing the ProjectUI, starting the language learning system.
      */
     public static void main(String[] args) {
