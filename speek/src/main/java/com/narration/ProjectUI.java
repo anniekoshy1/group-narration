@@ -344,18 +344,6 @@ public class ProjectUI {
     }
 
 
-    private void promptForAssessment() {
-        System.out.println("Do you want to start an assessment for this lesson? (yes/no)");
-        String response = scanner.nextLine().trim();
-
-        if (response.equalsIgnoreCase("yes")) {
-            startAssessment();
-        } else {
-            System.out.println("Returning to main menu.");
-        }
-    }
-
-
     /**
      * Prompts the user to begin an assessment, tracking their knowledge progress through multiple-choice, open-ended, true/false, and fill-in-the-blank questions.
      */

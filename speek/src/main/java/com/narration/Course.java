@@ -47,6 +47,7 @@ public class Course {
         this.assessments = assessments;
         this.completedAssessments = new ArrayList<>();
         this.flashcard = flashcard;
+        this.keyWords = new ArrayList<>();
     }
 
     /**
@@ -58,6 +59,10 @@ public class Course {
     public Course(UUID id, double courseProgress) {
         this.id = id;
         this.courseProgress = courseProgress;
+        this.keyWords = new ArrayList<>(); // Initialize keyWords here
+        this.lessons = new ArrayList<>(); // Initialize other lists to avoid null pointers
+        this.assessments = new ArrayList<>();
+        this.completedAssessments = new ArrayList<>();
     }
 
     public void setCurrentLesson(Lesson lesson){
@@ -167,6 +172,11 @@ public class Course {
     public ArrayList<String> getKeyWords() {
         return keyWords;
     }
+
+    public void setKeyWords(ArrayList<String> keyWords) {
+    this.keyWords = keyWords;
+}
+
 
     public UUID generateUUID() {
         return UUID.randomUUID();

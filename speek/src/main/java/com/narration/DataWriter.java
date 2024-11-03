@@ -14,11 +14,6 @@ import org.json.simple.JSONObject;
 
 public class DataWriter extends DataConstants {
 
-    private static final String USERS_FILE = "speek/docs/JSON/User.json";
-    private static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
-    private static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
-    private static final String WORDS_FILE = "speek/docs/JSON/words.json";
-    private static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
     /**
      * Saves a list of users to the JSON file.
