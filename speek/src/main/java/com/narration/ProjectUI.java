@@ -617,7 +617,7 @@ public class ProjectUI {
      */
     private void logout() {
         facade.saveAndLogout();
-        System.out.println("You have been logged out.");
+        System.out.println("You have been logged out!");
     }
     /**
      * Main method for executing the ProjectUI, starting the language learning system.
