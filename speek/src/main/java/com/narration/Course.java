@@ -88,10 +88,10 @@ public class Course {
      * Calculates and updates the course progress based on the completion status of lessons and flashcards
      */
     public void calculateProgress() {
-        if (lesson.isCompleted() && flashcard.isCompleted()) {
+        if (lesson.isCompleted() && flashcard.getFlashcardProgress() == 100.0) {
             courseProgress = 100.0;
             System.out.println(courseProgress);
-        } else if (lesson.isCompleted() || flashcard.isCompleted()) {
+        } else if (lesson.isCompleted() || flashcard.getFlashcardProgress() == 100.0) {
             courseProgress = 50.0;
             System.out.println("Course Progress: "+courseProgress);
         } else {

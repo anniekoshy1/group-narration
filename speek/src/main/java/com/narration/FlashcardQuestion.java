@@ -99,7 +99,12 @@ public class FlashcardQuestion {
      * @return true if completed, false otherwise
      */
     public boolean isCompleted() {
-        return completed;
+        if(flashcardProgress == 100.0){
+            return completed;
+        }
+       else{
+        return false;
+       }
     }
 
     /**
@@ -108,5 +113,18 @@ public class FlashcardQuestion {
      */
     public double getFlashcardProgress() {
         return flashcardProgress;
+    }
+
+
+    /**
+     * Sets the progress of the flashcard.
+     * @param flashcardProgress the progress to set as a percentage
+     * @throws IllegalArgumentException if the progress is not between 0.0 and 100.0
+     */
+    public void setFlashcardProgress(double flashcardProgress) {
+        if (flashcardProgress < 0.0 || flashcardProgress > 100.0) {
+            throw new IllegalArgumentException("Flashcard progress must be between 0.0 and 100.0");
+        }
+        this.flashcardProgress = flashcardProgress;
     }
 }
