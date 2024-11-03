@@ -79,6 +79,11 @@ public class Language {
         courseAccess.put(course, access);
     }
 
+    public HashMap<Course, Boolean> getCourseAccess() {
+        return courseAccess;
+    }
+
+
     public double getTotalPercentage() {
         return totalPercentage;
     }

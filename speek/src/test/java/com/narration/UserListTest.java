@@ -1,12 +1,11 @@
 package com.narration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import java.util.UUID;
 
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -67,7 +66,7 @@ public void tearDown() {
         assertNotNull(userList.findUserById(id3)); // Ensure the new user can be found
     }
 
-    @Test
+    @Test //bug -- git issue
     public void testAddUser_UserAlreadyExists() {
         // Attempt to add an existing user again
         userList.addUser(user1);
@@ -76,7 +75,7 @@ public void tearDown() {
         assertEquals(2, userList.getTotalUsers());
     }
 
-    @Test
+    @Test //bug //git issue
     public void testAddUser_NullUser() {
         int initialSize = userList.getTotalUsers(); // Get initial count
         

@@ -56,13 +56,18 @@ public class Course {
      * @param id the unique identifier of the course
      * @param courseProgress the progress of the course
      */
-    public Course(UUID id, double courseProgress) {
-        this.id = id;
-        this.courseProgress = courseProgress;
-        this.keyWords = new ArrayList<>(); // Initialize keyWords here
-        this.lessons = new ArrayList<>(); // Initialize other lists to avoid null pointers
+    public Course() {
+        this.id = UUID.randomUUID();
+        this.name = "";
+        this.description = "";
+        this.userAccess = false;
+        this.courseProgress = 0.0;
+        this.completed = false;
+        this.lessons = new ArrayList<>();
         this.assessments = new ArrayList<>();
         this.completedAssessments = new ArrayList<>();
+        this.keyWords = new ArrayList<>();
+        this.flashcard = null;
     }
 
     public void setCurrentLesson(Lesson lesson){
@@ -108,6 +113,10 @@ public class Course {
         if (courseProgress >= 0.0 && courseProgress <= 100.0) {
             this.courseProgress = courseProgress;
         }
+    }
+
+    public FlashcardQuestion getFlashcard(){
+        return flashcard;
     }
 
     public boolean getUserAccess() {

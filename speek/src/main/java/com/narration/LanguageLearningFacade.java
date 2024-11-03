@@ -178,22 +178,6 @@ public class LanguageLearningFacade {
     }
 
     /**
-     * Retrieves all languages that match a specified keyword.
-     *
-     * @param keyWord the keyword to match languages against
-     * @return a list of languages matching the keyword
-     */
-    public ArrayList<Language> getAllLanguagesByKeyWord(String keyWord) {
-        ArrayList<Language> matchingLanguages = new ArrayList<>();
-        for (Language language : languageList.getLanguages()) {
-            if (language.getKeyWords().contains(keyWord)) {
-                matchingLanguages.add(language);
-            }
-        }
-        return matchingLanguages;
-    }
-
-    /**
      * Gets the currently logged-in user.
      *
      * @return the current user, or null if no user is logged in

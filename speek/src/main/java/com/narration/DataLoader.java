@@ -18,11 +18,11 @@ import org.json.simple.parser.ParseException;
 
 public class DataLoader extends DataConstants {
 
-    public static final String USERS_FILE = "speek/docs/JSON/User.json";
-    public static final String COURSES_FILE = "speek/docs/JSON/Courses.json";
-    public static final String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
-    public static final String WORDS_FILE = "speek/docs/JSON/words.json";
-    public static final String PHRASES_FILE = "speek/docs/JSON/phrases.json";
+    public static String USERS_FILE = "speek/docs/JSON/User.json";
+    public static String COURSES_FILE = "speek/docs/JSON/Courses.json";
+    public static String LANGUAGES_FILE = "speek/docs/JSON/Languages.json";
+    public static String WORDS_FILE = "speek/docs/JSON/words.json";
+    public static String PHRASES_FILE = "speek/docs/JSON/phrases.json";
 
     private static JSONObject wordsData;
     public DataLoader() {

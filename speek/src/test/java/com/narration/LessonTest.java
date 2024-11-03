@@ -1,102 +1,88 @@
 package com.narration;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 
 public class LessonTest {
 
     private Lesson lesson;
-
+    private UUID lessonId;
+    
     @Before
     public void setUp() {
-        // Initialize a Lesson object before each test
-        lesson = new Lesson(
-            "Introduction to Spanish",
-            UUID.fromString("00000000-0000-0000-0000-000000000001"),
-            "An introductory lesson",
-            0.0,
-            "Hello, welcome to the Spanish course.",
-            "Hola, bienvenido al curso de español."
-        );
+        lessonId = UUID.randomUUID();
+        lesson = new Lesson("Introduction", lessonId, "Basic Spanish phrases", 50.0, "Hello", "Hola");
     }
 
     @Test
-    public void testConstructorWithAllParameters() {
-        // Verify that all fields are correctly initialized
-        assertEquals("Introduction to Spanish", lesson.getLessonName());
-        assertEquals(UUID.fromString("00000000-0000-0000-0000-000000000001"), lesson.getId());
-        assertEquals("An introductory lesson", lesson.getDescription());
-        assertEquals(0.0, lesson.getLessonProgress(), 0.0);
-        assertEquals("Hello, welcome to the Spanish course.", lesson.getEnglishContent());
-        assertEquals("Hola, bienvenido al curso de español.", lesson.getSpanishContent());
-        assertFalse(lesson.isCompleted());
+    public void testConstructor_WithAllFields() {
+        assertEquals("Introduction", lesson.getLessonName());
+        assertEquals(lessonId, lesson.getId());
+        assertEquals("Basic Spanish phrases", lesson.getDescription());
+        assertEquals(50.0, lesson.getLessonProgress(), 0.01);
+        assertEquals("Hello", lesson.getEnglishContent());
+        assertEquals("Hola", lesson.getSpanishContent());
+        assertFalse("Lesson should not be marked as completed initially", lesson.isCompleted());
     }
 
     @Test
-    public void testConstructorWithDefaultProgress() {
-        // Create a Lesson using the constructor that initializes progress at 0
-        Lesson lesson2 = new Lesson(
-            "Basic Phrases",
-            "Learn basic phrases",
-            "Good morning, good night.",
-            "Buenos días, buenas noches."
-        );
-
-        // Verify that fields are correctly initialized
-        assertEquals("Basic Phrases", lesson2.getLessonName());
-        assertNotNull(lesson2.getId());
-        assertEquals("Learn basic phrases", lesson2.getDescription());
-        assertEquals(0.0, lesson2.getLessonProgress(), 0.0);
-        assertEquals("Good morning, good night.", lesson2.getEnglishContent());
-        assertEquals("Buenos días, buenas noches.", lesson2.getSpanishContent());
-        assertFalse(lesson2.isCompleted());
+    public void testConstructor_WithPartialFields() {
+        Lesson partialLesson = new Lesson("Greetings", "Learn greetings", "Hi", "Hola");
+        assertEquals("Greetings", partialLesson.getLessonName());
+        assertEquals("Learn greetings", partialLesson.getDescription());
+        assertEquals(0.0, partialLesson.getLessonProgress(), 0.01);
+        assertFalse("Lesson should not be marked as completed initially", partialLesson.isCompleted());
     }
 
     @Test
     public void testSetDescription() {
-        // Update the description and verify the change
-        lesson.setDescription("Updated description");
-        assertEquals("Updated description", lesson.getDescription());
+        lesson.setDescription("Advanced Spanish phrases");
+        assertEquals("Advanced Spanish phrases", lesson.getDescription());
     }
 
     @Test
-    public void testSetLessonProgress() {
-        // Set progress to 50% and verify
-        lesson.setLessonProgress(50.0);
-        assertEquals(50.0, lesson.getLessonProgress(), 0.0);
-        assertFalse(lesson.isCompleted());
+    public void testSetLessonProgress_ProgressBelow100() {
+        lesson.setLessonProgress(70.0);
+        assertEquals(70.0, lesson.getLessonProgress(), 0.01);
+        assertFalse("Lesson should not be completed when progress is below 100%", lesson.isCompleted());
+    }
 
-        // Set progress to 100% and verify that the lesson is marked as completed
+    @Test
+    public void testSetLessonProgress_ProgressAt100() {
         lesson.setLessonProgress(100.0);
-        assertEquals(100.0, lesson.getLessonProgress(), 0.0);
-        assertTrue(lesson.isCompleted());
+        assertEquals(100.0, lesson.getLessonProgress(), 0.01);
+        assertTrue("Lesson should be marked as completed when progress reaches 100%", lesson.isCompleted());
+    }
+
+    @Test
+    public void testSetLessonProgress_InvalidProgress() {
+        lesson.setLessonProgress(-20.0);
+        assertEquals(-20.0, lesson.getLessonProgress(), 0.01);
+        assertFalse("Lesson should not be completed with invalid progress", lesson.isCompleted());
     }
 
     @Test
     public void testSetEnglishContent() {
-        // Update the English content and verify the change
-        lesson.setEnglishContent("New English content");
-        assertEquals("New English content", lesson.getEnglishContent());
+        lesson.setEnglishContent("Goodbye");
+        assertEquals("Goodbye", lesson.getEnglishContent());
     }
 
     @Test
     public void testSetSpanishContent() {
-        // Update the Spanish content and verify the change
-        lesson.setSpanishContent("Nuevo contenido en español");
-        assertEquals("Nuevo contenido en español", lesson.getSpanishContent());
+        lesson.setSpanishContent("Adiós");
+        assertEquals("Adiós", lesson.getSpanishContent());
     }
 
     @Test
     public void testMarkAsCompleted() {
-        // Mark the lesson as completed and verify
         lesson.markAsCompleted();
-        assertTrue(lesson.isCompleted());
-        assertEquals(100.0, lesson.getLessonProgress(), 0.0);
+        assertTrue("Lesson should be marked as completed", lesson.isCompleted());
+        assertEquals(100.0, lesson.getLessonProgress(), 0.01);
     }
 }

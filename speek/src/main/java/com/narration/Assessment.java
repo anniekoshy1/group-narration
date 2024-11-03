@@ -17,7 +17,7 @@ public class Assessment {
     }
 
     private AssessmentType type;  
-    private int userScore;  
+    public int userScore;  
     private List<Questions> questions;  
     private int attempts;  
     private UUID id;

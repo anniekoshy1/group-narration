@@ -2,16 +2,19 @@ package com.narration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,12 +22,6 @@ import org.junit.Test;
  * Test class for the DataLoader class.
  */
 public class DataLoaderTest {
-
-    private static String originalUsersFile;
-    private static String originalCoursesFile;
-    private static String originalLanguagesFile;
-    private static String originalWordsFile;
-    private static String originalPhrasesFile;
 
     private static final String TEST_USERS_FILE = "testData/User.json";
     private static final String TEST_COURSES_FILE = "testData/Courses.json";
@@ -34,305 +31,411 @@ public class DataLoaderTest {
 
     @Before
     public void setUp() throws IOException {
-        // Backup original file paths
-        originalUsersFile = DataLoader.USERS_FILE;
-        originalCoursesFile = DataLoader.COURSES_FILE;
-        originalLanguagesFile = DataLoader.LANGUAGES_FILE;
-        originalWordsFile = DataLoader.WORDS_FILE;
-        originalPhrasesFile = DataLoader.PHRASES_FILE;
+        // Create test data directories if they don't exist
+        new File("testData").mkdirs();
 
-        // Create test data files
-        createTestUsersFile();
-        createTestCoursesFile();
-        createTestLanguagesFile();
-        createTestWordsFile();
-        createTestPhrasesFile();
-
-        // Update DataLoader paths to point to test files
+        // Set the DataLoader file paths to the test files
         DataLoader.USERS_FILE = TEST_USERS_FILE;
         DataLoader.COURSES_FILE = TEST_COURSES_FILE;
         DataLoader.LANGUAGES_FILE = TEST_LANGUAGES_FILE;
         DataLoader.WORDS_FILE = TEST_WORDS_FILE;
         DataLoader.PHRASES_FILE = TEST_PHRASES_FILE;
+
+        // Initialize test data files
+        createEmptyJsonArrayFile(TEST_USERS_FILE);
+        createEmptyJsonArrayFile(TEST_COURSES_FILE);
+        createEmptyJsonArrayFile(TEST_LANGUAGES_FILE);
+        createEmptyJsonArrayFile(TEST_WORDS_FILE);
+        createEmptyJsonArrayFile(TEST_PHRASES_FILE);
     }
 
-    @After
-    public void tearDown() {
-        // Restore original file paths
-        DataLoader.USERS_FILE = originalUsersFile;
-        DataLoader.COURSES_FILE = originalCoursesFile;
-        DataLoader.LANGUAGES_FILE = originalLanguagesFile;
-        DataLoader.WORDS_FILE = originalWordsFile;
-        DataLoader.PHRASES_FILE = originalPhrasesFile;
-
-        // Optionally delete test data files after tests
-        // For simplicity, we'll leave them in place
+    private void createEmptyJsonArrayFile(String filePath) throws IOException {
+        JSONArray emptyArray = new JSONArray();
+        try (FileWriter file = new FileWriter(filePath)) {
+            file.write(emptyArray.toJSONString());
+        }
     }
+
+    // Test getUsers()
 
     @Test
-    public void getUsers_ReturnsCorrectNumberOfUsers() {
-        // Act
+    public void testGetUsers_EmptyFile() {
         ArrayList<User> users = DataLoader.getUsers();
-
-        // Assert
-        assertEquals("getUsers should return 2 users", 2, users.size());
+        assertNotNull(users);
+        assertEquals(0, users.size());
     }
 
     @Test
-    public void getUsers_ReturnsCorrectUserData() {
-        // Act
-        ArrayList<User> users = DataLoader.getUsers();
-        User user = users.get(0);
-
-        // Assert
-        assertEquals("User ID should match", "00000000-0000-0000-0000-000000000001", user.getId().toString());
-        assertEquals("Username should match", "testuser1", user.getUsername());
-        assertEquals("Email should match", "testuser1@example.com", user.getEmail());
-        assertEquals("Password should match", "password1", user.getPassword());
-    }
-
-    @Test
-    public void loadCourses_ReturnsCorrectNumberOfCourses() {
-        // Act
-        ArrayList<Course> courses = DataLoader.loadCourses();
-
-        // Assert
-        assertEquals("loadCourses should return 2 courses", 2, courses.size());
-    }
-
-    @Test
-    public void loadCourses_ReturnsCorrectCourseData() {
-        // Act
-        ArrayList<Course> courses = DataLoader.loadCourses();
-        Course course = courses.get(0);
-
-        // Assert
-        assertEquals("Course ID should match", "10000000-0000-0000-0000-000000000001", course.getId().toString());
-        assertEquals("Course name should match", "Spanish Basics", course.getName());
-        assertEquals("Course description should match", "An introductory Spanish course", course.getDescription());
-        assertTrue("User access should be true", course.getUserAccess());
-        assertFalse("Course should not be completed", course.isCompletedCourse());
-        assertEquals("Course progress should be 0.0", 0.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void getLanguages_ReturnsCorrectNumberOfLanguages() {
-        // Act
-        ArrayList<Language> languages = DataLoader.getLanguages();
-
-        // Assert
-        assertEquals("getLanguages should return 2 languages", 2, languages.size());
-    }
-
-    @Test
-    public void getLanguages_ReturnsCorrectLanguageData() {
-        // Act
-        ArrayList<Language> languages = DataLoader.getLanguages();
-        Language language = languages.get(0);
-
-        // Assert
-        assertEquals("Language ID should match", "20000000-0000-0000-0000-000000000001", language.getId().toString());
-        assertEquals("Language name should match", "Spanish", language.getName());
-    }
-
-    @Test
-    public void loadWords_ReturnsCorrectNumberOfWords() {
-        // Act
-        WordsList wordsList = DataLoader.loadWords();
-
-        // Assert
-        assertEquals("loadWords should return 2 words", 2, wordsList.getAllWords().size());
-    }
-
-    @Test
-    public void loadWords_ReturnsCorrectWordData() {
-        // Act
-        WordsList wordsList = DataLoader.loadWords();
-        Word word = wordsList.getAllWords().get(0);
-
-        // Assert
-        assertEquals("Word text should match", "hola", word.getWordText());
-        assertEquals("Definition should match", "hello", word.getDefinition());
-        assertEquals("Difficulty should match", "easy", word.getDifficulty());
-        assertEquals("Translation should match", "hello", word.getTranslation());
-    }
-
-    @Test
-    public void loadPhrases_ReturnsCorrectNumberOfPhrases() {
-        // Act
-        PhraseList phraseList = new DataLoader().loadPhrases();
-
-        // Assert
-        assertEquals("loadPhrases should return 2 phrases", 2, phraseList.getAllPhrases().size());
-    }
-
-    @Test
-    public void loadPhrases_ReturnsCorrectPhraseData() {
-        // Act
-        PhraseList phraseList = new DataLoader().loadPhrases();
-        Phrase phrase = phraseList.getAllPhrases().get(0);
-
-        // Assert
-        assertEquals("Phrase text should match", "¿Cómo estás?", phrase.getPhraseText());
-        assertEquals("Definition should match", "How are you?", phrase.getDefinition());
-    }
-
-    @Test
-    public void getEnglishTranslation_ReturnsCorrectTranslation() {
-        // Arrange
-        String spanishWord = "hola";
-        String expectedTranslation = "hello";
-
-        // Act
-        String translation = DataLoader.getEnglishTranslation(spanishWord);
-
-        // Assert
-        assertEquals("getEnglishTranslation should return the correct translation", expectedTranslation, translation);
-    }
-
-    @Test
-    public void getEnglishTranslation_ReturnsNullWhenWordNotFound() {
-        // Arrange
-        String spanishWord = "adios";
-
-        // Act
-        String translation = DataLoader.getEnglishTranslation(spanishWord);
-
-        // Assert
-        assertNull("getEnglishTranslation should return null when word is not found", translation);
-    }
-
-    // Helper methods to create test data files
     @SuppressWarnings("unchecked")
-    private void createTestUsersFile() throws IOException {
+    public void testGetUsers_WithData() throws IOException {
+        // Arrange
         JSONArray usersArray = new JSONArray();
 
-        JSONObject user1 = new JSONObject();
-        user1.put("userId", "00000000-0000-0000-0000-000000000001");
-        user1.put("username", "testuser1");
-        user1.put("email", "testuser1@example.com");
-        user1.put("password", "password1");
-        user1.put("courses", new JSONArray());
-        user1.put("progress", new JSONObject());
-        user1.put("completedCourses", new JSONArray());
-        user1.put("languages", new JSONArray());
-        user1.put("currentCourseID", "00000000-0000-0000-0000-000000000000");
-        user1.put("currentLanguageID", "00000000-0000-0000-0000-000000000000");
-        user1.put("currentLanguageName", "Spanish");
+        JSONObject userJson = new JSONObject();
+        userJson.put("userId", UUID.randomUUID().toString());
+        userJson.put("username", "testuser");
+        userJson.put("email", "testuser@example.com");
+        userJson.put("password", "password123");
 
-        JSONObject user2 = new JSONObject();
-        user2.put("userId", "00000000-0000-0000-0000-000000000002");
-        user2.put("username", "testuser2");
-        user2.put("email", "testuser2@example.com");
-        user2.put("password", "password2");
-        user2.put("courses", new JSONArray());
-        user2.put("progress", new JSONObject());
-        user2.put("completedCourses", new JSONArray());
-        user2.put("languages", new JSONArray());
-        user2.put("currentCourseID", "00000000-0000-0000-0000-000000000000");
-        user2.put("currentLanguageID", "00000000-0000-0000-0000-000000000000");
-        user2.put("currentLanguageName", "French");
+        usersArray.add(userJson);
 
-        usersArray.add(user1);
-        usersArray.add(user2);
+        try (FileWriter file = new FileWriter(TEST_USERS_FILE)) {
+            file.write(usersArray.toJSONString());
+        }
 
-        writeJSONToFile(TEST_USERS_FILE, usersArray);
+        // Act
+        ArrayList<User> users = DataLoader.getUsers();
+
+        // Assert
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        assertEquals("testuser", users.get(0).getUsername());
+        assertEquals("testuser@example.com", users.get(0).getEmail());
+        assertEquals("password123", users.get(0).getPassword());
     }
+
+    @Test
     @SuppressWarnings("unchecked")
-    private void createTestCoursesFile() throws IOException {
+    public void testGetUsers_InvalidUUID() throws IOException {
+        // Arrange
+        JSONArray usersArray = new JSONArray();
+
+        JSONObject userJson = new JSONObject();
+        userJson.put("userId", "invalid-uuid");
+        userJson.put("username", "testuser");
+        userJson.put("email", "testuser@example.com");
+        userJson.put("password", "password123");
+
+        usersArray.add(userJson);
+
+        try (FileWriter file = new FileWriter(TEST_USERS_FILE)) {
+            file.write(usersArray.toJSONString());
+        }
+
+        // Act
+        ArrayList<User> users = DataLoader.getUsers();
+
+        // Assert
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        assertNull(users.get(0).getId());
+    }
+
+    // Test loadCourses()
+
+    @Test
+    public void testLoadCourses_EmptyFile() {
+        ArrayList<Course> courses = DataLoader.loadCourses();
+        assertNotNull(courses);
+        assertEquals(0, courses.size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testLoadCourses_WithData() throws IOException {
+        // Arrange
         JSONArray coursesArray = new JSONArray();
 
-        JSONObject course1 = new JSONObject();
-        course1.put("courseID", "10000000-0000-0000-0000-000000000001");
-        course1.put("name", "Spanish Basics");
-        course1.put("description", "An introductory Spanish course");
-        course1.put("userAccess", true);
-        course1.put("completed", false);
-        course1.put("courseProgress", 0.0);
-        course1.put("lessons", new JSONArray());
-        // Add other fields as necessary
+        JSONObject courseJson = new JSONObject();
+        courseJson.put("courseID", UUID.randomUUID().toString());
+        courseJson.put("name", "Spanish Basics");
+        courseJson.put("description", "An introductory course to Spanish");
+        courseJson.put("userAccess", true);
+        courseJson.put("completed", false);
+        courseJson.put("courseProgress", 0.0);
+        courseJson.put("lessons", new JSONArray()); // Empty lessons array
 
-        JSONObject course2 = new JSONObject();
-        course2.put("courseID", "10000000-0000-0000-0000-000000000002");
-        course2.put("name", "Advanced Spanish");
-        course2.put("description", "An advanced Spanish course");
-        course2.put("userAccess", false);
-        course2.put("completed", false);
-        course2.put("courseProgress", 0.0);
-        course2.put("lessons", new JSONArray());
-        // Add other fields as necessary
+        coursesArray.add(courseJson);
 
-        coursesArray.add(course1);
-        coursesArray.add(course2);
+        try (FileWriter file = new FileWriter(TEST_COURSES_FILE)) {
+            file.write(coursesArray.toJSONString());
+        }
 
-        writeJSONToFile(TEST_COURSES_FILE, coursesArray);
+        // Act
+        ArrayList<Course> courses = DataLoader.loadCourses();
+
+        // Assert
+        assertNotNull(courses);
+        assertEquals(1, courses.size());
+        assertEquals("Spanish Basics", courses.get(0).getName());
+        assertEquals("An introductory course to Spanish", courses.get(0).getDescription());
+        assertTrue(courses.get(0).getUserAccess());
+        assertFalse(courses.get(0).isCompletedCourse());
+        assertEquals(0.0, courses.get(0).getCourseProgress(), 0.01);
     }
+
+    @Test
     @SuppressWarnings("unchecked")
-    private void createTestLanguagesFile() throws IOException {
+    public void testLoadCourses_InvalidUUID() throws IOException {
+        // Arrange
+        JSONArray coursesArray = new JSONArray();
+
+        JSONObject courseJson = new JSONObject();
+        courseJson.put("courseID", "invalid-uuid");
+        courseJson.put("name", "Spanish Basics");
+        courseJson.put("description", "An introductory course to Spanish");
+        courseJson.put("userAccess", true);
+        courseJson.put("completed", false);
+        courseJson.put("courseProgress", 0.0);
+        courseJson.put("lessons", new JSONArray());
+
+        coursesArray.add(courseJson);
+
+        try (FileWriter file = new FileWriter(TEST_COURSES_FILE)) {
+            file.write(coursesArray.toJSONString());
+        }
+
+        // Act
+        ArrayList<Course> courses = DataLoader.loadCourses();
+
+        // Assert
+        assertNotNull(courses);
+        assertEquals(1, courses.size());
+        assertNull(courses.get(0).getId());
+    }
+
+    // Test getLanguages()
+
+    @Test
+    public void testGetLanguages_EmptyFile() {
+        ArrayList<Language> languages = DataLoader.getLanguages();
+        assertNotNull(languages);
+        assertEquals(0, languages.size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetLanguages_WithData() throws IOException {
+        // Arrange
         JSONArray languagesArray = new JSONArray();
 
-        JSONObject language1 = new JSONObject();
-        language1.put("languageID", "20000000-0000-0000-0000-000000000001");
-        language1.put("name", "Spanish");
+        JSONObject languageJson = new JSONObject();
+        languageJson.put("languageID", UUID.randomUUID().toString());
+        languageJson.put("name", "Spanish");
 
-        JSONObject language2 = new JSONObject();
-        language2.put("languageID", "20000000-0000-0000-0000-000000000002");
-        language2.put("name", "French");
+        languagesArray.add(languageJson);
 
-        languagesArray.add(language1);
-        languagesArray.add(language2);
+        try (FileWriter file = new FileWriter(TEST_LANGUAGES_FILE)) {
+            file.write(languagesArray.toJSONString());
+        }
 
-        writeJSONToFile(TEST_LANGUAGES_FILE, languagesArray);
+        // Act
+        ArrayList<Language> languages = DataLoader.getLanguages();
+
+        // Assert
+        assertNotNull(languages);
+        assertEquals(1, languages.size());
+        assertEquals("Spanish", languages.get(0).getName());
     }
+
+    // Test loadWords()
+
+    @Test
     @SuppressWarnings("unchecked")
-    private void createTestWordsFile() throws IOException {
+    public void testLoadWords_EmptyFile() {
+        WordsList wordsList = DataLoader.loadWords();
+        assertNotNull(wordsList);
+        assertEquals(0, wordsList.getAllWords().size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testLoadWords_WithData() throws IOException {
+        // Arrange
         JSONArray wordsArray = new JSONArray();
 
-        JSONObject word1 = new JSONObject();
-        word1.put("word", "hola");
-        word1.put("definition", "hello");
-        word1.put("difficulty", "easy");
-        word1.put("translation", "hello");
+        JSONObject wordJson = new JSONObject();
+        wordJson.put("word", "Hola");
+        wordJson.put("definition", "Hello");
+        wordJson.put("difficulty", "Rudimentary");
+        wordJson.put("translation", "Hello");
 
-        JSONObject word2 = new JSONObject();
-        word2.put("word", "gracias");
-        word2.put("definition", "thank you");
-        word2.put("difficulty", "easy");
-        word2.put("translation", "thank you");
+        wordsArray.add(wordJson);
 
-        wordsArray.add(word1);
-        wordsArray.add(word2);
+        try (FileWriter file = new FileWriter(TEST_WORDS_FILE)) {
+            file.write(wordsArray.toJSONString());
+        }
 
-        writeJSONToFile(TEST_WORDS_FILE, wordsArray);
+        // Act
+        WordsList wordsList = DataLoader.loadWords();
+
+        // Assert
+        assertNotNull(wordsList);
+        assertEquals(1, wordsList.getAllWords().size());
+        assertEquals("Hola", wordsList.getAllWords().get(0).getWordText());
+        assertEquals("Hello", wordsList.getAllWords().get(0).getDefinition());
     }
+
+    // Test getEnglishTranslation()
+
+    @Test
     @SuppressWarnings("unchecked")
-    private void createTestPhrasesFile() throws IOException {
+    public void testGetEnglishTranslation_Found() throws IOException {
+        // Arrange
+        JSONArray wordsArray = new JSONArray();
+
+        JSONObject wordJson = new JSONObject();
+        wordJson.put("word", "Hola");
+        wordJson.put("definition", "Hello");
+        wordJson.put("difficulty", "Rudimentary");
+        wordJson.put("translation", "Hello");
+
+        wordsArray.add(wordJson);
+
+        try (FileWriter file = new FileWriter(TEST_WORDS_FILE)) {
+            file.write(wordsArray.toJSONString());
+        }
+
+        // Act
+        String translation = DataLoader.getEnglishTranslation("Hola");
+
+        // Assert
+        assertEquals("Hello", translation);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetEnglishTranslation_NotFound() throws IOException {
+        // Arrange
+        JSONArray wordsArray = new JSONArray();
+
+        JSONObject wordJson = new JSONObject();
+        wordJson.put("word", "Hola");
+        wordJson.put("definition", "Hello");
+        wordJson.put("difficulty", "Rudimentary");
+        wordJson.put("translation", "Hello");
+
+        wordsArray.add(wordJson);
+
+        try (FileWriter file = new FileWriter(TEST_WORDS_FILE)) {
+            file.write(wordsArray.toJSONString());
+        }
+
+        // Act
+        String translation = DataLoader.getEnglishTranslation("Adios");
+
+        // Assert
+        assertNull(translation);
+    }
+
+    // Test loadPhrases()
+
+    @Test
+    public void testLoadPhrases_EmptyFile() {
+        PhraseList phraseList = new DataLoader().loadPhrases();
+        assertNotNull(phraseList);
+        assertEquals(0, phraseList.getAllPhrases().size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testLoadPhrases_WithData() throws IOException {
+        // Arrange
         JSONArray phrasesArray = new JSONArray();
 
-        JSONObject phrase1 = new JSONObject();
-        phrase1.put("phrase", "¿Cómo estás?");
-        phrase1.put("definition", "How are you?");
+        JSONObject phraseJson = new JSONObject();
+        phraseJson.put("phrase", "Buenos días");
+        phraseJson.put("definition", "Good morning");
 
-        JSONObject phrase2 = new JSONObject();
-        phrase2.put("phrase", "Buenos días");
-        phrase2.put("definition", "Good morning");
+        phrasesArray.add(phraseJson);
 
-        phrasesArray.add(phrase1);
-        phrasesArray.add(phrase2);
+        try (FileWriter file = new FileWriter(TEST_PHRASES_FILE)) {
+            file.write(phrasesArray.toJSONString());
+        }
 
-        writeJSONToFile(TEST_PHRASES_FILE, phrasesArray);
+        // Act
+        PhraseList phraseList = new DataLoader().loadPhrases();
+
+        // Assert
+        assertNotNull(phraseList);
+        assertEquals(1, phraseList.getAllPhrases().size());
+        assertEquals("Buenos días", phraseList.getAllPhrases().get(0).getPhraseText());
+        assertEquals("Good morning", phraseList.getAllPhrases().get(0).getDefinition());
     }
 
-    private void writeJSONToFile(String filePath, JSONArray jsonArray) throws IOException {
-        // Ensure the testData directory exists
-        java.io.File dir = new java.io.File("testData");
-        if (!dir.exists()) {
-            dir.mkdir();
+    // Optional: Test confirmUser()
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testConfirmUser_ValidCredentials() throws IOException {
+        // Arrange
+        JSONArray usersArray = new JSONArray();
+        JSONObject userJson = new JSONObject();
+        userJson.put("userId", UUID.randomUUID().toString());
+        userJson.put("username", "testuser");
+        userJson.put("email", "testuser@example.com");
+        userJson.put("password", "password123");
+
+        usersArray.add(userJson);
+
+        try (FileWriter file = new FileWriter(TEST_USERS_FILE)) {
+            file.write(usersArray.toJSONString());
         }
 
-        try (FileWriter file = new FileWriter(filePath)) {
-            file.write(jsonArray.toJSONString());
-            file.flush();
+        // Act
+        boolean result = new DataLoader().confirmUser("testuser", "password123");
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testConfirmUser_InvalidCredentials() throws IOException {
+        // Arrange
+        JSONArray usersArray = new JSONArray();
+
+        JSONObject userJson = new JSONObject();
+        userJson.put("userId", UUID.randomUUID().toString());
+        userJson.put("username", "testuser");
+        userJson.put("email", "testuser@example.com");
+        userJson.put("password", "password123");
+
+        usersArray.add(userJson);
+
+        try (FileWriter file = new FileWriter(TEST_USERS_FILE)) {
+            file.write(usersArray.toJSONString());
         }
+
+        // Act
+        boolean result = new DataLoader().confirmUser("testuser", "wrongpassword");
+
+        // Assert
+        assertFalse(result);
+    }
+
+    // Test loadFlashcardsFromJson()
+
+    @Test
+    public void testLoadFlashcardsFromJson_EmptyFile() {
+        List<FlashcardQuestion> flashcards = DataLoader.loadFlashcardsFromJson(TEST_WORDS_FILE);
+        assertNotNull(flashcards);
+        assertEquals(0, flashcards.size());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testLoadFlashcardsFromJson_WithData() throws IOException {
+        // Arrange
+        JSONArray wordsArray = new JSONArray();
+
+        JSONObject wordJson = new JSONObject();
+        wordJson.put("word", "Hola");
+        wordJson.put("translation", "Hello");
+
+        wordsArray.add(wordJson);
+
+        try (FileWriter file = new FileWriter(TEST_WORDS_FILE)) {
+            file.write(wordsArray.toJSONString());
+        }
+
+        // Act
+        List<FlashcardQuestion> flashcards = DataLoader.loadFlashcardsFromJson(TEST_WORDS_FILE);
+
+        // Assert
+        assertNotNull(flashcards);
+        assertEquals(1, flashcards.size());
+        assertEquals("Hola", flashcards.get(0).getFrontInfo());
+        assertEquals("Hello", flashcards.get(0).getBackAnswer());
     }
 }

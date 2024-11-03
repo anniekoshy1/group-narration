@@ -1,19 +1,24 @@
 package com.narration;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test class for the Language class.
+ */
 public class LanguageTest {
 
     private Language language;
-    private User user;
+    private User testUser;
     private Course course1;
     private Course course2;
     private Assessment assessment1;
@@ -21,153 +26,104 @@ public class LanguageTest {
 
     @Before
     public void setUp() {
-        // Create a mock user
-        user = new User(
-            UUID.fromString("00000000-0000-0000-0000-000000000001"),
-            "testuser",
-            "testuser@example.com",
-            "password",
-            new ArrayList<>(), // courses
-            new HashMap<>(),   // progress
-            new ArrayList<>(), // completedCourses
-            null,              // currentCourseID
-            new ArrayList<>(), // languages
-            null,              // currentLanguageID
-            "Spanish"          // currentLanguageName
-        );
-
-        // Initialize the Language object
-        language = new Language(user, "Spanish");
-
-        // Create mock courses
-        course1 = new Course(
-            UUID.fromString("10000000-0000-0000-0000-000000000001"),
-            "Course 1",
-            "Description 1",
-            true,
-            0.0,
-            false,
-            new ArrayList<>(), // lessons
-            new ArrayList<>(), // assessments
-            new ArrayList<>(), // completedAssessments
-            new FlashcardQuestion("Question?", "Answer")
-        );
-
-        course2 = new Course(
-            UUID.fromString("10000000-0000-0000-0000-000000000002"),
-            "Course 2",
-            "Description 2",
-            true,
-            0.0,
-            false,
-            new ArrayList<>(), // lessons
-            new ArrayList<>(), // assessments
-            new ArrayList<>(), // completedAssessments
-            new FlashcardQuestion("Question?", "Answer")
-        );
-
-        // Create mock assessments using your Assessment class
-        assessment1 = new Assessment(
-            UUID.fromString("20000000-0000-0000-0000-000000000001"),
-            Assessment.AssessmentType.MULTIPLE_CHOICE,
-            new ArrayList<>()
-        );
-
-        assessment2 = new Assessment(
-            UUID.fromString("20000000-0000-0000-0000-000000000002"),
-            Assessment.AssessmentType.TRUE_FALSE,
-            new ArrayList<>()
-        );
+        testUser = new User(UUID.randomUUID(), "testUser", "test@example.com", "password");
+        language = new Language(testUser, "Spanish");
+        
+        course1 = new Course(UUID.randomUUID(), "Spanish 101", "Introductory Spanish course", true, 0.0, false, 
+                            new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null);
+        
+        course2 = new Course(UUID.randomUUID(), "Spanish 102", "Intermediate Spanish course", true, 0.0, false, 
+                            new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null);
+                        
+        assessment1 = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.MULTIPLE_CHOICE, new ArrayList<>());
+        assessment2 = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, new ArrayList<>());
     }
 
+    // Test constructor with user and language name
     @Test
-    public void testGetName() {
+    public void testConstructorWithUserAndName() {
+        assertNotNull(language.getId());
         assertEquals("Spanish", language.getName());
+        assertEquals(testUser, language.getUser());
     }
 
+    // Test setUser method
     @Test
-    public void testGetAndSetUser() {
-        assertEquals(user, language.getUser());
-
-        // Create a new user
-        User newUser = new User(
-            UUID.fromString("00000000-0000-0000-0000-000000000002"),
-            "newuser",
-            "newuser@example.com",
-            "newpassword",
-            new ArrayList<>(),
-            new HashMap<>(),
-            new ArrayList<>(),
-            null,
-            new ArrayList<>(),
-            null,
-            "French"
-        );
-
+    public void testSetUser() {
+        User newUser = new User(UUID.randomUUID(), "newUser", "newuser@example.com", "newpassword");
         language.setUser(newUser);
         assertEquals(newUser, language.getUser());
     }
 
+    // Test setCourseAccess with valid course
     @Test
-    public void testSetAndGetLanguageProgress() {
-        language.setLanguageProgress(75.0);
-        assertEquals(75.0, language.getLanguageProgress(), 0.0);
-        assertEquals(37.5, language.getTotalPercentage(), 0.0); // Since coursePercentage is 0.0
+    public void testSetCourseAccess() {
+        language.setCourseAccess(course1, true);
+        assertTrue(language.getCourseAccess().containsKey(course1));
+        assertTrue(language.getCourseAccess().get(course1));
     }
 
+    // Test addKeyWord method
     @Test
-    public void testSetAndGetCompletedCourses() {
+    public void testAddKeyWord() {
+        language.addKeyWord("beginner");
+        assertTrue(language.getKeyWords().contains("beginner"));
+    }
+
+    // Test setLanguageProgress updates languageProgress and totalPercentage
+    @Test
+    public void testSetLanguageProgress() {
+        language.setLanguageProgress(50.0);
+        assertEquals(50.0, language.getLanguageProgress(), 0.01);
+        assertEquals(25.0, language.getTotalPercentage(), 0.01);  // totalPercentage should reflect average
+    }
+
+    // Test setCompletedCourses with multiple courses
+    @Test //bug -- git issue
+    public void testSetCompletedCourses() {
         ArrayList<Course> completedCourses = new ArrayList<>();
         completedCourses.add(course1);
         completedCourses.add(course2);
 
         language.setCompletedCourses(completedCourses);
+        assertEquals(100.0, language.getCoursePercentage(), 0.01);
+        assertEquals(100.0, language.getTotalPercentage(), 0.01);
+    }
+
+    // Test takenStarterTest method
+    @Test
+    public void testTakenStarterTest_NoStarterTest() {
+        assertFalse(language.takenStarterTest());
+    }
+
+    // Test addCompletedAssessment adds assessment to completedAssessments
+    @Test
+    public void testAddCompletedAssessment() {
+        language.addCompletedAssessment(assessment1);
+        assertTrue(language.getCompletedAssessments().contains(assessment1));
+    }
+
+    // Test getCompletedCourses with non-empty list
+    @Test
+    public void testGetCompletedCourses_NonEmpty() {
+        language.setCompletedCourses(new ArrayList<>(List.of(course1, course2)));
         assertEquals(2, language.getCompletedCourses().size());
-        assertTrue(language.getCompletedCourses().contains(course1));
-        assertTrue(language.getCompletedCourses().contains(course2));
-        assertEquals(100.0, language.getCoursePercentage(), 0.0);
     }
 
+    // Test getKeyWords with multiple keywords
     @Test
-    public void testAddAndGetKeyWords() {
-        language.addKeyWord("hola");
-        language.addKeyWord("adiós");
-
-        ArrayList<String> keyWords = language.getKeyWords();
-        assertEquals(2, keyWords.size());
-        assertTrue(keyWords.contains("hola"));
-        assertTrue(keyWords.contains("adiós"));
+    public void testGetKeyWords_MultipleKeywords() {
+        language.addKeyWord("basic");
+        language.addKeyWord("intermediate");
+        assertTrue(language.getKeyWords().contains("basic"));
+        assertTrue(language.getKeyWords().contains("intermediate"));
     }
 
+    // Test getCompletedAssessments with multiple assessments
     @Test
-    public void testAddAndGetCompletedAssessments() {
+    public void testGetCompletedAssessments_MultipleAssessments() {
         language.addCompletedAssessment(assessment1);
         language.addCompletedAssessment(assessment2);
-
-        ArrayList<Assessment> completedAssessments = language.getCompletedAssessments();
-        assertEquals(2, completedAssessments.size());
-        assertTrue(completedAssessments.contains(assessment1));
-        assertTrue(completedAssessments.contains(assessment2));
+        assertEquals(2, language.getCompletedAssessments().size());
     }
-
-    @Test
-    public void testGetId() {
-        assertNotNull(language.getId());
-    }
-
-    @Test
-    public void testUpdateTotalPercentage() {
-        language.setLanguageProgress(80.0);
-        ArrayList<Course> completedCourses = new ArrayList<>();
-        completedCourses.add(course1);
-        language.setCompletedCourses(completedCourses);
-
-        // After setting completed courses, coursePercentage should be 100.0
-        // Total percentage should be (100.0 + 80.0) / 2 = 90.0
-        assertEquals(90.0, language.getTotalPercentage(), 0.0);
-    }
-
-    // Note: Tests that require access to private fields without getters are limited.
-    // For example, we cannot test setCourseAccess() or takenStarterTest() fully
-    // without appropriate getter methods.
 }

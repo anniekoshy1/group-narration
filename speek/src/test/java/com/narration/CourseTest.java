@@ -5,298 +5,302 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Test class for the Course class.
- */
 public class CourseTest {
 
     private Course course;
-    private Lesson lesson;
+    private UUID courseId;
+    private Lesson lesson1;
+    private Lesson lesson2;
     private FlashcardQuestion flashcard;
-    private Assessment assessment;
+    private Assessment assessment1;
+    private Assessment assessment2;
 
     @Before
     public void setUp() {
-        // Initialize a sample lesson
-        lesson = new Lesson(
-            "Sample Lesson",
-            UUID.randomUUID(),
-            "This is a sample lesson.",
-            0.0,
-            "English content",
-            "Spanish content"
-        );
+        courseId = UUID.randomUUID();
 
-        // Initialize a sample flashcard
-        flashcard = new FlashcardQuestion(
-            "What is the capital of France?",
-            "Paris"
-        );
-
-        // Initialize sample questions for the assessment
-        ArrayList<Questions> questions = new ArrayList<>();
-        // Assuming Difficulty enum has EASY, MEDIUM, HARD
-        questions.add(new Questions("Is the earth round?", true, Difficulty.RUDIMENTARY));
-        questions.add(new Questions("What color is the sky?", "Blue", Difficulty.RUDIMENTARY));
-        questions.add(new Questions("Solve for x: 2x + 3 = 7", "2", Difficulty.INTERMEDIATE));
-
-        // Set user's answers to be correct
-        questions.get(0).submitAnswer("true");
-        questions.get(1).submitAnswer("Blue");
-        questions.get(2).submitAnswer("2");
-
-        // Initialize an assessment with these questions
-        assessment = new Assessment(
-            UUID.randomUUID(),
-            Assessment.AssessmentType.MULTIPLE_CHOICE,
-            questions
-        );
-
-        // Calculate the score to reflect the user's answers
-        assessment.calculateScore();
-
-        // Initialize the course with the sample data
-        ArrayList<Lesson> lessons = new ArrayList<>();
-        lessons.add(lesson);
-
-        ArrayList<Assessment> assessments = new ArrayList<>();
-        assessments.add(assessment);
-
-        ArrayList<String> completedAssessments = new ArrayList<>();
-
+        // Initialize the course with default values
         course = new Course(
-            UUID.randomUUID(),
-            "Sample Course",
-            "A course for testing",
-            true,
-            0.0,
-            false,
-            lessons,
-            assessments,
-            completedAssessments,
-            flashcard
+                courseId,
+                "Test Course",
+                "A course for testing",
+                true,
+                0.0,
+                false,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                null
         );
 
-        // Set the current lesson
-        course.setCurrentLesson(lesson);
+        // Create test lessons
+        lesson1 = new Lesson("Lesson 1", "Introduction", "Content in English", "Contenido en Español");
+        lesson2 = new Lesson("Lesson 2", "Advanced Topics", "Advanced English Content", "Contenido Avanzado en Español");
+
+        // Create a flashcard with initial progress
+        flashcard = new FlashcardQuestion("Flashcard Content", "Flashcard Answer");
+
+        // Create assessments
+        assessment1 = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.MULTIPLE_CHOICE, new ArrayList<>());
+        assessment2 = new Assessment(UUID.randomUUID(), Assessment.AssessmentType.TRUE_FALSE, new ArrayList<>());
     }
 
     @Test
-    public void calculateProgress_UpdatesCourseProgressTo100WhenLessonAndFlashcardCompleted() {
-        // Arrange
-        lesson.markAsCompleted();
-        flashcard.setFlashcardProgress(100.0);
+    public void testDefaultConstructor() {
+        Course defaultCourse = new Course();
 
-        // Act
-        course.calculateProgress();
+        // Check if the generated ID is not null
+        assertNotNull(defaultCourse.getId());
 
-        // Assert
-        assertEquals("Course progress should be 100% when lesson and flashcard are completed", 100.0, course.getCourseProgress(), 0.0);
+        // Verify default values of other fields
+        assertEquals("", defaultCourse.getName());
+        assertEquals("", defaultCourse.getDescription());
+        assertFalse(defaultCourse.getUserAccess());
+        assertEquals(0.0, defaultCourse.getCourseProgress(), 0.01);
+        assertFalse(defaultCourse.isCompletedCourse());
+        assertNotNull(defaultCourse.getAllLessons());
+        assertTrue(defaultCourse.getAllLessons().isEmpty());
+        assertNotNull(defaultCourse.getAllAssessments());
+        assertTrue(defaultCourse.getAllAssessments().isEmpty());
+        assertNotNull(defaultCourse.getKeyWords());
+        assertTrue(defaultCourse.getKeyWords().isEmpty());
+        assertNull(defaultCourse.getFlashcard());
     }
 
+    // Test adding lessons to the course
     @Test
-    public void calculateProgress_UpdatesCourseProgressTo50WhenOnlyLessonCompleted() {
-        // Arrange
-        lesson.markAsCompleted();
-        flashcard.setFlashcardProgress(0.0);
-
-        // Act
-        course.calculateProgress();
-
-        // Assert
-        assertEquals("Course progress should be 50% when only the lesson is completed", 50.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void calculateProgress_UpdatesCourseProgressTo50WhenOnlyFlashcardCompleted() {
-        // Arrange
-        lesson.setLessonProgress(0.0);
-        flashcard.setFlashcardProgress(100.0);
-
-        // Act
-        course.calculateProgress();
-
-        // Assert
-        assertEquals("Course progress should be 50% when only the flashcard is completed", 50.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void calculateProgress_UpdatesCourseProgressTo50WhenNeitherCompleted() {
-        // Arrange
-        lesson.setLessonProgress(0.0);
-        flashcard.setFlashcardProgress(0.0);
-
-        // Act
-        course.calculateProgress();
-
-        // Assert
-        assertEquals("Course progress should be 50% when neither lesson nor flashcard is completed (as per method logic)", 50.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void setCourseProgress_SetsProgressWithinValidRange() {
-        // Act
-        course.setCourseProgress(85.0);
-
-        // Assert
-        assertEquals("Course progress should be set to 85.0%", 85.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void setCourseProgress_DoesNotSetProgressOutsideValidRange() {
-        // Act
-        course.setCourseProgress(-10.0);
-
-        // Assert
-        assertNotEquals("Course progress should not be set to a negative value", -10.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void addLesson_AddsLessonToCourse() {
-        // Arrange
-        Lesson newLesson = new Lesson(
-            "New Lesson",
-            "New lesson description",
-            "English content",
-            "Spanish content"
-        );
+    public void testAddLesson_NewLesson() {
         int initialSize = course.getAllLessons().size();
+        course.addLesson(lesson1);
+        assertEquals(initialSize + 1, course.getAllLessons().size());
+        assertTrue(course.getAllLessons().contains(lesson1));
+    }
 
-        // Act
-        course.addLesson(newLesson);
+    @Test // bug -- git issue
+    public void testAddLesson_DuplicateLesson() {
+        course.addLesson(lesson1);
+        int initialSize = course.getAllLessons().size();
+        course.addLesson(lesson1); // Attempt to add duplicate
+        assertEquals(initialSize, course.getAllLessons().size());
+    }
 
-        // Assert
-        assertEquals("Course should have one more lesson after adding", initialSize + 1, course.getAllLessons().size());
-        assertTrue("Course lessons should contain the new lesson", course.getAllLessons().contains(newLesson));
+    @Test // bug //git issue
+    public void testAddLesson_NullLesson() {
+        int initialSize = course.getAllLessons().size();
+        course.addLesson(null);
+        assertEquals(initialSize, course.getAllLessons().size());
     }
 
     @Test
-    public void addAssessment_AddsAssessmentToCourse() {
+    public void testAddLesson_MultipleLessons() {
+        course.addLesson(lesson1);
+        course.addLesson(lesson2);
+        assertEquals(2, course.getAllLessons().size());
+        assertTrue(course.getAllLessons().contains(lesson1));
+        assertTrue(course.getAllLessons().contains(lesson2));
+    }
+
+    // Test calculateProgress
+    @Test
+    public void testCalculateProgress_LessonAndFlashcardIncomplete() {
         // Arrange
-        ArrayList<Questions> newQuestions = new ArrayList<>();
-        newQuestions.add(new Questions("What is 2 + 2?", "4", Difficulty.RUDIMENTARY));
-        Assessment newAssessment = new Assessment(
-            UUID.randomUUID(),
-            Assessment.AssessmentType.MULTIPLE_CHOICE,
-            newQuestions
-        );
-        int initialSize = course.getAllAssessments().size();
-
-        // Act
-        course.addAssessment(newAssessment);
-
-        // Assert
-        assertEquals("Course should have one more assessment after adding", initialSize + 1, course.getAllAssessments().size());
-        assertTrue("Course assessments should contain the new assessment", course.getAllAssessments().contains(newAssessment));
+        course.setCurrentLesson(lesson1); // Assume lesson1 is set as the current lesson
+        course.setCourseProgress(0.0); // Start with no progress on course
+        course.calculateProgress(); // Both lesson and flashcard are incomplete
+        
+        // Act & Assert
+        assertEquals("Course progress should be 0% when both lesson and flashcard are incomplete",
+                0.0, course.getCourseProgress(), 0.01);
     }
 
     @Test
-    public void getCompletedAssessments_ReturnsAssessmentsWithScore70OrAbove() {
+    public void testCalculateProgress_LessonComplete_FlashcardIncomplete() {
         // Arrange
-        // Existing assessment has a score calculated during setup (should be 100%)
-        Assessment failingAssessment = new Assessment(
-            UUID.randomUUID(),
-            Assessment.AssessmentType.MULTIPLE_CHOICE,
-            new ArrayList<>()
-        );
-        failingAssessment.calculateScore(); // Score will be 0% due to empty question list
-        course.addAssessment(failingAssessment);
+        lesson1.markAsCompleted(); // Complete the lesson
+        course.setCurrentLesson(lesson1);
+        course.setCourseProgress(0.0);
+        course.setCurrentLesson(lesson1); // Set current lesson to the completed lesson
+        course.calculateProgress(); // Flashcard is still incomplete
 
-        // Act
-        ArrayList<String> completedAssessments = course.getCompletedAssessments();
-
-        // Assert
-        assertEquals("There should be one completed assessment with a score >= 70%", 1, completedAssessments.size());
-        assertTrue("Completed assessments should contain the assessment with a passing score", completedAssessments.contains(assessment.toString()));
+        // Act & Assert
+        assertEquals("Course progress should be 50% when lesson is complete but flashcard is incomplete",
+                50.0, course.getCourseProgress(), 0.01);
     }
 
     @Test
-    public void setCompletedCourse_SetsCourseToCompletedAndProgressTo100() {
-        // Act
-        course.setCompletedCourse();
-
-        // Assert
-        assertTrue("Course should be marked as completed", course.isCompletedCourse());
-        assertEquals("Course progress should be set to 100% when completed", 100.0, course.getCourseProgress(), 0.0);
-    }
-
-    @Test
-    public void completedCourse_ReturnsTrueWhenProgressIs100() {
+    public void testCalculateProgress_LessonIncomplete_FlashcardComplete() {
         // Arrange
-        course.setCourseProgress(100.0);
+        flashcard.setFlashcardProgress(100.0); // Set flashcard progress to 100%
+        course.setCurrentLesson(lesson1); // Current lesson is still incomplete
+        course.setCourseProgress(0.0);
+        course.calculateProgress();
 
-        // Act
-        boolean isCompleted = course.completedCourse();
-
-        // Assert
-        assertTrue("completedCourse should return true when progress is 100%", isCompleted);
+        // Act & Assert
+        assertEquals("Course progress should be 50% when flashcard is complete but lesson is incomplete",
+                50.0, course.getCourseProgress(), 0.01);
     }
 
     @Test
-    public void completedCourse_ReturnsFalseWhenProgressIsNot100() {
+    public void testCalculateProgress_LessonAndFlashcardComplete() {
         // Arrange
+        lesson1.markAsCompleted(); // Complete the lesson
+        flashcard.setFlashcardProgress(100.0); // Complete the flashcard
+        course.setCurrentLesson(lesson1);
+        course.setCourseProgress(0.0);
+        course.calculateProgress(); // Both lesson and flashcard are complete
+
+        // Act & Assert
+        assertEquals("Course progress should be 100% when both lesson and flashcard are complete",
+                100.0, course.getCourseProgress(), 0.01);
+    }
+
+    // Test setCourseProgress with invalid values
+    @Test
+    public void testSetCourseProgress_ValidValue() {
         course.setCourseProgress(75.0);
-
-        // Act
-        boolean isCompleted = course.completedCourse();
-
-        // Assert
-        assertFalse("completedCourse should return false when progress is not 100%", isCompleted);
+        assertEquals(75.0, course.getCourseProgress(), 0.01);
     }
 
     @Test
-    public void addKeyWord_AddsKeyWordToCourse() {
-        // Arrange
-        String keyWord = "Language";
-        if (course.getKeyWords() == null) {
-            course.setKeyWords(new ArrayList<>()); 
-        }
-        int initialSize = course.getKeyWords().size();
-
-        // Act
-        course.addKeyWord(keyWord);
-
-        // Assert
-        assertEquals("Course should have one more keyword after adding", initialSize + 1, course.getKeyWords().size());
-        assertTrue("Course keywords should contain the new keyword", course.getKeyWords().contains(keyWord));
+    public void testSetCourseProgress_NegativeValue() {
+        course.setCourseProgress(-10.0);
+        assertEquals(0.0, course.getCourseProgress(), 0.01);
     }
 
+    //bug
     @Test
-    public void generateUUID_ReturnsValidUUID() {
-        // Act
-        UUID newUUID = course.generateUUID();
-
-        // Assert
-        assertNotNull("Generated UUID should not be null", newUUID);
-        assertNotEquals("Generated UUID should be unique", course.getId(), newUUID);
+    public void testSetCourseProgress_OverMaxValue() {
+        course.setCourseProgress(120.0);
+        assertEquals(100.0, course.getCourseProgress(), 0.01);
     }
 
+    // Test setUserAccess
     @Test
-    public void setCompleted_SetsCompletedStatusAndUpdatesProgress() {
-        // Act
+    public void testSetUserAccess() {
+        course.setUserAccess(false);
+        assertFalse(course.getUserAccess());
+        course.setUserAccess(true);
+        assertTrue(course.getUserAccess());
+    }
+
+    // Test isCompletedCourse and setCompleted
+    @Test
+    public void testSetCompleted() {
         course.setCompleted(true);
-
-        // Assert
-        assertTrue("Course should be marked as completed", course.isCompletedCourse());
-        assertEquals("Course progress should be set to 100% when completed", 100.0, course.getCourseProgress(), 0.0);
+        assertTrue(course.isCompletedCourse());
+        assertEquals(100.0, course.getCourseProgress(), 0.01);
     }
 
     @Test
-    public void setCompleted_DoesNotUpdateProgressWhenSetToIncomplete() {
-        // Arrange
-        course.setCourseProgress(100.0);
-
-        // Act
+    public void testSetCompleted_False() {
         course.setCompleted(false);
+        assertFalse(course.isCompletedCourse());
+    }
 
-        // Assert
-        assertFalse("Course should be marked as not completed", course.isCompletedCourse());
-        assertEquals("Course progress should remain unchanged when set to incomplete", 100.0, course.getCourseProgress(), 0.0);
+    // Test addAssessment and getAllAssessments
+    @Test
+    public void testAddAssessment() {
+        int initialSize = course.getAllAssessments().size();
+        course.addAssessment(assessment1);
+        assertEquals(initialSize + 1, course.getAllAssessments().size());
+        assertTrue(course.getAllAssessments().contains(assessment1));
+    }
+
+    @Test // bug -- git issue
+    public void testAddAssessment_Duplicate() {
+        course.addAssessment(assessment1);
+        int initialSize = course.getAllAssessments().size();
+        course.addAssessment(assessment1); // Attempt to add duplicate
+        assertEquals(initialSize, course.getAllAssessments().size());
+    }
+
+    @Test // bug //git issue
+    public void testAddAssessment_Null() {
+        int initialSize = course.getAllAssessments().size();
+        course.addAssessment(null);
+        assertEquals(initialSize, course.getAllAssessments().size());
+    }
+
+    // Test getCompletedAssessments
+    @Test //bug //git issue
+    public void testGetCompletedAssessments() {
+        // Set up assessments with results
+        assessment1.calculateScore(); // User score is 0
+        assessment2.calculateScore(); // User score is 0
+
+        // Set userScore manually for testing
+        assessment1.userScore = 80; // Assume user passed
+        assessment2.userScore = 60; // Assume user did not pass
+
+        course.addAssessment(assessment1);
+        course.addAssessment(assessment2);
+
+        ArrayList<String> completedAssessments = course.getCompletedAssessments();
+        assertEquals(1, completedAssessments.size());
+        assertTrue(completedAssessments.contains(assessment1.toString()));
+        assertFalse(completedAssessments.contains(assessment2.toString()));
+    }
+
+    // Test addKeyWord and getKeyWords
+    @Test
+    public void testAddKeyWord() {
+        course.addKeyWord("Beginner");
+        course.addKeyWord("Spanish");
+        assertEquals(2, course.getKeyWords().size());
+        assertTrue(course.getKeyWords().contains("Beginner"));
+        assertTrue(course.getKeyWords().contains("Spanish"));
+    }
+
+    @Test // bug -- git issue
+    public void testAddKeyWord_Duplicate() {
+        course.addKeyWord("Spanish");
+        course.addKeyWord("Spanish"); // Attempt to add duplicate
+        assertEquals(1, course.getKeyWords().size());
+    }
+
+    @Test // bug -- git issue
+    public void testAddKeyWord_Null() {
+        int initialSize = course.getKeyWords().size();
+        course.addKeyWord(null);
+        assertEquals(initialSize, course.getKeyWords().size());
+    }
+
+    // Test setCompletedCourse and completedCourse
+    @Test
+    public void testSetCompletedCourse() {
+        course.setCompletedCourse();
+        assertTrue(course.isCompletedCourse());
+        assertEquals(100.0, course.getCourseProgress(), 0.01);
+    }
+
+    @Test//bug //git issue
+    public void testCompletedCourse() {
+        course.setCourseProgress(100.0);
+        assertTrue(course.isCompletedCourse());
+    }
+
+    @Test
+    public void testCompletedCourse_False() {
+        course.setCourseProgress(50.0);
+        assertFalse(course.isCompletedCourse());
+    }
+
+    @Test
+    public void testConstructorWithProgress() {
+        double progress = 50.0;
+        Course courseWithProgress = new Course(courseId, "Test Course", "A course for testing", true, progress, false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null);
+        assertEquals(progress, courseWithProgress.getCourseProgress(), 0.01);
+    }
+
+    @Test
+    public void testConstructorWithoutProgress() {
+        Course courseWithoutProgress = new Course(courseId, "Test Course", "A course for testing", true, 0.0, false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null);
+        assertEquals(0.0, courseWithoutProgress.getCourseProgress(), 0.01);
     }
 }

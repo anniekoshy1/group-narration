@@ -1,8 +1,10 @@
 package com.narration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -35,31 +37,33 @@ public class UserTest {
 
     @After
     public void tearDown() {
-        // Reset the user's courses if necessary
-        user.getCourses().clear(); // Assuming there's a method to get the user's courses
+        user.getCourses().clear();
+        user.getCompletedCourses().clear();
     }
+
+    // Test cases for addCourse
 
     @Test
     public void testAddCourse_NewCourse() {
         int initialSize = user.getCourses().size();
         user.addCourse(course1);
         assertEquals(initialSize + 1, user.getCourses().size());
-        assertNotNull(user.getCourses().get(0)); // Ensure the course can be found
+        assertNotNull(user.getCourses().get(0));
     }
 
-    @Test
+    @Test // bug -- git issue
     public void testAddCourse_ExistingCourse() {
         user.addCourse(course1);
         int initialSize = user.getCourses().size();
         user.addCourse(course1);
-        assertEquals(initialSize, user.getCourses().size()); // Size should remain the same
+        assertEquals(initialSize, user.getCourses().size());
     }
 
-    @Test
+    @Test //bug //git issue
     public void testAddCourse_NullCourse() {
         int initialSize = user.getCourses().size();
         user.addCourse(null);
-        assertEquals(initialSize, user.getCourses().size()); // Size should remain the same
+        assertEquals(initialSize, user.getCourses().size());
     }
 
     @Test
@@ -67,7 +71,7 @@ public class UserTest {
         user.addCourse(course1);
         user.addCourse(course2);
         assertEquals(2, user.getCourses().size());
-        assertNotNull(user.getCourses().get(1)); // Ensure the second course can be found
+        assertNotNull(user.getCourses().get(1));
     }
 
     @Test
@@ -80,7 +84,7 @@ public class UserTest {
 
     @Test
     public void testUpdateProgress_CourseNotStarted() {
-        user.updateCourseProgress(courseId1, 0.0);  // Initially 0 progress
+        user.updateCourseProgress(courseId1, 0.0);
         assertEquals(0.0, user.getCourseProgress(courseId1), 0.01);
         user.updateCourseProgress(courseId1, 0.3);
         assertEquals(0.3, user.getCourseProgress(courseId1), 0.01);
@@ -88,7 +92,7 @@ public class UserTest {
 
     @Test
     public void testUpdateProgress_CourseHalfway() {
-        user.updateCourseProgress(courseId2, 0.5);  // Initially halfway
+        user.updateCourseProgress(courseId2, 0.5);
         assertEquals(0.5, user.getCourseProgress(courseId2), 0.01);
         user.updateCourseProgress(courseId2, 0.7);
         assertEquals(0.7, user.getCourseProgress(courseId2), 0.01);
@@ -111,10 +115,10 @@ public class UserTest {
     public void testUpdateCorrectCourse() {
         user.updateCourseProgress(courseId1, 0.8);
         assertEquals(0.8, user.getCourseProgress(courseId1), 0.01);
-        assertEquals(0.0, user.getCourseProgress(courseId2), 0.01);  // No change in courseId2
+        assertEquals(0.0, user.getCourseProgress(courseId2), 0.01);
     }
 
-    @Test
+    @Test //bug //git issue
     public void testUpdateProgressToNullCourseId() {
         user.updateCourseProgress(null, 0.6);
         assertNull(user.getCourseProgress(null));
@@ -124,5 +128,56 @@ public class UserTest {
     public void testUpdateProgressInvalidProgress() {
         user.updateCourseProgress(courseId1, -0.3);
         assertEquals(-0.3, user.getCourseProgress(courseId1), 0.01);
+    }
+
+    // Test cases for completeCourse
+
+    @Test
+    public void testCompleteCourse_NotPreviouslyCompleted() {
+        user.completeCourse(courseId1);
+        assertTrue(user.getCompletedCourses().contains(courseId1));
+    }
+
+    @Test
+    public void testCompleteCourse_PreviouslyCompleted() {
+        user.completeCourse(courseId1);
+        user.completeCourse(courseId1);
+        assertEquals(1, user.getCompletedCourses().size());
+    }
+
+    @Test
+    public void testCompleteCourse_MultipleCourses() {
+        user.completeCourse(courseId1);
+        user.completeCourse(courseId2);
+        assertTrue(user.getCompletedCourses().contains(courseId1));
+        assertTrue(user.getCompletedCourses().contains(courseId2));
+    }
+
+    @Test
+    public void testCompleteCourse_EmptyCompletedCourses() {
+        assertTrue(user.getCompletedCourses().isEmpty());
+        user.completeCourse(courseId1);
+        assertEquals(1, user.getCompletedCourses().size());
+    }
+
+    @Test //bug //git issue
+    public void testCompleteCourse_NullCourseId() {
+        user.completeCourse(null);
+        assertFalse(user.getCompletedCourses().contains(null));
+    }
+
+    @Test
+    public void testCompleteCourse_NoDuplicateEntries() {
+        user.completeCourse(courseId1);
+        user.completeCourse(courseId1);
+        user.completeCourse(courseId1);
+        assertEquals(1, user.getCompletedCourses().size());
+    }
+
+    @Test
+    public void testCompleteCourse_InvalidCourseId() {
+        UUID invalidCourseId = UUID.randomUUID();
+        user.completeCourse(invalidCourseId);
+        assertTrue(user.getCompletedCourses().contains(invalidCourseId));
     }
 }
