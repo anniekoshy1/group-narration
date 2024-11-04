@@ -1,11 +1,5 @@
 package com.narration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +9,11 @@ import java.util.UUID;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,7 +63,7 @@ public class DataLoaderTest {
         assertNotNull(users);
         assertEquals(0, users.size());
     }
-
+    // GIT ISSUE - bug on assertEquals(1, users.size());
     @Test
     @SuppressWarnings("unchecked")
     public void testGetUsers_WithData() throws IOException {
@@ -88,12 +87,13 @@ public class DataLoaderTest {
 
         // Assert
         assertNotNull(users);
-        assertEquals(1, users.size());
+        assertEquals(1, users.size()); //bug java.lang.AssertionError: expected:[1] but was:[0]
         assertEquals("testuser", users.get(0).getUsername());
         assertEquals("testuser@example.com", users.get(0).getEmail());
         assertEquals("password123", users.get(0).getPassword());
     }
 
+    //bug assertNotNull(users);
     @Test
     @SuppressWarnings("unchecked")
     public void testGetUsers_InvalidUUID() throws IOException {
@@ -116,7 +116,7 @@ public class DataLoaderTest {
         ArrayList<User> users = DataLoader.getUsers();
 
         // Assert
-        assertNotNull(users);
+        assertNotNull(users); //java.lang.AssertionError: expected:[1] but was:[0]
         assertEquals(1, users.size());
         assertNull(users.get(0).getId());
     }
@@ -163,6 +163,7 @@ public class DataLoaderTest {
         assertFalse(courses.get(0).isCompletedCourse());
         assertEquals(0.0, courses.get(0).getCourseProgress(), 0.01);
     }
+
 
     @Test
     @SuppressWarnings("unchecked")
@@ -266,8 +267,8 @@ public class DataLoaderTest {
         assertEquals("Hello", wordsList.getAllWords().get(0).getDefinition());
     }
 
+    //bug assertEquals("Hello", translation);
     // Test getEnglishTranslation()
-
     @Test
     @SuppressWarnings("unchecked")
     public void testGetEnglishTranslation_Found() throws IOException {
@@ -290,7 +291,7 @@ public class DataLoaderTest {
         String translation = DataLoader.getEnglishTranslation("Hola");
 
         // Assert
-        assertEquals("Hello", translation);
+        assertEquals("Hello", translation); //bug java.lang.AssertionError: expected:[Hello] but was:[null]
     }
 
     @Test
@@ -354,7 +355,7 @@ public class DataLoaderTest {
     }
 
     // Optional: Test confirmUser()
-
+    //bug java.lang.AssertionError boolean result = new DataLoader().confirmUser("testuser", "password123");
     @Test
     @SuppressWarnings("unchecked")
     public void testConfirmUser_ValidCredentials() throws IOException {
@@ -373,7 +374,7 @@ public class DataLoaderTest {
         }
 
         // Act
-        boolean result = new DataLoader().confirmUser("testuser", "password123");
+        boolean result = new DataLoader().confirmUser("testuser", "password123"); //bug java.lang.AssertionError
 
         // Assert
         assertTrue(result);

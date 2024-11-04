@@ -1,12 +1,11 @@
 package com.narration;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,15 +31,15 @@ public class WordsListTest {
         assertTrue("Words list should contain word1 after addition", wordsList.getAllWords().contains(word1));
     }
 
-    @Test
+    @Test //bug Words list should ignore null entries expected:[0] but was:[1]
     public void testAddWord_DuplicateWord() {
         wordsList.addWord(word1);
         int initialSize = wordsList.getAllWords().size();
-        wordsList.addWord(word1); // Attempt to add duplicate
+        wordsList.addWord(word1); // Attempt to add duplicate //Words list should ignore null entries expected:[0] but was:[1]
         assertEquals("Words list should not allow duplicate additions", initialSize, wordsList.getAllWords().size());
     }
 
-    @Test
+    @Test //bug Words list should ignore null entries expected:[0] but was:[1]
     public void testAddWord_NullWord() {
         int initialSize = wordsList.getAllWords().size();
         wordsList.addWord(null); // Attempt to add null

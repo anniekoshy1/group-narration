@@ -36,7 +36,7 @@ public class CourseTest {
                 new ArrayList<>(),
                 new ArrayList<>(),
                 new ArrayList<>(),
-                null
+                flashcard
         );
 
         // Create test lessons
@@ -173,7 +173,7 @@ public class CourseTest {
         assertEquals(0.0, course.getCourseProgress(), 0.01);
     }
 
-    //bug
+    //bug -- git issue
     @Test
     public void testSetCourseProgress_OverMaxValue() {
         course.setCourseProgress(120.0);

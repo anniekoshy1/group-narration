@@ -98,16 +98,17 @@ public class Course {
      * Calculates and updates the course progress based on the completion status of lessons and flashcards
      */
     public void calculateProgress() {
-        if (lesson.isCompleted() && flashcard.getFlashcardProgress() == 100.0) {
+        if (lesson != null && lesson.isCompleted() && flashcard != null && flashcard.getFlashcardProgress() == 100.0) {
             courseProgress = 100.0;
             System.out.println(courseProgress);
-        } else if (lesson.isCompleted() || flashcard.getFlashcardProgress() == 100.0) {
+        } else if ((lesson != null && lesson.isCompleted()) || (flashcard != null && flashcard.getFlashcardProgress() == 100.0)) {
             courseProgress = 50.0;
-            System.out.println("Course Progress: "+courseProgress);
+            System.out.println("Course Progress: " + courseProgress);
         } else {
-            courseProgress = 50.0;
+            courseProgress = 0.0;
         }
     }
+
 
     public void setCourseProgress(double courseProgress) {
         if (courseProgress >= 0.0 && courseProgress <= 100.0) {
